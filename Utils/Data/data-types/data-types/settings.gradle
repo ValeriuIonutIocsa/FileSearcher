@@ -1,0 +1,10 @@
+final String projectPath = file('.').getAbsolutePath()
+final String rootDirPath = file('../../../../').getAbsolutePath()
+gradle.ext.rootDirPath = rootDirPath
+final String[] subProjectsRelativePaths = [
+        '/Utils/Services/json-utils/json-utils',
+        '/Utils/Services/html-utils/html-utils'
+]
+
+apply from: rootDirPath + '/common_settings.gradle'
+configureSettings(projectPath, rootDirPath, subProjectsRelativePaths)

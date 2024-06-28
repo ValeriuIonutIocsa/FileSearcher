@@ -1,0 +1,3 @@
+.border-default {
+    -fx-border-color: ladder(-fx-background, black 10%, derive(-fx-background, -15%) 30%);
+}

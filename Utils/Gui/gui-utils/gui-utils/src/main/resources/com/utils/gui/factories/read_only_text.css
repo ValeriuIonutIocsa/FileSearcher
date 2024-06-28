@@ -1,0 +1,4 @@
+.text-read-only {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0px;
+}

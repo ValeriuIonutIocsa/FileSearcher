@@ -1,0 +1,16 @@
+ext {
+    mainClass = 'com.personal.scripts.file_search.AppStart' + project.name
+    projectVersion = '1.0.0'
+    jarFolderPath = 'C:\\IVI\\Apps\\Scripts\\General\\FileSearcher'
+
+    subProjectNames = [
+            ':app-info',
+            ':gui-utils'
+    ]
+    compileClassPaths = []
+    compileJarFilePaths = []
+    testCompileClassPaths = []
+    testCompileJarFilePaths = []
+}
+
+apply from: gradle.ext.rootDirPath + '/common_build.gradle'

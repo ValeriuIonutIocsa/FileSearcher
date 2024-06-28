@@ -1,0 +1,80 @@
+.root {
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 9pt;
+
+    -fx-base: rgb(50, 50, 50);
+    -fx-background: rgb(50, 50, 50);
+
+    -fx-color: derive(-fx-base, 10%);
+
+    -fx-control-inner-background: rgb(20, 20, 20);
+    -fx-control-inner-background-alt: derive(-fx-control-inner-background, 2.5%);
+
+    -fx-light-text-color: rgb(220, 220, 220);
+    -fx-mid-text-color: rgb(100, 100, 100);
+    -fx-dark-text-color: rgb(20, 20, 20);
+
+    -fx-accent: rgb(0, 80, 100);
+
+    -fx-selection-bar-non-focused: rgb(50, 50, 50);
+}
+
+.text-input {
+    -fx-prompt-text-fill: derive(-fx-control-inner-background, +50%);
+}
+
+.text-input:focused {
+    -fx-prompt-text-fill: transparent;
+}
+
+.scroll-bar > .increment-button > .increment-arrow,
+.scroll-bar > .decrement-button > .decrement-arrow {
+    -fx-background-color: -fx-mark-highlight-color, rgb(220, 220, 220);
+}
+
+.scroll-bar > .increment-button:hover > .increment-arrow,
+.scroll-bar > .decrement-button:hover > .decrement-arrow {
+    -fx-background-color: -fx-mark-highlight-color, rgb(240, 240, 240);
+}
+
+.scroll-bar > .increment-button:pressed > .increment-arrow,
+.scroll-bar > .decrement-button:pressed > .decrement-arrow {
+    -fx-background-color: -fx-mark-highlight-color, rgb(255, 255, 255);
+}
+
+.button {
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 5, 0.0, 0, 1);
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}
+
+.menu-bar {
+    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 5, 0.0, 0, 1);
+}
+
+.menu-bar > .container > .menu-button > .label {
+    -fx-text-fill: white;
+    -fx-font-size: 8.5pt;
+    -fx-font-weight: bold;
+}
+
+.menu-bar:hover {
+    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}
+
+.jfx-check-box {
+    -jfx-checked-color: #61a2b1;
+}
+
+.brand-background-second-color {
+    -fx-background-color: white;
+}
+
+.region-brand-logo {
+    -fx-background-color: white;
+}

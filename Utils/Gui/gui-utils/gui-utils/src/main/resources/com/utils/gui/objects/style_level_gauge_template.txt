@@ -1,0 +1,12 @@
+.@@style_class@@ > .track, .progress-bar > .bar {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+}
+
+.@@style_class@@ > .bar {
+    @@full_color@@;
+}
+
+.@@style_class@@ > .track {
+    @@empty_color@@;
+}

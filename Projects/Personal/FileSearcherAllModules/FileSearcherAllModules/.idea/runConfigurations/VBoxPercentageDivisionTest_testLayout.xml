@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" factoryName="JUnit" folderName="gui-utils" name="VBoxPercentageDivisionTest.testLayout" nameIsGenerated="true" type="JUnit">
+        <module name="FileSearcherAllModules.gui-utils.test"/>
+        <extension name="coverage">
+            <pattern>
+                <option name="PATTERN" value="com.utils.gui.charts.division.*"/>
+                <option name="ENABLED" value="true"/>
+            </pattern>
+        </extension>
+        <option name="PACKAGE_NAME" value="com.utils.gui.charts.division"/>
+        <option name="MAIN_CLASS_NAME" value="com.utils.gui.charts.division.VBoxPercentageDivisionTest"/>
+        <option name="METHOD_NAME" value="testLayout"/>
+        <option name="TEST_OBJECT" value="method"/>
+        <method v="2">
+            <option enabled="true" name="Make"/>
+        </method>
+    </configuration>
+</component>

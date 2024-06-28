@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" factoryName="JUnit" folderName="app-info" name="FactoryAppInfoTest.testFormatTitle" nameIsGenerated="true" type="JUnit">
+        <module name="FileSearcherAllModules.app-info.test"/>
+        <extension name="coverage">
+            <pattern>
+                <option name="PATTERN" value="com.utils.app_info.*"/>
+                <option name="ENABLED" value="true"/>
+            </pattern>
+        </extension>
+        <option name="PACKAGE_NAME" value="com.utils.app_info"/>
+        <option name="MAIN_CLASS_NAME" value="com.utils.app_info.FactoryAppInfoTest"/>
+        <option name="METHOD_NAME" value="testFormatTitle"/>
+        <option name="TEST_OBJECT" value="method"/>
+        <method v="2">
+            <option enabled="true" name="Make"/>
+        </method>
+    </configuration>
+</component>

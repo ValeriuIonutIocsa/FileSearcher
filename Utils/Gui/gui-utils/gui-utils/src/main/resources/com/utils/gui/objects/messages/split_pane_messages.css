@@ -1,0 +1,12 @@
+.boldFontSize9 {
+    -fx-font-size: 9pt;
+    -fx-font-weight: bold;
+}
+
+.bold {
+    -fx-font-weight: bold;
+}
+
+#tree-table-view-messages .tree-disclosure-node {
+    -fx-padding: 12 5 0 5;
+}

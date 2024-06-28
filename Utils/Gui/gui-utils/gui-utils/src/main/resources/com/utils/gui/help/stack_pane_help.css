@@ -1,0 +1,7 @@
+.hoverOn {
+  -fx-background-color:transparent;
+}
+
+.hoverOn:hover {
+  -fx-background-color:#dae7f3;
+}

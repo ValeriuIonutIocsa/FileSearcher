@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" factoryName="JUnit" folderName="html-utils" name="HtmlUtilsTest.testEmbedImage" nameIsGenerated="true" type="JUnit">
+        <module name="FileSearcherAllModules.html-utils.test"/>
+        <extension name="coverage">
+            <pattern>
+                <option name="PATTERN" value="com.utils.html.*"/>
+                <option name="ENABLED" value="true"/>
+            </pattern>
+        </extension>
+        <option name="PACKAGE_NAME" value="com.utils.html"/>
+        <option name="MAIN_CLASS_NAME" value="com.utils.html.HtmlUtilsTest"/>
+        <option name="METHOD_NAME" value="testEmbedImage"/>
+        <option name="TEST_OBJECT" value="method"/>
+        <method v="2">
+            <option enabled="true" name="Make"/>
+        </method>
+    </configuration>
+</component>

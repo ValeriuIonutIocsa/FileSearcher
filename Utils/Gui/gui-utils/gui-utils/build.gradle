@@ -1,0 +1,18 @@
+ext {
+    subProjectNames = [
+            ':data-types'
+    ]
+    compileClassPaths = [
+            'org.openjfx:javafx-base:21.0.3:win',
+            'org.openjfx:javafx-graphics:21.0.3:win',
+            'org.openjfx:javafx-controls:21.0.3:win'
+    ]
+    compileJarFilePaths = []
+    testCompileClassPaths = [
+            'org.testfx:testfx-junit5:4.0.18',
+            'org.hamcrest:hamcrest-all:1.3'
+    ]
+    testCompileJarFilePaths = []
+}
+
+apply from: gradle.ext.rootDirPath + '/common_build.gradle'
