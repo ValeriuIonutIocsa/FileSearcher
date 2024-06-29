@@ -80,6 +80,8 @@ public class ApplicationFileSearcher extends Application {
 		primaryStage.setWidth(1_250);
 		StageUtils.centerOnScreen(primaryStage);
 
+		GuiUtils.setAppIcon(primaryStage, ImagesFileSearcher.IMAGE_APP);
+
 		final VBoxFileSearcher vBoxFileSearcher = new VBoxFileSearcher(searchFolderPathString, nppExePathString,
 				searchPathSelectionItemList, filePathPatternSelectionItemList, searchTextSelectionItemList);
 
