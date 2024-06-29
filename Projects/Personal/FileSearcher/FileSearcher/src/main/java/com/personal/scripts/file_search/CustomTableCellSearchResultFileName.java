@@ -17,7 +17,8 @@ class CustomTableCellSearchResultFileName extends AbstractCustomTableCell<Search
 			final Object item) {
 
 		ContextMenu contextMenu = null;
-		if (item instanceof final SearchResult searchResult) {
+		final SearchResult searchResult = getRowData();
+		if (searchResult != null) {
 
 			contextMenu = new ContextMenu();
 
