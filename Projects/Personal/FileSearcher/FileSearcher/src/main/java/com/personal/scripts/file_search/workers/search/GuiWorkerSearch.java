@@ -38,6 +38,7 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 	private final boolean useRegex;
 	private final boolean caseSensitive;
 
+	private final boolean saveHistory;
 	private final VBoxFileSearcher vBoxFileSearcher;
 
 	private final List<SearchResult> searchResultList;
@@ -52,6 +53,7 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 			final String searchText,
 			final boolean useRegex,
 			final boolean caseSensitive,
+			final boolean saveHistory,
 			final VBoxFileSearcher vBoxFileSearcher) {
 
 		super(scene, new ControlDisablerAll(scene));
@@ -61,6 +63,7 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 		this.searchText = searchText;
 		this.useRegex = useRegex;
 		this.caseSensitive = caseSensitive;
+		this.saveHistory = saveHistory;
 
 		this.vBoxFileSearcher = vBoxFileSearcher;
 
@@ -70,17 +73,28 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 	@Override
 	protected void work() {
 
-		final String appFolderPathString = FileSearcherUtils.createAppFolderPathString();
-		final boolean createDirectoriesSuccess = FactoryFolderCreator.getInstance()
-				.createDirectories(appFolderPathString, false, true);
-		if (createDirectoriesSuccess) {
+		if (saveHistory) {
 
-			saveHistory(SavedHistoryFile.SEARCH_PATH_SAVED_HISTORY_FILE, searchFolderPathString);
-			saveHistory(SavedHistoryFile.FILE_PATH_PATTERN_SAVED_HISTORY_FILE, filePathPatternString);
-			saveHistory(SavedHistoryFile.SEARCH_TEXT_SAVED_HISTORY_FILE, searchText);
+			final String appFolderPathString = FileSearcherUtils.createAppFolderPathString();
+			final boolean createDirectoriesSuccess = FactoryFolderCreator.getInstance()
+					.createDirectories(appFolderPathString, false, true);
+			if (createDirectoriesSuccess) {
+
+				saveHistory(SavedHistoryFile.SEARCH_PATH_SAVED_HISTORY_FILE, searchFolderPathString);
+				saveHistory(SavedHistoryFile.FILE_PATH_PATTERN_SAVED_HISTORY_FILE, filePathPatternString);
+				saveHistory(SavedHistoryFile.SEARCH_TEXT_SAVED_HISTORY_FILE, searchText);
+			}
 		}
 
 		workL2();
+	}
+
+	private static void saveHistory(
+			final SavedHistoryFile savedHistoryFile,
+			final String savedHistoryEntry) {
+
+		savedHistoryFile.addEntry(savedHistoryEntry);
+		savedHistoryFile.save();
 	}
 
 	void workL2() {
@@ -155,7 +169,7 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 	}
 
 	private static int computeFileContainingTextCount(
-			List<SearchResult> searchResultList) {
+			final List<SearchResult> searchResultList) {
 
 		int fileContainingTextCount = 0;
 		for (final SearchResult searchResult : searchResultList) {
@@ -195,14 +209,6 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 			}
 		}
 		return textFinder;
-	}
-
-	private static void saveHistory(
-			final SavedHistoryFile savedHistoryFile,
-			final String savedHistoryEntry) {
-
-		savedHistoryFile.addEntry(savedHistoryEntry);
-		savedHistoryFile.save();
 	}
 
 	private void addSearchResult(

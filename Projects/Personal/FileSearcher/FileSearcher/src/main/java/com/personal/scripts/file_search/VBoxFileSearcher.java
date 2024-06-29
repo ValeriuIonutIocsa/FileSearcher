@@ -24,6 +24,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -43,6 +44,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 	private HBoxTextFieldWithSelectionImpl<SelectionItem> searchTextHBoxTextFieldWithSelection;
 	private CheckBox useRegexCheckBox;
 	private CheckBox caseSensitiveCheckBox;
+	private CheckBox saveHistoryCheckBox;
 
 	private CustomTableView<SearchResult> customTableView;
 
@@ -108,6 +110,13 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 				final String detailsString = newValue.createDetailsString();
 				detailsTextArea.setText(detailsString);
+			}
+		});
+
+		rootVBox.setOnKeyPressed(keyEvent -> {
+
+			if (keyEvent.getCode() == KeyCode.ENTER) {
+				search();
 			}
 		});
 
@@ -281,6 +290,17 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		GuiUtils.addToHBox(bottomHBox, caseSensitiveCheckBox,
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
+		final Label saveHistoryLabel = BasicControlsFactories.getInstance()
+				.createLabel("save history:", "bold");
+		GuiUtils.addToHBox(bottomHBox, saveHistoryLabel,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		saveHistoryCheckBox =
+				BasicControlsFactories.getInstance().createCheckBox("");
+		saveHistoryCheckBox.setSelected(true);
+		GuiUtils.addToHBox(bottomHBox, saveHistoryCheckBox,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
 		GuiUtils.addToHBox(bottomHBox, new Region(),
 				Pos.CENTER_LEFT, Priority.ALWAYS, 0, 0, 0, 0);
 
@@ -302,12 +322,13 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		final String searchText = searchTextHBoxTextFieldWithSelection.computeValue();
 		final boolean useRegex = useRegexCheckBox.isSelected();
 		final boolean caseSensitive = caseSensitiveCheckBox.isSelected();
+		final boolean saveHistory = saveHistoryCheckBox.isSelected();
 
 		makeCountsControlsInvisible();
 
 		new GuiWorkerSearch(getRoot().getScene(),
-				searchFolderPathString, filePathPatternString, searchText, useRegex, caseSensitive,
-				this).start();
+				searchFolderPathString, filePathPatternString, searchText,
+				useRegex, caseSensitive, saveHistory, this).start();
 	}
 
 	private void makeCountsControlsInvisible() {

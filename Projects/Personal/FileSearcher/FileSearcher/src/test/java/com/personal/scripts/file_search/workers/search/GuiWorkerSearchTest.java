@@ -39,7 +39,7 @@ class GuiWorkerSearchTest {
 
 		final GuiWorkerSearch guiWorkerSearch =
 				new GuiWorkerSearch(null, searchFolderPathString, filePathPatternString, searchText,
-						useRegex, caseSensitive, null);
+						useRegex, caseSensitive, false, null);
 		guiWorkerSearch.workL2();
 
 		Logger.printNewLine();
