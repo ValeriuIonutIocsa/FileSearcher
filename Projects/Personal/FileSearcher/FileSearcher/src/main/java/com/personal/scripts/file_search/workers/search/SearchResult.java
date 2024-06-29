@@ -17,8 +17,10 @@ public class SearchResult implements TableRowData {
 	@Serial
 	private static final long serialVersionUID = 5792448166898402974L;
 
+	public static final String FILE_NAME_COLUMN_NAME = "File Name";
+
 	public static final TableColumnData[] TABLE_COLUMN_DATA_ARRAY = {
-			new TableColumnData("File Name", "File Name", 0.2),
+			new TableColumnData(FILE_NAME_COLUMN_NAME, "File Name", 0.2),
 			new TableColumnData("Folder Path", "FolderPath", 0.5),
 			new TableColumnData("Ext", "Ext", 0.06),
 			new TableColumnData("Last Modified", "LastModified", 0.15),
@@ -76,7 +78,7 @@ public class SearchResult implements TableRowData {
 		return PathUtils.computePath(folderPathString, fileName);
 	}
 
-	boolean checkHasOccurrences() {
+	public boolean checkHasOccurrences() {
 
 		return count > 0;
 	}

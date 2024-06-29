@@ -16,12 +16,14 @@ import com.utils.gui.factories.BasicControlsFactories;
 import com.utils.gui.factories.LayoutControlsFactories;
 import com.utils.gui.objects.select.HBoxTextFieldWithSelectionImpl;
 import com.utils.gui.objects.tables.table_view.CustomTableView;
+import com.utils.string.StrUtils;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -41,7 +43,14 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 	private HBoxTextFieldWithSelectionImpl<SelectionItem> searchTextHBoxTextFieldWithSelection;
 	private CheckBox useRegexCheckBox;
 	private CheckBox caseSensitiveCheckBox;
+
 	private CustomTableView<SearchResult> customTableView;
+
+	private Label fileCountLabel;
+	private TextField fileCountTextField;
+	private Label fileContainingTextCountLabel;
+	private TextField fileContainingTextCountTextField;
+
 	private TextArea detailsTextArea;
 
 	private TextFinder textFinder;
@@ -82,6 +91,10 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		GuiUtils.addToVBox(rootVBox, customTableView,
 				Pos.CENTER_LEFT, Priority.ALWAYS, 7, 0, 0, 0);
 
+		final HBox countsHBox = createCountsHBox();
+		GuiUtils.addToVBox(rootVBox, countsHBox,
+				Pos.CENTER_LEFT, Priority.NEVER, 7, 0, 0, 0);
+
 		detailsTextArea = createDetailsTextArea();
 		GuiUtils.addToVBox(rootVBox, detailsTextArea,
 				Pos.CENTER_LEFT, Priority.NEVER, 7, 7, 7, 7);
@@ -101,6 +114,35 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		return rootVBox;
 	}
 
+	private HBox createCountsHBox() {
+
+		final HBox countsHBox = LayoutControlsFactories.getInstance().createHBox();
+
+		fileCountLabel = BasicControlsFactories.getInstance()
+				.createLabel("file count:", "bold");
+		GuiUtils.addToHBox(countsHBox, fileCountLabel,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		fileCountTextField = BasicControlsFactories.getInstance()
+				.createReadOnlyTextField("");
+		GuiUtils.addToHBox(countsHBox, fileCountTextField,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		fileContainingTextCountLabel = BasicControlsFactories.getInstance()
+				.createLabel("file containing text count:", "bold");
+		GuiUtils.addToHBox(countsHBox, fileContainingTextCountLabel,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		fileContainingTextCountTextField = BasicControlsFactories.getInstance()
+				.createReadOnlyTextField("");
+		GuiUtils.addToHBox(countsHBox, fileContainingTextCountTextField,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		makeCountsControlsInvisible();
+
+		return countsHBox;
+	}
+
 	private static TextArea createDetailsTextArea() {
 
 		final TextArea detailsTextArea =
@@ -115,6 +157,9 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		final CustomTableView<SearchResult> customTableView =
 				new CustomTableView<>(SearchResult.TABLE_COLUMN_DATA_ARRAY,
 						false, true, true, true, true, 0);
+
+		customTableView.getColumnByName(SearchResult.FILE_NAME_COLUMN_NAME)
+				.setCellFactory(param -> new CustomTableCellSearchResultFileName());
 
 		customTableView.setOnMouseClicked(mouseEvent -> {
 
@@ -258,16 +303,40 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		final boolean useRegex = useRegexCheckBox.isSelected();
 		final boolean caseSensitive = caseSensitiveCheckBox.isSelected();
 
+		makeCountsControlsInvisible();
+
 		new GuiWorkerSearch(getRoot().getScene(),
 				searchFolderPathString, filePathPatternString, searchText, useRegex, caseSensitive,
 				this).start();
 	}
 
+	private void makeCountsControlsInvisible() {
+
+		fileCountLabel.setVisible(false);
+		fileCountTextField.setVisible(false);
+		fileContainingTextCountLabel.setVisible(false);
+		fileContainingTextCountTextField.setVisible(false);
+	}
+
 	public void updateSearchResults(
 			final List<SearchResult> searchResultList,
+			final int fileCount,
+			final int fileContainingTextCount,
 			final TextFinder textFinder) {
 
 		customTableView.setItems(searchResultList);
+
+		fileCountLabel.setVisible(true);
+		fileCountTextField.setText(StrUtils.positiveIntToString(fileCount, true));
+		fileCountTextField.setVisible(true);
+
+		if (textFinder != null) {
+
+			fileContainingTextCountLabel.setVisible(true);
+			fileContainingTextCountTextField.setText(
+					StrUtils.positiveIntToString(fileContainingTextCount, true));
+			fileContainingTextCountTextField.setVisible(true);
+		}
 
 		this.textFinder = textFinder;
 	}

@@ -41,6 +41,8 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 	private final VBoxFileSearcher vBoxFileSearcher;
 
 	private final List<SearchResult> searchResultList;
+	private int fileCount;
+	private int fileContainingTextCount;
 	private TextFinder textFinder;
 
 	public GuiWorkerSearch(
@@ -147,6 +149,23 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 				Comparator.comparing(SearchResult::checkHasOccurrences, Comparator.reverseOrder())
 						.thenComparing(SearchResult::getFolderPathString)
 						.thenComparing(SearchResult::getFileName));
+
+		fileCount = searchResultList.size();
+		fileContainingTextCount = computeFileContainingTextCount(searchResultList);
+	}
+
+	private static int computeFileContainingTextCount(
+			List<SearchResult> searchResultList) {
+
+		int fileContainingTextCount = 0;
+		for (final SearchResult searchResult : searchResultList) {
+
+			final boolean hasOccurrences = searchResult.checkHasOccurrences();
+			if (hasOccurrences) {
+				fileContainingTextCount++;
+			}
+		}
+		return fileContainingTextCount;
 	}
 
 	private TextFinder createTextFinder() {
@@ -243,7 +262,8 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 	@Override
 	protected void finish() {
 
-		vBoxFileSearcher.updateSearchResults(searchResultList, textFinder);
+		vBoxFileSearcher.updateSearchResults(searchResultList,
+				fileCount, fileContainingTextCount, textFinder);
 	}
 
 	List<SearchResult> getSearchResultList() {
