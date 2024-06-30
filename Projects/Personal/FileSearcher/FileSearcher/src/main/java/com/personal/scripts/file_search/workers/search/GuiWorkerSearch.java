@@ -1,6 +1,9 @@
 package com.personal.scripts.file_search.workers.search;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -9,6 +12,8 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tika.parser.txt.CharsetDetector;
+import org.apache.tika.parser.txt.CharsetMatch;
 
 import com.personal.scripts.file_search.FileSearcherUtils;
 import com.personal.scripts.file_search.VBoxFileSearcher;
@@ -24,6 +29,7 @@ import com.utils.io.IoUtils;
 import com.utils.io.ListFileUtils;
 import com.utils.io.PathUtils;
 import com.utils.io.ReaderUtils;
+import com.utils.io.StreamUtils;
 import com.utils.io.folder_creators.FactoryFolderCreator;
 import com.utils.log.Logger;
 import com.utils.string.regex.RegexUtils;
@@ -41,7 +47,7 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 	private final boolean saveHistory;
 	private final VBoxFileSearcher vBoxFileSearcher;
 
-	private final List<SearchResult> searchResultList;
+	private List<SearchResult> searchResultList;
 	private int fileCount;
 	private int fileContainingTextCount;
 	private TextFinder textFinder;
@@ -66,8 +72,6 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 		this.saveHistory = saveHistory;
 
 		this.vBoxFileSearcher = vBoxFileSearcher;
-
-		searchResultList = new ArrayList<>();
 	}
 
 	@Override
@@ -150,6 +154,8 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 					}
 				});
 
+		searchResultList = new ArrayList<>();
+
 		for (final String dirPathString : dirPathStringList) {
 			addSearchResult(dirPathString, true, null);
 		}
@@ -228,21 +234,52 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 		}
 
 		int count = -1;
+		Charset charset = null;
 		if (!dir && textFinder != null) {
-			count = computeOccurrenceCount(filePathString, textFinder);
+
+			charset = detectCharset(filePathString);
+			count = computeOccurrenceCount(filePathString, charset, textFinder);
 		}
 
 		final SearchResult searchResult = new SearchResult(fileName, folderPathString, extension,
-				lastModifiedInstant, fileSizeString, count);
+				lastModifiedInstant, fileSizeString, count, charset);
 		searchResultList.add(searchResult);
+	}
+
+	static Charset detectCharset(
+			final String filePathString) {
+
+		String charsetName = null;
+		try (InputStream inputStream = StreamUtils.openBufferedInputStream(filePathString)) {
+
+			final CharsetDetector charsetDetector =
+					new CharsetDetector().setText(inputStream);
+			final CharsetMatch charsetMatch = charsetDetector.detect();
+			charsetName = charsetMatch.getName();
+
+		} catch (final Exception exc) {
+			Logger.printError("failed to detect charset for file:" +
+					System.lineSeparator() + filePathString);
+			Logger.printException(exc);
+		}
+
+		final Charset charset;
+		if (StringUtils.startsWith(charsetName, "ISO-") ||
+				StringUtils.startsWith(charsetName, "windows-")) {
+			charset = StandardCharsets.ISO_8859_1;
+		} else {
+			charset = StandardCharsets.UTF_8;
+		}
+		return charset;
 	}
 
 	private static int computeOccurrenceCount(
 			final String filePathString,
+			final Charset charset,
 			final TextFinder textFinder) {
 
 		int occurrenceCount = 0;
-		try (BufferedReader bufferedReader = ReaderUtils.openBufferedReader(filePathString)) {
+		try (BufferedReader bufferedReader = ReaderUtils.openBufferedReader(filePathString, charset)) {
 
 			String line;
 			while ((line = bufferedReader.readLine()) != null) {
@@ -252,7 +289,7 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 			}
 
 		} catch (final Exception exc) {
-			Logger.printError("failed to compute occurrence count in file" +
+			Logger.printError("failed to compute occurrence count in file:" +
 					System.lineSeparator() + filePathString);
 			Logger.printException(exc);
 		}

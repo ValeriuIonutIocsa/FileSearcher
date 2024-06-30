@@ -7,7 +7,9 @@ ext {
             ':app-info',
             ':gui-utils'
     ]
-    compileClassPaths = []
+    compileClassPaths = [
+            'org.apache.tika:tika-parser-text-module:2.9.2'
+    ]
     compileJarFilePaths = []
     testCompileClassPaths = []
     testCompileJarFilePaths = []

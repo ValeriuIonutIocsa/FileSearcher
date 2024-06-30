@@ -1,6 +1,7 @@
 package com.personal.scripts.file_search.workers.search;
 
 import java.io.Serial;
+import java.nio.charset.Charset;
 import java.time.Instant;
 
 import com.utils.data_types.data_items.DataItem;
@@ -47,6 +48,7 @@ public class SearchResult implements TableRowData {
 	private final Instant lastModifiedInstant;
 	private final String fileSizeString;
 	private final int count;
+	private final Charset charset;
 
 	SearchResult(
 			final String fileName,
@@ -54,7 +56,8 @@ public class SearchResult implements TableRowData {
 			final String extension,
 			final Instant lastModifiedInstant,
 			final String fileSizeString,
-			final int count) {
+			final int count,
+			final Charset charset) {
 
 		this.fileName = fileName;
 		this.folderPathString = folderPathString;
@@ -62,6 +65,7 @@ public class SearchResult implements TableRowData {
 		this.lastModifiedInstant = lastModifiedInstant;
 		this.fileSizeString = fileSizeString;
 		this.count = count;
+		this.charset = charset;
 	}
 
 	public String createDetailsString() {
@@ -98,5 +102,9 @@ public class SearchResult implements TableRowData {
 
 	int getCount() {
 		return count;
+	}
+
+	public Charset getCharset() {
+		return charset;
 	}
 }

@@ -1,6 +1,7 @@
 package com.personal.scripts.file_search.workers.jump;
 
 import java.io.BufferedReader;
+import java.nio.charset.Charset;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,12 +21,14 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 	private final String nppExePathString;
 
 	private final String filePathString;
+	private final Charset charset;
 	private final TextFinder textFinder;
 
 	public GuiWorkerJumpToFirstOccurrence(
 			final Scene scene,
 			final String nppExePathString,
 			final String filePathString,
+			final Charset charset,
 			final TextFinder textFinder) {
 
 		super(scene, new ControlDisablerAll(scene));
@@ -33,6 +36,7 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 		this.nppExePathString = nppExePathString;
 
 		this.filePathString = filePathString;
+		this.charset = charset;
 		this.textFinder = textFinder;
 	}
 
@@ -67,7 +71,7 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 
 		int row = 0;
 		int col = 0;
-		try (BufferedReader bufferedReader = ReaderUtils.openBufferedReader(filePathString)) {
+		try (BufferedReader bufferedReader = ReaderUtils.openBufferedReader(filePathString, charset)) {
 
 			String line;
 			int fileRow = 1;

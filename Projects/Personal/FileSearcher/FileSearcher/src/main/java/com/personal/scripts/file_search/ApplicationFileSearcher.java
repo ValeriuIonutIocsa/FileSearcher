@@ -12,6 +12,7 @@ import com.utils.cli.CliUtils;
 import com.utils.gui.GuiUtils;
 import com.utils.gui.stages.StageUtils;
 import com.utils.gui.styles.StyleUtils;
+import com.utils.log.Logger;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -44,6 +45,12 @@ public class ApplicationFileSearcher extends Application {
 
 		searchFolderPathString = cliArgsByNameMap.get("search_folder");
 		nppExePathString = cliArgsByNameMap.get("npp_exe_path");
+
+		final String debugString = cliArgsByNameMap.get("debug");
+		final boolean debug = Boolean.parseBoolean(debugString);
+		if (debug) {
+			Logger.setDebugMode(true);
+		}
 
 		fillSelectionItemList(SavedHistoryFile.SEARCH_PATH_SAVED_HISTORY_FILE,
 				searchPathSelectionItemList);

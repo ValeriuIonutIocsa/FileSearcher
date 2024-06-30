@@ -1,5 +1,6 @@
 package com.personal.scripts.file_search.workers.search;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ class GuiWorkerSearchTest {
 		final String searchText;
 		final boolean useRegex;
 		final boolean caseSensitive;
-		final int input = TestInputUtils.parseTestInputNumber("2");
+		final int input = TestInputUtils.parseTestInputNumber("1");
 		if (input == 1) {
 			searchFolderPathString = "C:\\IVI";
 			filePathPatternString = "*.gradle";
@@ -49,5 +50,22 @@ class GuiWorkerSearchTest {
 		for (final SearchResult searchResult : searchResultList) {
 			Logger.printLine(searchResult.createFilePathString() + "   " + searchResult.getCount());
 		}
+	}
+
+	@Test
+	void testDetectCharset() {
+
+		final String filePathString;
+		final int input = TestInputUtils.parseTestInputNumber("1");
+		if (input == 1) {
+			filePathString = "D:\\IVI_MISC\\Tmp\\FileSearcher\\iso_input.h";
+		} else if (input == 2) {
+			filePathString = "D:\\IVI_MISC\\Tmp\\FileSearcher\\utf8_input.h";
+		} else {
+			throw new RuntimeException();
+		}
+
+		final Charset charset = GuiWorkerSearch.detectCharset(filePathString);
+		Logger.printLine("charset: " + charset);
 	}
 }

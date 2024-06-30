@@ -1,5 +1,6 @@
 package com.personal.scripts.file_search;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -187,8 +188,9 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		if (searchResult != null) {
 
 			final String filePathString = searchResult.createFilePathString();
+			final Charset charset = searchResult.getCharset();
 			new GuiWorkerJumpToFirstOccurrence(getRoot().getScene(),
-					nppExePathString, filePathString, textFinder).start();
+					nppExePathString, filePathString, charset, textFinder).start();
 		}
 	}
 
