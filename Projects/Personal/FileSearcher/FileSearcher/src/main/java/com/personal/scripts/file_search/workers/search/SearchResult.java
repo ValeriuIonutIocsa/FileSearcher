@@ -10,6 +10,7 @@ import com.utils.data_types.data_items.objects.FactoryDataItemObjectComparable;
 import com.utils.data_types.data_items.objects.instant.FactoryDataItemInstant;
 import com.utils.data_types.table.TableColumnData;
 import com.utils.data_types.table.TableRowData;
+import com.utils.io.IoUtils;
 import com.utils.io.PathUtils;
 import com.utils.string.StrUtils;
 
@@ -19,10 +20,11 @@ public class SearchResult implements TableRowData {
 	private static final long serialVersionUID = 5792448166898402974L;
 
 	public static final String FILE_NAME_COLUMN_NAME = "File Name";
+	public static final String FOLDER_PATH_COLUMN_NAME = "Folder Path";
 
 	public static final TableColumnData[] TABLE_COLUMN_DATA_ARRAY = {
 			new TableColumnData(FILE_NAME_COLUMN_NAME, "File Name", 0.2),
-			new TableColumnData("Folder Path", "FolderPath", 0.5),
+			new TableColumnData(FOLDER_PATH_COLUMN_NAME, "FolderPath", 0.5),
 			new TableColumnData("Ext", "Ext", 0.06),
 			new TableColumnData("Last Modified", "LastModified", 0.15),
 			new TableColumnData("Size", "Size", 0.06),
@@ -87,6 +89,11 @@ public class SearchResult implements TableRowData {
 		return count > 0;
 	}
 
+	public void openFolderInExplorer() {
+
+		IoUtils.openFileWithDefaultApp(folderPathString);
+	}
+
 	@Override
 	public String toString() {
 		return StrUtils.reflectionToString(this);
@@ -96,7 +103,7 @@ public class SearchResult implements TableRowData {
 		return fileName;
 	}
 
-	String getFolderPathString() {
+	public String getFolderPathString() {
 		return folderPathString;
 	}
 

@@ -170,6 +170,8 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 		customTableView.getColumnByName(SearchResult.FILE_NAME_COLUMN_NAME)
 				.setCellFactory(param -> new CustomTableCellSearchResultFileName());
+		customTableView.getColumnByName(SearchResult.FOLDER_PATH_COLUMN_NAME)
+				.setCellFactory(param -> new CustomTableCellSearchResultFolderName());
 
 		customTableView.setOnMouseClicked(mouseEvent -> {
 
