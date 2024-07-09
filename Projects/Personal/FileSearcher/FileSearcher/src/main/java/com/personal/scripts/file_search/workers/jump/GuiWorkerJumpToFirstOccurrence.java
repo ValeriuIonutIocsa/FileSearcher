@@ -61,7 +61,7 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 		}
 
 		final Process process = new ProcessBuilder()
-				.command(nppExePathString, filePathString, "-n" + row, "-c" + col)
+				.command("cmd", "/c", "start", nppExePathString, filePathString, "-n" + row, "-c" + col)
 				.inheritIO()
 				.start();
 		process.waitFor();

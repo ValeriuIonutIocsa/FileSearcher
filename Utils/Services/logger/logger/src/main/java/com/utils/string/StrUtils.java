@@ -849,6 +849,26 @@ public final class StrUtils {
 	}
 
 	@ApiMethod
+	public static String removePrefixIgnoreCase(
+			final String str,
+			final String prefix) {
+
+		final String resultStr;
+		if (str != null) {
+
+			if (StringUtils.startsWithIgnoreCase(str, prefix)) {
+				resultStr = str.substring(prefix.length());
+			} else {
+				resultStr = str;
+			}
+
+		} else {
+			resultStr = null;
+		}
+		return resultStr;
+	}
+
+	@ApiMethod
 	public static String removeSuffix(
 			final String str,
 			final String suffix) {
@@ -857,6 +877,26 @@ public final class StrUtils {
 		if (str != null) {
 
 			if (str.endsWith(suffix)) {
+				resultStr = str.substring(0, str.length() - suffix.length());
+			} else {
+				resultStr = str;
+			}
+
+		} else {
+			resultStr = null;
+		}
+		return resultStr;
+	}
+
+	@ApiMethod
+	public static String removeSuffixIgnoreCase(
+			final String str,
+			final String suffix) {
+
+		final String resultStr;
+		if (str != null) {
+
+			if (StringUtils.endsWithIgnoreCase(str, suffix)) {
 				resultStr = str.substring(0, str.length() - suffix.length());
 			} else {
 				resultStr = str;
