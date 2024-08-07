@@ -2,6 +2,7 @@ package com.utils.gui.objects.tables.table_view;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -601,7 +602,8 @@ public class CustomTableView<
 	@ApiMethod
 	public void moveSelectedItem(
 			final int offset,
-			final TableItemIndexUpdater<TableRowDataT> tableItemIndexUpdater) {
+			final TableItemIndexUpdater<TableRowDataT> tableItemIndexUpdater,
+			final Comparator<TableRowDataT> comparator) {
 
 		final boolean filteredTable = getItems().size() != unfilteredItemList.size();
 		if (filteredTable && tableItemIndexUpdater == null) {
@@ -647,7 +649,7 @@ public class CustomTableView<
 									final TableRowDataT item = copyItemList.get(i);
 									tableItemIndexUpdater.updateIndex(item, i);
 								}
-								unfilteredItemList.sort(null);
+								unfilteredItemList.sort(comparator);
 
 							} else {
 								removeItem(selectedItem);

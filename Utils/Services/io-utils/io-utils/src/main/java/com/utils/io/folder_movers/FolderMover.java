@@ -1,14 +1,14 @@
-package com.utils.io.folder_copiers;
+package com.utils.io.folder_movers;
 
 import com.utils.annotations.ApiMethod;
 
-public interface FolderCopier {
+public interface FolderMover {
 
 	@ApiMethod
-	boolean copyFolder(
+	boolean moveFolder(
 			String srcFolderPathString,
 			String dstFolderPathString,
-			boolean deleteDstDirectoryBeforeCopying,
+			boolean deleteDstDirectoryBeforeMoving,
 			boolean verboseProgress,
 			boolean verboseError);
 }

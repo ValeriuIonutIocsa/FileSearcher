@@ -19,8 +19,4 @@ public final class ImagesGuiUtils {
 			GuiUtils.createImageFromResourceFile("com/utils/gui/icons/icon_long_arrow.png");
 	public static final Image IMAGE_SEARCH =
 			GuiUtils.createImageFromResourceFile("com/utils/gui/icons/icon_search.png");
-	public static final Image IMAGE_FILE =
-			GuiUtils.createImageFromResourceFile("com/utils/gui/icons/icon_file.png");
-	public static final Image IMAGE_FOLDER =
-			GuiUtils.createImageFromResourceFile("com/utils/gui/icons/icon_folder.png");
 }

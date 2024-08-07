@@ -1,31 +1,29 @@
-package com.utils.io.folder_copiers;
+package com.utils.io.folder_movers;
 
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
 
-import com.utils.annotations.ApiMethod;
 import com.utils.io.folder_deleters.FactoryFolderDeleter;
 import com.utils.log.Logger;
 
-class FolderCopierImpl implements FolderCopier {
+class FolderMoverImpl implements FolderMover {
 
-	FolderCopierImpl() {
+	FolderMoverImpl() {
 	}
 
-	@ApiMethod
 	@Override
-	public boolean copyFolder(
+	public boolean moveFolder(
 			final String srcFolderPathString,
 			final String dstFolderPathString,
-			final boolean deleteDstDirectoryBeforeCopying,
+			final boolean deleteDstDirectoryBeforeMoving,
 			final boolean verboseProgress,
 			final boolean verboseError) {
 
 		boolean success = false;
 		try {
 			final boolean keepGoing;
-			if (deleteDstDirectoryBeforeCopying) {
+			if (deleteDstDirectoryBeforeMoving) {
 				keepGoing = FactoryFolderDeleter.getInstance()
 						.deleteFolder(dstFolderPathString, verboseProgress, verboseError);
 			} else {
@@ -35,7 +33,7 @@ class FolderCopierImpl implements FolderCopier {
 
 				if (verboseProgress) {
 
-					Logger.printProgress("copying folder:");
+					Logger.printProgress("moving folder:");
 					Logger.printLine(srcFolderPathString);
 					Logger.printLine("to:");
 					Logger.printLine(dstFolderPathString);
@@ -43,7 +41,7 @@ class FolderCopierImpl implements FolderCopier {
 
 				final File srcFolder = new File(srcFolderPathString);
 				final File dstFolder = new File(dstFolderPathString);
-				FileUtils.copyDirectory(srcFolder, dstFolder);
+				FileUtils.moveDirectory(srcFolder, dstFolder);
 
 				success = true;
 			}
@@ -54,7 +52,7 @@ class FolderCopierImpl implements FolderCopier {
 
 		if (!success) {
 			if (verboseError) {
-				Logger.printError("failed to copy folder " +
+				Logger.printError("failed to move folder " +
 						System.lineSeparator() + srcFolderPathString +
 						System.lineSeparator() + "to:" +
 						System.lineSeparator() + dstFolderPathString);

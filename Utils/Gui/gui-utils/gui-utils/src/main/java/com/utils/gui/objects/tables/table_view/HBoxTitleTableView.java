@@ -1,5 +1,7 @@
 package com.utils.gui.objects.tables.table_view;
 
+import java.util.Comparator;
+
 import com.utils.data_types.table.TableRowData;
 import com.utils.gui.GuiUtils;
 import com.utils.gui.icons.ImagesGuiUtils;
@@ -23,6 +25,7 @@ public class HBoxTitleTableView<
 			final double titleMinWidth,
 			final CustomTableView<TableRowDataT> customTableView,
 			final TableItemIndexUpdater<TableRowDataT> tableItemIndexUpdater,
+			final Comparator<TableRowDataT> comparator,
 			final Thunk saveData) {
 
 		super(title, titleLabelId, titleMinWidth);
@@ -32,7 +35,7 @@ public class HBoxTitleTableView<
 
 			if (GuiUtils.isLeftClick(mouseEvent)) {
 
-				customTableView.moveSelectedItem(-1, tableItemIndexUpdater);
+				customTableView.moveSelectedItem(-1, tableItemIndexUpdater, comparator);
 				if (saveData != null) {
 					saveData.apply();
 				}
@@ -46,7 +49,7 @@ public class HBoxTitleTableView<
 
 			if (GuiUtils.isLeftClick(mouseEvent)) {
 
-				customTableView.moveSelectedItem(1, tableItemIndexUpdater);
+				customTableView.moveSelectedItem(1, tableItemIndexUpdater, comparator);
 				if (saveData != null) {
 					saveData.apply();
 				}
