@@ -1,6 +1,5 @@
 package com.personal.scripts.file_search;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,19 +19,8 @@ import javafx.stage.Stage;
 
 public class ApplicationFileSearcher extends Application {
 
-	private final List<SelectionItem> searchPathSelectionItemList;
-	private final List<SelectionItem> filePathPatternSelectionItemList;
-	private final List<SelectionItem> searchTextSelectionItemList;
-
 	private String searchFolderPathString;
 	private String nppExePathString;
-
-	public ApplicationFileSearcher() {
-
-		searchPathSelectionItemList = new ArrayList<>();
-		filePathPatternSelectionItemList = new ArrayList<>();
-		searchTextSelectionItemList = new ArrayList<>();
-	}
 
 	@Override
 	public void init() {
@@ -52,25 +40,9 @@ public class ApplicationFileSearcher extends Application {
 			Logger.setDebugMode(true);
 		}
 
-		fillSelectionItemList(SavedHistoryFile.SEARCH_PATH_SAVED_HISTORY_FILE,
-				searchPathSelectionItemList);
-		fillSelectionItemList(SavedHistoryFile.FILE_PATH_PATTERN_SAVED_HISTORY_FILE,
-				filePathPatternSelectionItemList);
-		fillSelectionItemList(SavedHistoryFile.SEARCH_TEXT_SAVED_HISTORY_FILE,
-				searchTextSelectionItemList);
-	}
-
-	private static void fillSelectionItemList(
-			final SavedHistoryFile savedHistoryFile,
-			final List<SelectionItem> selectionItemList) {
-
-		savedHistoryFile.parse();
-		final List<String> savedHistoryEntryList = savedHistoryFile.getSavedHistoryEntryList();
-		for (final String savedHistoryEntry : savedHistoryEntryList) {
-
-			final SelectionItem selectionItem = new SelectionItem(savedHistoryEntry);
-			selectionItemList.add(selectionItem);
-		}
+		SavedHistoryFile.SEARCH_PATH_SAVED_HISTORY_FILE.parse();
+		SavedHistoryFile.FILE_PATH_PATTERN_SAVED_HISTORY_FILE.parse();
+		SavedHistoryFile.SEARCH_TEXT_SAVED_HISTORY_FILE.parse();
 	}
 
 	@Override
@@ -89,8 +61,8 @@ public class ApplicationFileSearcher extends Application {
 
 		GuiUtils.setAppIcon(primaryStage, ImagesFileSearcher.IMAGE_APP);
 
-		final VBoxFileSearcher vBoxFileSearcher = new VBoxFileSearcher(searchFolderPathString, nppExePathString,
-				searchPathSelectionItemList, filePathPatternSelectionItemList, searchTextSelectionItemList);
+		final VBoxFileSearcher vBoxFileSearcher =
+				new VBoxFileSearcher(searchFolderPathString, nppExePathString);
 
 		final Scene primaryScene = new Scene(vBoxFileSearcher.getRoot());
 		primaryStage.setScene(primaryScene);

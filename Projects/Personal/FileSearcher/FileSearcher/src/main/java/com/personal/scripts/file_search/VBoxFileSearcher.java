@@ -1,10 +1,12 @@
 package com.personal.scripts.file_search;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.personal.scripts.file_search.hist.SavedHistoryFile;
 import com.personal.scripts.file_search.text_find.TextFinder;
 import com.personal.scripts.file_search.workers.jump.GuiWorkerJumpToFirstOccurrence;
 import com.personal.scripts.file_search.workers.search.GuiWorkerSearch;
@@ -36,10 +38,6 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 	private final String searchFolderPathString;
 	private final String nppExePathString;
 
-	private final List<SelectionItem> searchPathSelectionItemList;
-	private final List<SelectionItem> filePathPatternSelectionItemList;
-	private final List<SelectionItem> searchTextSelectionItemList;
-
 	private HBoxTextFieldWithSelectionImpl<SelectionItem> searchPathHBoxTextFieldWithSelection;
 	private HBoxTextFieldWithSelectionImpl<SelectionItem> filePathPatternHBoxTextFieldWithSelection;
 	private HBoxTextFieldWithSelectionImpl<SelectionItem> searchTextHBoxTextFieldWithSelection;
@@ -60,17 +58,10 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 	VBoxFileSearcher(
 			final String searchFolderPathString,
-			final String nppExePathString,
-			final List<SelectionItem> searchPathSelectionItemList,
-			final List<SelectionItem> filePathPatternSelectionItemList,
-			final List<SelectionItem> searchTextSelectionItemList) {
+			final String nppExePathString) {
 
 		this.searchFolderPathString = searchFolderPathString;
 		this.nppExePathString = nppExePathString;
-
-		this.searchPathSelectionItemList = searchPathSelectionItemList;
-		this.filePathPatternSelectionItemList = filePathPatternSelectionItemList;
-		this.searchTextSelectionItemList = searchTextSelectionItemList;
 	}
 
 	@Override
@@ -120,6 +111,8 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 				search();
 			}
 		});
+
+		updateSelectionItems();
 
 		return rootVBox;
 	}
@@ -210,16 +203,16 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 			searchPathInitialValue = searchFolderPathString;
 
 		} else {
-			if (!searchPathSelectionItemList.isEmpty()) {
-
-				final SelectionItem firstSelectionItem = searchPathSelectionItemList.getFirst();
-				searchPathInitialValue = firstSelectionItem.createTextFieldValue();
+			final List<String> searchPathSavedHistoryEntryList =
+					SavedHistoryFile.SEARCH_PATH_SAVED_HISTORY_FILE.getSavedHistoryEntryList();
+			if (!searchPathSavedHistoryEntryList.isEmpty()) {
+				searchPathInitialValue = searchPathSavedHistoryEntryList.getFirst();
 			}
 		}
 		searchPathHBoxTextFieldWithSelection = new HBoxTextFieldWithSelectionImpl<>("search path",
 				new Dimensions(600, 600, 1920, 1280, 1200, 700), new TableColumnData[] {
 						new TableColumnData("Search Path", "SearchPath", 1.0)
-				}, searchPathSelectionItemList, searchPathInitialValue);
+				}, new ArrayList<>(), searchPathInitialValue);
 		GuiUtils.addToHBox(topHBox, searchPathHBoxTextFieldWithSelection.getRoot(),
 				Pos.CENTER_LEFT, Priority.ALWAYS, 0, 7, 0, 7);
 
@@ -236,15 +229,15 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
 		String filePathPatternInitialValue = "";
-		if (!searchTextSelectionItemList.isEmpty()) {
-
-			final SelectionItem firstSelectionItem = filePathPatternSelectionItemList.getFirst();
-			filePathPatternInitialValue = firstSelectionItem.createTextFieldValue();
+		final List<String> filePathPatternSavedHistoryEntryList =
+				SavedHistoryFile.FILE_PATH_PATTERN_SAVED_HISTORY_FILE.getSavedHistoryEntryList();
+		if (!filePathPatternSavedHistoryEntryList.isEmpty()) {
+			filePathPatternInitialValue = filePathPatternSavedHistoryEntryList.getFirst();
 		}
 		filePathPatternHBoxTextFieldWithSelection = new HBoxTextFieldWithSelectionImpl<>("file path pattern",
 				new Dimensions(600, 600, 1920, 1280, 1200, 700), new TableColumnData[] {
 						new TableColumnData("File Path Pattern", "FilePathPattern", 1.0)
-				}, filePathPatternSelectionItemList, filePathPatternInitialValue);
+				}, new ArrayList<>(), filePathPatternInitialValue);
 		GuiUtils.addToHBox(middleHBox, filePathPatternHBoxTextFieldWithSelection.getRoot(),
 				Pos.CENTER_LEFT, Priority.ALWAYS, 0, 7, 0, 7);
 
@@ -254,15 +247,15 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
 		String searchTextInitialValue = "";
-		if (!searchTextSelectionItemList.isEmpty()) {
-
-			final SelectionItem firstSelectionItem = searchTextSelectionItemList.getFirst();
-			searchTextInitialValue = firstSelectionItem.createTextFieldValue();
+		final List<String> searchTextSavedHistoryEntryList =
+				SavedHistoryFile.SEARCH_TEXT_SAVED_HISTORY_FILE.getSavedHistoryEntryList();
+		if (!searchTextSavedHistoryEntryList.isEmpty()) {
+			searchTextInitialValue = searchTextSavedHistoryEntryList.getFirst();
 		}
 		searchTextHBoxTextFieldWithSelection = new HBoxTextFieldWithSelectionImpl<>("search text",
 				new Dimensions(600, 600, 1920, 1280, 1200, 700), new TableColumnData[] {
 						new TableColumnData("Search Text", "SearchText", 1.0)
-				}, searchTextSelectionItemList, searchTextInitialValue);
+				}, new ArrayList<>(), searchTextInitialValue);
 		GuiUtils.addToHBox(middleHBox, searchTextHBoxTextFieldWithSelection.getRoot(),
 				Pos.CENTER_LEFT, Priority.ALWAYS, 0, 7, 0, 7);
 
@@ -364,5 +357,33 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		}
 
 		this.textFinder = textFinder;
+
+		updateSelectionItems();
+	}
+
+	private void updateSelectionItems() {
+
+		fillSelectionItemList(SavedHistoryFile.SEARCH_PATH_SAVED_HISTORY_FILE,
+				searchPathHBoxTextFieldWithSelection);
+		fillSelectionItemList(SavedHistoryFile.FILE_PATH_PATTERN_SAVED_HISTORY_FILE,
+				filePathPatternHBoxTextFieldWithSelection);
+		fillSelectionItemList(SavedHistoryFile.SEARCH_TEXT_SAVED_HISTORY_FILE,
+				searchTextHBoxTextFieldWithSelection);
+	}
+
+	private static void fillSelectionItemList(
+			final SavedHistoryFile savedHistoryFile,
+			final HBoxTextFieldWithSelectionImpl<SelectionItem> hBoxTextFieldWithSelection) {
+
+		final List<SelectionItem> selectionItemList = new ArrayList<>();
+		final List<String> savedHistoryEntryList = savedHistoryFile.getSavedHistoryEntryList();
+		for (final String savedHistoryEntry : savedHistoryEntryList) {
+
+			final SelectionItem selectionItem = new SelectionItem(savedHistoryEntry);
+			selectionItemList.add(selectionItem);
+		}
+
+		hBoxTextFieldWithSelection.getItemList().clear();
+		hBoxTextFieldWithSelection.getItemList().addAll(selectionItemList);
 	}
 }

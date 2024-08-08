@@ -32,11 +32,11 @@ public class HBoxTextFieldWithSelectionImpl<
 	private TextField textField;
 
 	public HBoxTextFieldWithSelectionImpl(
-            final String displayName,
-            final Dimensions popupWindowDimensions,
-            final TableColumnData[] tableColumnDataArray,
-            final List<TextFieldWithSelectionItemT> itemList,
-            final String initialValue) {
+			final String displayName,
+			final Dimensions popupWindowDimensions,
+			final TableColumnData[] tableColumnDataArray,
+			final List<TextFieldWithSelectionItemT> itemList,
+			final String initialValue) {
 
 		this.displayName = displayName;
 		this.popupWindowDimensions = popupWindowDimensions;
@@ -102,5 +102,9 @@ public class HBoxTextFieldWithSelectionImpl<
 			value = textField.getText();
 		}
 		return value;
+	}
+
+	public List<TextFieldWithSelectionItemT> getItemList() {
+		return itemList;
 	}
 }
