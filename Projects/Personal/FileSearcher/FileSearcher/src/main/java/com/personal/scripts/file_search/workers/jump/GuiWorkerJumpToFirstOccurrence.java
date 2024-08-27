@@ -3,10 +3,13 @@ package com.personal.scripts.file_search.workers.jump;
 import org.apache.commons.lang3.StringUtils;
 
 import com.personal.scripts.file_search.text_find.TextFinder;
+import com.personal.scripts.file_search.workers.search.engine.SearchEngine;
+import com.personal.scripts.file_search.workers.search.engine.data.FirstOccurrenceData;
 import com.utils.gui.alerts.CustomAlertError;
 import com.utils.gui.clipboard.ClipboardUtils;
 import com.utils.gui.workers.AbstractGuiWorker;
 import com.utils.gui.workers.ControlDisablerAll;
+import com.utils.log.Logger;
 
 import javafx.scene.Scene;
 
@@ -15,16 +18,14 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 	private final String nppExePathString;
 
 	private final String filePathString;
-	private final int firstOccurrenceRow;
-	private final int firstOccurrenceCol;
+	private final SearchEngine searchEngine;
 	private final TextFinder textFinder;
 
 	public GuiWorkerJumpToFirstOccurrence(
 			final Scene scene,
 			final String nppExePathString,
 			final String filePathString,
-			final int firstOccurrenceRow,
-			final int firstOccurrenceCol,
+			final SearchEngine searchEngine,
 			final TextFinder textFinder) {
 
 		super(scene, new ControlDisablerAll(scene));
@@ -32,13 +33,16 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 		this.nppExePathString = nppExePathString;
 
 		this.filePathString = filePathString;
-		this.firstOccurrenceRow = firstOccurrenceRow;
-		this.firstOccurrenceCol = firstOccurrenceCol;
+		this.searchEngine = searchEngine;
 		this.textFinder = textFinder;
 	}
 
 	@Override
 	protected void work() throws Exception {
+
+		Logger.printNewLine();
+		Logger.printProgress("jumping to first occurrence in file:");
+		Logger.printLine(filePathString);
 
 		if (textFinder != null) {
 
@@ -47,6 +51,11 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 				ClipboardUtils.putStringInClipBoard(stringToPutInClipboard);
 			}
 		}
+
+		final FirstOccurrenceData firstOccurrenceData =
+				searchEngine.parseFirstOccurrenceData(filePathString, textFinder);
+		final int firstOccurrenceRow = firstOccurrenceData.firstOccurrenceRow();
+		final int firstOccurrenceCol = firstOccurrenceData.firstOccurrenceCol();
 
 		final Process process = new ProcessBuilder()
 				.command("cmd", "/c", "start", nppExePathString, filePathString,

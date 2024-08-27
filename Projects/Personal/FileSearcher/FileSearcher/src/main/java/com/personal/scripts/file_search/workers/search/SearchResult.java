@@ -49,8 +49,6 @@ public class SearchResult implements TableRowData {
 	private final Instant lastModifiedInstant;
 	private final String fileSizeString;
 	private final int occurrenceCount;
-	private final int firstOccurrenceRow;
-	private final int firstOccurrenceCol;
 
 	SearchResult(
 			final String fileName,
@@ -58,9 +56,7 @@ public class SearchResult implements TableRowData {
 			final String extension,
 			final Instant lastModifiedInstant,
 			final String fileSizeString,
-			final int occurrenceCount,
-			final int firstOccurrenceRow,
-			final int firstOccurrenceCol) {
+			final int occurrenceCount) {
 
 		this.fileName = fileName;
 		this.folderPathString = folderPathString;
@@ -68,8 +64,6 @@ public class SearchResult implements TableRowData {
 		this.lastModifiedInstant = lastModifiedInstant;
 		this.fileSizeString = fileSizeString;
 		this.occurrenceCount = occurrenceCount;
-		this.firstOccurrenceRow = firstOccurrenceRow;
-		this.firstOccurrenceCol = firstOccurrenceCol;
 	}
 
 	public String createDetailsString() {
@@ -109,15 +103,7 @@ public class SearchResult implements TableRowData {
 		return folderPathString;
 	}
 
-	int getOccurrenceCount() {
+	public int getOccurrenceCount() {
 		return occurrenceCount;
-	}
-
-	public int getFirstOccurrenceRow() {
-		return firstOccurrenceRow;
-	}
-
-	public int getFirstOccurrenceCol() {
-		return firstOccurrenceCol;
 	}
 }

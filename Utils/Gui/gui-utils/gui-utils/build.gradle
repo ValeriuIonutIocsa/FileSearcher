@@ -5,7 +5,9 @@ ext {
     compileClassPaths = [
             'org.openjfx:javafx-base:21.0.3:win',
             'org.openjfx:javafx-graphics:21.0.3:win',
-            'org.openjfx:javafx-controls:21.0.3:win'
+            'org.openjfx:javafx-controls:21.0.3:win',
+            'org.slf4j:slf4j-api:2.0.16',
+            'org.slf4j:slf4j-nop:2.0.16'
     ]
     compileJarFilePaths = []
     testCompileClassPaths = [

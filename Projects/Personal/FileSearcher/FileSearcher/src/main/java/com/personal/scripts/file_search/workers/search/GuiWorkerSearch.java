@@ -1,21 +1,15 @@
 package com.personal.scripts.file_search.workers.search;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.nio.file.PathMatcher;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tika.parser.txt.CharsetDetector;
-import org.apache.tika.parser.txt.CharsetMatch;
 
 import com.personal.scripts.file_search.FileSearcherUtils;
 import com.personal.scripts.file_search.VBoxFileSearcher;
@@ -23,15 +17,16 @@ import com.personal.scripts.file_search.hist.SavedHistoryFile;
 import com.personal.scripts.file_search.text_find.TextFinder;
 import com.personal.scripts.file_search.text_find.TextFinderRegex;
 import com.personal.scripts.file_search.text_find.TextFinderRegular;
+import com.personal.scripts.file_search.workers.search.engine.SearchEngine;
+import com.personal.scripts.file_search.workers.search.engine.SearchEngineOwn;
+import com.personal.scripts.file_search.workers.search.engine.SearchEngineRg;
+import com.personal.scripts.file_search.workers.search.engine.type.SearchEngineType;
 import com.utils.gui.alerts.CustomAlertError;
 import com.utils.gui.workers.AbstractGuiWorker;
 import com.utils.gui.workers.ControlDisablerAll;
 import com.utils.io.FileSizeUtils;
 import com.utils.io.IoUtils;
-import com.utils.io.ListFileUtils;
 import com.utils.io.PathUtils;
-import com.utils.io.ReaderUtils;
-import com.utils.io.StreamUtils;
 import com.utils.io.folder_creators.FactoryFolderCreator;
 import com.utils.log.Logger;
 import com.utils.string.regex.RegexUtils;
@@ -40,17 +35,7 @@ import javafx.scene.Scene;
 
 public class GuiWorkerSearch extends AbstractGuiWorker {
 
-	private final String rgExePathString;
-
-	private final String searchFolderPathString;
-
-	private final String filePathPatternString;
-	private final boolean caseSensitivePathPattern;
-
-	private final String searchText;
-	private final boolean useRegex;
-	private final boolean caseSensitive;
-
+	private final SearchData searchData;
 	private final boolean saveHistory;
 
 	private final VBoxFileSearcher vBoxFileSearcher;
@@ -58,33 +43,18 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 	private List<SearchResult> searchResultList;
 	private int fileCount;
 	private int fileContainingTextCount;
+	private SearchEngine searchEngine;
 	private TextFinder textFinder;
 
 	public GuiWorkerSearch(
 			final Scene scene,
-			final String rgExePathString,
-			final String searchFolderPathString,
-			final String filePathPatternString,
-			final boolean caseSensitivePathPattern,
-			final String searchText,
-			final boolean useRegex,
-			final boolean caseSensitive,
+			final SearchData searchData,
 			final boolean saveHistory,
 			final VBoxFileSearcher vBoxFileSearcher) {
 
 		super(scene, new ControlDisablerAll(scene));
 
-		this.rgExePathString = rgExePathString;
-
-		this.searchFolderPathString = searchFolderPathString;
-
-		this.filePathPatternString = filePathPatternString;
-		this.caseSensitivePathPattern = caseSensitivePathPattern;
-
-		this.searchText = searchText;
-		this.useRegex = useRegex;
-		this.caseSensitive = caseSensitive;
-
+		this.searchData = searchData;
 		this.saveHistory = saveHistory;
 
 		this.vBoxFileSearcher = vBoxFileSearcher;
@@ -93,6 +63,9 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 	@Override
 	protected void work() {
 
+		Logger.printNewLine();
+		Logger.printProgress("starting search");
+
 		if (saveHistory) {
 
 			final String appFolderPathString = FileSearcherUtils.createAppFolderPathString();
@@ -100,8 +73,13 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 					.createDirectories(appFolderPathString, false, true);
 			if (createDirectoriesSuccess) {
 
+				final String searchFolderPathString = searchData.searchFolderPathString();
 				saveHistory(SavedHistoryFile.SEARCH_PATH_SAVED_HISTORY_FILE, searchFolderPathString);
+
+				final String filePathPatternString = searchData.filePathPatternString();
 				saveHistory(SavedHistoryFile.FILE_PATH_PATTERN_SAVED_HISTORY_FILE, filePathPatternString);
+
+				final String searchText = searchData.searchText();
 				saveHistory(SavedHistoryFile.SEARCH_TEXT_SAVED_HISTORY_FILE, searchText);
 			}
 		}
@@ -119,6 +97,7 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 
 	void workL2() {
 
+		final String searchFolderPathString = searchData.searchFolderPathString();
 		if (StringUtils.isBlank(searchFolderPathString)) {
 			new CustomAlertError("search path is blank",
 					"search path is blank").showAndWait();
@@ -129,6 +108,7 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 						"search folder does not exist").showAndWait();
 
 			} else {
+				final String filePathPatternString = searchData.filePathPatternString();
 				if (StringUtils.isBlank(filePathPatternString)) {
 					new CustomAlertError("file path pattern is blank",
 							"file path pattern is blank").showAndWait();
@@ -144,38 +124,25 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 
 		final List<String> dirPathStringList = new ArrayList<>();
 		final List<String> filePathStringList = new ArrayList<>();
-		final PathMatcher pathMatcher = tryCreatePathMatcher();
-		if (pathMatcher == null) {
-			new CustomAlertError("invalid file path pattern",
-					"the file path pattern is not a valid pattern").showAndWait();
 
+		final SearchEngineType searchEngineType = searchData.searchEngineType();
+		if (searchEngineType == SearchEngineType.RG) {
+			searchEngine = new SearchEngineRg(searchData);
 		} else {
-			ListFileUtils.visitFilesRecursively(searchFolderPathString,
-					dirPath -> {
-						if (pathMatcher.matches(dirPath)) {
-
-							final String dirPathString = dirPath.toString();
-							dirPathStringList.add(dirPathString);
-						}
-					},
-					filePath -> {
-						if (pathMatcher.matches(filePath)) {
-
-							final String filePathString = filePath.toString();
-							filePathStringList.add(filePathString);
-						}
-					});
+			searchEngine = new SearchEngineOwn(searchData);
 		}
+		searchEngine.parseFilePaths(dirPathStringList, filePathStringList);
+
+		final Map<String, Integer> filePathStringToOccurrenceCountMap = new HashMap<>();
+		textFinder = createTextFinder();
+		searchEngine.searchText(filePathStringList, textFinder, filePathStringToOccurrenceCountMap);
 
 		searchResultList = new ArrayList<>();
-
 		for (final String dirPathString : dirPathStringList) {
-			addSearchResult(dirPathString, true, null);
+			addSearchResult(dirPathString, true, filePathStringToOccurrenceCountMap);
 		}
-
-		textFinder = createTextFinder();
 		for (final String filePathString : filePathStringList) {
-			addSearchResult(filePathString, false, textFinder);
+			addSearchResult(filePathString, false, filePathStringToOccurrenceCountMap);
 		}
 
 		searchResultList.sort(
@@ -185,16 +152,6 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 
 		fileCount = searchResultList.size();
 		fileContainingTextCount = computeFileContainingTextCount(searchResultList);
-	}
-
-	private PathMatcher tryCreatePathMatcher() {
-
-		PathMatcher pathMatcher = null;
-		try {
-			pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + filePathPatternString);
-		} catch (final Exception ignored) {
-		}
-		return pathMatcher;
 	}
 
 	private static int computeFileContainingTextCount(
@@ -214,10 +171,13 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 	private TextFinder createTextFinder() {
 
 		TextFinder textFinder = null;
+		final String searchText = searchData.searchText();
 		if (StringUtils.isNotBlank(searchText)) {
 
+			final boolean useRegex = searchData.useRegex();
 			if (useRegex) {
 
+				final boolean caseSensitive = searchData.caseSensitive();
 				final Pattern searchPattern = RegexUtils.tryCompile(searchText, caseSensitive);
 				if (searchPattern == null) {
 					new CustomAlertError("invalid search text pattern",
@@ -229,6 +189,7 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 
 			} else {
 				final String searchString;
+				final boolean caseSensitive = searchData.caseSensitive();
 				if (caseSensitive) {
 					searchString = searchText;
 				} else {
@@ -243,11 +204,12 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 	private void addSearchResult(
 			final String filePathString,
 			final boolean dir,
-			final TextFinder textFinder) {
+			final Map<String, Integer> filePathStringToOccurrenceCountMap) {
 
 		final String fileName = PathUtils.computeFileName(filePathString);
 		final String folderPathString = PathUtils.computeParentPath(filePathString);
 		final String extension = PathUtils.computeExtension(fileName);
+
 		final long lastModifiedTime = IoUtils.computeFileLastModifiedTime(filePathString);
 		final Instant lastModifiedInstant = Instant.ofEpochMilli(lastModifiedTime);
 
@@ -257,71 +219,18 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 		}
 
 		int occurrenceCount = -1;
-		int firstOccurrenceRow = 0;
-		int firstOccurrenceCol = 0;
-		if (!dir && textFinder != null) {
+		if (!dir) {
 
-			occurrenceCount = 0;
-			final Charset charset = detectCharset(filePathString);
-			try (BufferedReader bufferedReader = ReaderUtils.openBufferedReader(filePathString, charset)) {
-
-				String line;
-				int fileRow = 1;
-				while ((line = bufferedReader.readLine()) != null) {
-
-					final int lineOccurrenceCount = textFinder.countOccurrencesInString(line);
-					occurrenceCount += lineOccurrenceCount;
-
-					if (firstOccurrenceRow == 0 && lineOccurrenceCount > 0) {
-
-						final int index = textFinder.findIndexInString(line);
-						if (index >= 0) {
-
-							firstOccurrenceRow = fileRow;
-							firstOccurrenceCol = index + 1;
-						}
-					}
-
-					fileRow++;
-				}
-
-			} catch (final Exception exc) {
-				Logger.printError("failed to compute occurrence count in file:" +
-						System.lineSeparator() + filePathString);
-				Logger.printException(exc);
+			final Integer occurrenceCountInteger =
+					filePathStringToOccurrenceCountMap.get(filePathString);
+			if (occurrenceCountInteger != null) {
+				occurrenceCount = occurrenceCountInteger;
 			}
 		}
 
 		final SearchResult searchResult = new SearchResult(fileName, folderPathString, extension,
-				lastModifiedInstant, fileSizeString, occurrenceCount, firstOccurrenceRow, firstOccurrenceCol);
+				lastModifiedInstant, fileSizeString, occurrenceCount);
 		searchResultList.add(searchResult);
-	}
-
-	static Charset detectCharset(
-			final String filePathString) {
-
-		String charsetName = null;
-		try (InputStream inputStream = StreamUtils.openBufferedInputStream(filePathString)) {
-
-			final CharsetDetector charsetDetector =
-					new CharsetDetector().setText(inputStream);
-			final CharsetMatch charsetMatch = charsetDetector.detect();
-			charsetName = charsetMatch.getName();
-
-		} catch (final Exception exc) {
-			Logger.printError("failed to detect charset for file:" +
-					System.lineSeparator() + filePathString);
-			Logger.printException(exc);
-		}
-
-		final Charset charset;
-		if (StringUtils.startsWith(charsetName, "ISO-") ||
-				StringUtils.startsWith(charsetName, "windows-")) {
-			charset = StandardCharsets.ISO_8859_1;
-		} else {
-			charset = StandardCharsets.UTF_8;
-		}
-		return charset;
 	}
 
 	@Override
@@ -334,7 +243,7 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 	protected void finish() {
 
 		vBoxFileSearcher.updateSearchResults(searchResultList,
-				fileCount, fileContainingTextCount, textFinder);
+				fileCount, fileContainingTextCount, searchEngine, textFinder);
 	}
 
 	List<SearchResult> getSearchResultList() {

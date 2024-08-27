@@ -9,7 +9,10 @@ import com.personal.scripts.file_search.hist.SavedHistoryFile;
 import com.personal.scripts.file_search.text_find.TextFinder;
 import com.personal.scripts.file_search.workers.jump.GuiWorkerJumpToFirstOccurrence;
 import com.personal.scripts.file_search.workers.search.GuiWorkerSearch;
+import com.personal.scripts.file_search.workers.search.SearchData;
 import com.personal.scripts.file_search.workers.search.SearchResult;
+import com.personal.scripts.file_search.workers.search.engine.SearchEngine;
+import com.personal.scripts.file_search.workers.search.engine.type.SearchEngineType;
 import com.utils.data_types.table.TableColumnData;
 import com.utils.gui.AbstractCustomControl;
 import com.utils.gui.GuiUtils;
@@ -23,6 +26,7 @@ import com.utils.string.StrUtils;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -41,6 +45,8 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 	private HBoxTextFieldWithSelectionImpl<SelectionItem> searchPathHBoxTextFieldWithSelection;
 	private HBoxTextFieldWithSelectionImpl<SelectionItem> filePathPatternHBoxTextFieldWithSelection;
 	private HBoxTextFieldWithSelectionImpl<SelectionItem> searchTextHBoxTextFieldWithSelection;
+
+	private ComboBox<SearchEngineType> searchEngineTypeComboBox;
 	private CheckBox caseSensitivePathPatternCheckBox;
 	private CheckBox useRegexCheckBox;
 	private CheckBox caseSensitiveCheckBox;
@@ -55,6 +61,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 	private TextArea detailsTextArea;
 
+	private SearchEngine searchEngine;
 	private TextFinder textFinder;
 
 	VBoxFileSearcher(
@@ -186,10 +193,8 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		if (searchResult != null) {
 
 			final String filePathString = searchResult.createFilePathString();
-			final int firstOccurrenceRow = searchResult.getFirstOccurrenceRow();
-			final int firstOccurrenceCol = searchResult.getFirstOccurrenceCol();
-			new GuiWorkerJumpToFirstOccurrence(getRoot().getScene(), nppExePathString, filePathString,
-					firstOccurrenceRow, firstOccurrenceCol, textFinder).start();
+			new GuiWorkerJumpToFirstOccurrence(getRoot().getScene(),
+					nppExePathString, filePathString, searchEngine, textFinder).start();
 		}
 	}
 
@@ -270,10 +275,21 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 		final HBox bottomHBox = LayoutControlsFactories.getInstance().createHBox();
 
+		final Label searchEngineTypeLabel = BasicControlsFactories.getInstance()
+				.createLabel("search engine type:", "bold");
+		GuiUtils.addToHBox(bottomHBox, searchEngineTypeLabel,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		searchEngineTypeComboBox = BasicControlsFactories.getInstance().createComboBox();
+		searchEngineTypeComboBox.getItems().addAll(SearchEngineType.values());
+		searchEngineTypeComboBox.getSelectionModel().selectLast();
+		GuiUtils.addToHBox(bottomHBox, searchEngineTypeComboBox,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
 		final Label caseSensitivePathPatternLabel = BasicControlsFactories.getInstance()
 				.createLabel("case sensitive path pattern:", "bold");
 		GuiUtils.addToHBox(bottomHBox, caseSensitivePathPatternLabel,
-				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 14);
 
 		caseSensitivePathPatternCheckBox =
 				BasicControlsFactories.getInstance().createCheckBox("");
@@ -327,24 +343,35 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 	private void search() {
 
+		final SearchData searchData = createSearchData();
+
+		final boolean saveHistory = saveHistoryCheckBox.isSelected();
+
+		makeCountsControlsInvisible();
+
+		new GuiWorkerSearch(getRoot().getScene(), searchData, saveHistory, this).start();
+	}
+
+	private SearchData createSearchData() {
+
 		final String searchFolderPathString =
 				searchPathHBoxTextFieldWithSelection.computeValue();
 		final String filePathPatternString =
 				filePathPatternHBoxTextFieldWithSelection.computeValue();
-		final String searchText = searchTextHBoxTextFieldWithSelection.computeValue();
+		final String searchText =
+				searchTextHBoxTextFieldWithSelection.computeValue();
+
+		final SearchEngineType searchEngineType =
+				searchEngineTypeComboBox.getSelectionModel().getSelectedItem();
 
 		final boolean caseSensitivePathPattern = caseSensitivePathPatternCheckBox.isSelected();
 
 		final boolean useRegex = useRegexCheckBox.isSelected();
 		final boolean caseSensitive = caseSensitiveCheckBox.isSelected();
 
-		final boolean saveHistory = saveHistoryCheckBox.isSelected();
-
-		makeCountsControlsInvisible();
-
-		new GuiWorkerSearch(getRoot().getScene(), rgExePathString,
-				searchFolderPathString, filePathPatternString, caseSensitivePathPattern, searchText,
-				useRegex, caseSensitive, saveHistory, this).start();
+		return new SearchData(searchEngineType, rgExePathString,
+				searchFolderPathString, filePathPatternString, caseSensitivePathPattern,
+				searchText, useRegex, caseSensitive);
 	}
 
 	private void makeCountsControlsInvisible() {
@@ -359,6 +386,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 			final List<SearchResult> searchResultList,
 			final int fileCount,
 			final int fileContainingTextCount,
+			final SearchEngine searchEngine,
 			final TextFinder textFinder) {
 
 		customTableView.setItems(searchResultList);
@@ -375,6 +403,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 			fileContainingTextCountTextField.setVisible(true);
 		}
 
+		this.searchEngine = searchEngine;
 		this.textFinder = textFinder;
 
 		updateSelectionItems();

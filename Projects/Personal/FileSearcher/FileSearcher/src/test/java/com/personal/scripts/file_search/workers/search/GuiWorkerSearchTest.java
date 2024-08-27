@@ -1,10 +1,10 @@
 package com.personal.scripts.file_search.workers.search;
 
-import java.nio.charset.Charset;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.personal.scripts.file_search.workers.search.engine.type.SearchEngineType;
 import com.utils.log.Logger;
 import com.utils.string.StrUtils;
 import com.utils.test.TestInputUtils;
@@ -13,6 +13,9 @@ class GuiWorkerSearchTest {
 
 	@Test
 	void testWorkL2() {
+
+		final SearchEngineType searchEngineType;
+		final String rgExePathString = "C:\\IVI\\Apps\\RipGrep\\rg.exe";
 
 		final String searchFolderPathString;
 
@@ -26,6 +29,7 @@ class GuiWorkerSearchTest {
 		final int input = TestInputUtils.parseTestInputNumber("1");
 		if (input == 1) {
 
+			searchEngineType = SearchEngineType.RG;
 			searchFolderPathString = "C:\\IVI";
 
 			filePathPatternString = "**/*.gradle";
@@ -37,6 +41,7 @@ class GuiWorkerSearchTest {
 
 		} else if (input == 2) {
 
+			searchEngineType = SearchEngineType.RG;
 			searchFolderPathString = "C:\\IVI\\Prog";
 
 			filePathPatternString = "**/*.java";
@@ -50,9 +55,11 @@ class GuiWorkerSearchTest {
 			throw new RuntimeException();
 		}
 
-		final GuiWorkerSearch guiWorkerSearch = new GuiWorkerSearch(null, "",
+		final SearchData searchData = new SearchData(searchEngineType, rgExePathString,
 				searchFolderPathString, filePathPatternString, caseSensitivePathPattern,
-				searchText, useRegex, caseSensitive, false, null);
+				searchText, useRegex, caseSensitive);
+
+		final GuiWorkerSearch guiWorkerSearch = new GuiWorkerSearch(null, searchData, false, null);
 		guiWorkerSearch.workL2();
 
 		Logger.printNewLine();
@@ -60,24 +67,9 @@ class GuiWorkerSearchTest {
 		Logger.printLine("result count: " +
 				StrUtils.positiveIntToString(searchResultList.size(), true));
 		for (final SearchResult searchResult : searchResultList) {
-			Logger.printLine(searchResult.createFilePathString() + "   " + searchResult.getOccurrenceCount());
+
+			final int occurrenceCount = searchResult.getOccurrenceCount();
+			Logger.printLine(searchResult.createFilePathString() + "   " + occurrenceCount);
 		}
-	}
-
-	@Test
-	void testDetectCharset() {
-
-		final String filePathString;
-		final int input = TestInputUtils.parseTestInputNumber("1");
-		if (input == 1) {
-			filePathString = "D:\\IVI_MISC\\Tmp\\FileSearcher\\iso_input.h";
-		} else if (input == 2) {
-			filePathString = "D:\\IVI_MISC\\Tmp\\FileSearcher\\utf8_input.h";
-		} else {
-			throw new RuntimeException();
-		}
-
-		final Charset charset = GuiWorkerSearch.detectCharset(filePathString);
-		Logger.printLine("charset: " + charset);
 	}
 }
