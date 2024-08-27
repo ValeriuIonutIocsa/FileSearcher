@@ -127,9 +127,8 @@ public class SearchEngineRg implements SearchEngine {
 			final String searchFolderPathString = searchData.searchFolderPathString();
 
 			final List<String> commandPartList = new ArrayList<>();
-			Collections.addAll(commandPartList, rgExePathString,
-					globOption, filePathPatternString,
-					regexOption, caseSensitiveOption, searchText, searchFolderPathString);
+			Collections.addAll(commandPartList, rgExePathString, globOption, filePathPatternString,
+					regexOption, caseSensitiveOption, "--count-matches", searchText, searchFolderPathString);
 
 			Logger.printProgress("executing command:");
 			Logger.printLine(StringUtils.join(commandPartList, ' '));
