@@ -135,9 +135,7 @@ public class SearchEngineRg implements SearchEngine {
 			Logger.printLine(StringUtils.join(commandPartList, ' '));
 
 			final Process process = new ProcessBuilder()
-					.command(rgExePathString, globOption, filePathPatternString,
-							regexOption, caseSensitiveOption, "--count-matches", searchText,
-							searchFolderPathString)
+					.command(commandPartList)
 					.start();
 
 			final ReadBytesHandlerLinesCollect readBytesHandlerLinesCollect =
@@ -212,18 +210,15 @@ public class SearchEngineRg implements SearchEngine {
 
 			final String searchText = searchData.searchText();
 
-			final String searchFolderPathString = searchData.searchFolderPathString();
-
 			final List<String> commandPartList = new ArrayList<>();
-			Collections.addAll(commandPartList, rgExePathString,
-					regexOption, caseSensitiveOption, searchText, searchFolderPathString);
+			Collections.addAll(commandPartList, rgExePathString, regexOption, caseSensitiveOption,
+					"--line-number", "--column", searchText, filePathString);
 
 			Logger.printProgress("executing command:");
 			Logger.printLine(StringUtils.join(commandPartList, ' '));
 
 			final Process process = new ProcessBuilder()
-					.command(rgExePathString, regexOption, caseSensitiveOption,
-							"--line-number", "--column", searchText, filePathString)
+					.command(commandPartList)
 					.start();
 
 			final ReadBytesHandlerLinesCollect readBytesHandlerLinesCollect =
