@@ -1,5 +1,9 @@
 package com.personal.scripts.file_search.workers.jump;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.personal.scripts.file_search.text_find.TextFinder;
@@ -57,9 +61,15 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 		final int firstOccurrenceRow = firstOccurrenceData.firstOccurrenceRow();
 		final int firstOccurrenceCol = firstOccurrenceData.firstOccurrenceCol();
 
+		final List<String> commandPartList = new ArrayList<>();
+		Collections.addAll(commandPartList, "cmd", "/c", "start", nppExePathString, filePathString,
+				"-n" + firstOccurrenceRow, "-c" + firstOccurrenceCol);
+
+		Logger.printProgress("executing command:");
+		Logger.printLine(StringUtils.join(commandPartList, ' '));
+
 		final Process process = new ProcessBuilder()
-				.command("cmd", "/c", "start", nppExePathString, filePathString,
-						"-n" + firstOccurrenceRow, "-c" + firstOccurrenceCol)
+				.command(commandPartList)
 				.inheritIO()
 				.start();
 		process.waitFor();
