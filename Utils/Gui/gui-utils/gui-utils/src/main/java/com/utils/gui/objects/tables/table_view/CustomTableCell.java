@@ -1,8 +1,9 @@
-package com.utils.gui.objects.tables.tree_table;
+package com.utils.gui.objects.tables.table_view;
 
 import com.utils.annotations.ApiMethod;
 import com.utils.data_types.data_items.DataItem;
 import com.utils.gui.GuiUtils;
+import com.utils.gui.factories.BasicControlsFactories;
 import com.utils.gui.factories.LayoutControlsFactories;
 import com.utils.gui.objects.tables.CustomCell;
 import com.utils.log.Logger;
@@ -13,15 +14,16 @@ import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableCell;
-import javafx.scene.control.TreeTableRow;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 
-public abstract class AbstractCustomTreeTableCell<
+public class CustomTableCell<
 		RowDataT,
 		CellDataT>
-		extends TreeTableCell<RowDataT, CellDataT> implements CustomCell<CellDataT> {
+		extends TableCell<RowDataT, CellDataT> implements CustomCell<CellDataT> {
 
 	@Override
 	protected void updateItem(
@@ -30,10 +32,11 @@ public abstract class AbstractCustomTreeTableCell<
 
 		super.updateItem(item, empty);
 
-		setPadding(new Insets(0, 0, 0, 0));
+		setPadding(new Insets(0));
 		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
-		final StackPane stackPane = LayoutControlsFactories.getInstance().createStackPane(Pos.CENTER_LEFT);
+		final StackPane stackPane =
+				LayoutControlsFactories.getInstance().createStackPane(Pos.CENTER_LEFT);
 		setGraphic(stackPane);
 
 		if (empty || item == null) {
@@ -63,7 +66,7 @@ public abstract class AbstractCustomTreeTableCell<
 			CustomCell.setContextMenu(this, stackPane, contextMenu);
 
 		} catch (final Exception exc) {
-			Logger.printError("failed to render tree table cell");
+			Logger.printError("failed to render table cell");
 			Logger.printException(exc);
 		}
 		return stackPane;
@@ -74,7 +77,11 @@ public abstract class AbstractCustomTreeTableCell<
 			final StackPane stackPane,
 			final CellDataT item) {
 
-		final Label label = new Label(item.toString());
+		final String text = item.toString();
+		final Label label = new Label(text);
+
+		final Tooltip tooltip = BasicControlsFactories.getInstance().createTooltip(text);
+		setTooltip(tooltip);
 
 		final String[] labelStyleClassElements = getLabelStyleClassElements();
 		if (labelStyleClassElements != null) {
@@ -121,9 +128,9 @@ public abstract class AbstractCustomTreeTableCell<
 	protected RowDataT getRowData() {
 
 		RowDataT rowData = null;
-		final TreeTableRow<RowDataT> treeTableRow = getTableRow();
-		if (treeTableRow != null) {
-			rowData = treeTableRow.getItem();
+		final TableRow<RowDataT> tableRow = getTableRow();
+		if (tableRow != null) {
+			rowData = tableRow.getItem();
 		}
 		return rowData;
 	}
@@ -146,53 +153,9 @@ public abstract class AbstractCustomTreeTableCell<
 	}
 
 	@ApiMethod
-	protected void collapseTreeViewToLevel() {
+	protected int computeColumnIndex() {
 
-		final TreeItem<RowDataT> treeItem = getTableRow().getTreeItem();
-		final int depthInTreeView = getTreeTableView().getTreeItemLevel(treeItem);
-		collapseTreeViewToLevel(depthInTreeView);
-	}
-
-	@ApiMethod
-	protected void collapseTreeViewToLevel(
-			final int depthInTreeView) {
-
-		final TreeItem<RowDataT> treeItemRoot = getTreeTableView().getRoot();
-		collapseTreeViewToLevelRec(depthInTreeView, treeItemRoot, 0);
-	}
-
-	private void collapseTreeViewToLevelRec(
-			final int collapseDepth,
-			final TreeItem<RowDataT> treeItem,
-			final int depth) {
-
-		if (depth >= collapseDepth) {
-			treeItem.setExpanded(false);
-		}
-
-		final int childDepth = depth + 1;
-		for (final TreeItem<RowDataT> treeItemChild : treeItem.getChildren()) {
-			collapseTreeViewToLevelRec(collapseDepth, treeItemChild, childDepth);
-		}
-	}
-
-	@ApiMethod
-	protected int computeDepthInTreeTable() {
-
-		final TreeItem<RowDataT> treeItem = getTableRow().getTreeItem();
-		return computeDepthInTreeTableRec(treeItem);
-	}
-
-	private int computeDepthInTreeTableRec(
-			final TreeItem<RowDataT> treeItem) {
-
-		final int depth;
-		final TreeItem<RowDataT> parentTreeItem = treeItem.getParent();
-		if (parentTreeItem == null) {
-			depth = 0;
-		} else {
-			depth = computeDepthInTreeTableRec(parentTreeItem) + 1;
-		}
-		return depth;
+		final TableColumn<RowDataT, CellDataT> tableColumn = getTableColumn();
+		return getTableView().getColumns().indexOf(tableColumn);
 	}
 }

@@ -15,21 +15,33 @@ class GuiWorkerSearchTest {
 	void testWorkL2() {
 
 		final String searchFolderPathString;
+
 		final String filePathPatternString;
+		final boolean caseSensitivePathPattern;
+
 		final String searchText;
 		final boolean useRegex;
 		final boolean caseSensitive;
+
 		final int input = TestInputUtils.parseTestInputNumber("1");
 		if (input == 1) {
+
 			searchFolderPathString = "C:\\IVI";
-			filePathPatternString = "*.gradle";
+
+			filePathPatternString = "**/*.gradle";
+			caseSensitivePathPattern = true;
+
 			searchText = "jarF";
 			useRegex = false;
 			caseSensitive = true;
 
 		} else if (input == 2) {
+
 			searchFolderPathString = "C:\\IVI\\Prog";
-			filePathPatternString = "*.java";
+
+			filePathPatternString = "**/*.java";
+			caseSensitivePathPattern = false;
+
 			searchText = "Utils \\{\\w+";
 			useRegex = true;
 			caseSensitive = false;
@@ -38,9 +50,9 @@ class GuiWorkerSearchTest {
 			throw new RuntimeException();
 		}
 
-		final GuiWorkerSearch guiWorkerSearch =
-				new GuiWorkerSearch(null, searchFolderPathString, filePathPatternString, searchText,
-						useRegex, caseSensitive, false, null);
+		final GuiWorkerSearch guiWorkerSearch = new GuiWorkerSearch(null, "",
+				searchFolderPathString, filePathPatternString, caseSensitivePathPattern,
+				searchText, useRegex, caseSensitive, false, null);
 		guiWorkerSearch.workL2();
 
 		Logger.printNewLine();
@@ -48,7 +60,7 @@ class GuiWorkerSearchTest {
 		Logger.printLine("result count: " +
 				StrUtils.positiveIntToString(searchResultList.size(), true));
 		for (final SearchResult searchResult : searchResultList) {
-			Logger.printLine(searchResult.createFilePathString() + "   " + searchResult.getCount());
+			Logger.printLine(searchResult.createFilePathString() + "   " + searchResult.getOccurrenceCount());
 		}
 	}
 

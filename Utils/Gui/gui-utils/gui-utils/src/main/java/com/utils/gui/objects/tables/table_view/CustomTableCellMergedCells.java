@@ -4,10 +4,12 @@ import java.util.List;
 
 import com.utils.data_types.table.TableRowDataMergedCells;
 import com.utils.gui.GuiUtils;
+import com.utils.gui.factories.BasicControlsFactories;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -16,9 +18,9 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
-public abstract class AbstractCustomTableCellMergedCells<
+public class CustomTableCellMergedCells<
 		TableRowDataMergedCellsT extends TableRowDataMergedCells<TableRowDataMergedCellsT>>
-		extends AbstractCustomTableCell<TableRowDataMergedCellsT, Object> {
+		extends CustomTableCell<TableRowDataMergedCellsT, Object> {
 
 	private static final Border BORDER_OTHERS = new Border(new BorderStroke(
 			Color.BLACK,
@@ -32,7 +34,7 @@ public abstract class AbstractCustomTableCellMergedCells<
 
 	private final boolean mergeColumn;
 
-	protected AbstractCustomTableCellMergedCells(
+	protected CustomTableCellMergedCells(
 			final boolean mergeColumn) {
 
 		this.mergeColumn = mergeColumn;
@@ -60,6 +62,10 @@ public abstract class AbstractCustomTableCellMergedCells<
 			}
 			final String text = createText(item, firstCell);
 			final Label label = new Label(text);
+
+			final Tooltip tooltip = BasicControlsFactories.getInstance().createTooltip(text);
+			setTooltip(tooltip);
+
 			label.setGraphic(createLabelGraphic(item));
 			final Pos textAlignment = getTextAlignmentValue();
 			GuiUtils.addToStackPane(stackPane, label, textAlignment, 1, 1, 1, 1);

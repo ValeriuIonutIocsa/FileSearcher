@@ -81,6 +81,49 @@ public final class IoUtils {
 	}
 
 	@ApiMethod
+	public static boolean checkFileHidden(
+			final String pathString) {
+
+		boolean fileHidden = false;
+		try {
+			if (StringUtils.isNotBlank(pathString)) {
+
+				final Path path = Paths.get(pathString);
+				fileHidden = checkFileHidden(path);
+			}
+
+		} catch (final Exception ignored) {
+		}
+		return fileHidden;
+	}
+
+	@ApiMethod
+	public static boolean checkFileHidden(
+			final Path path) {
+
+		boolean fileHidden = false;
+		if (Files.exists(path)) {
+			fileHidden = checkFileHiddenNoChecks(path);
+		}
+		return fileHidden;
+	}
+
+	@ApiMethod
+	public static boolean checkFileHiddenNoChecks(
+			final Path path) {
+
+		boolean fileHidden = false;
+		try {
+			if (Files.isHidden(path)) {
+				fileHidden = true;
+			}
+
+		} catch (final Exception ignored) {
+		}
+		return fileHidden;
+	}
+
+	@ApiMethod
 	public static long computeFileLastModifiedTime(
 			final String filePathString) {
 

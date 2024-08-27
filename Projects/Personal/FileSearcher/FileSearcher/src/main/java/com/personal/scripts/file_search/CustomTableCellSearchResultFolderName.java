@@ -1,13 +1,13 @@
 package com.personal.scripts.file_search;
 
 import com.personal.scripts.file_search.workers.search.SearchResult;
-import com.utils.gui.objects.tables.table_view.AbstractCustomTableCell;
+import com.utils.gui.objects.tables.table_view.CustomTableCell;
 import com.utils.log.Logger;
 
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 
-class CustomTableCellSearchResultFolderName extends AbstractCustomTableCell<SearchResult, Object> {
+class CustomTableCellSearchResultFolderName extends CustomTableCell<SearchResult, Object> {
 
 	CustomTableCellSearchResultFolderName() {
 	}
@@ -44,10 +44,5 @@ class CustomTableCellSearchResultFolderName extends AbstractCustomTableCell<Sear
 			Logger.printError("failed to open folder in explorer");
 			Logger.printException(exc);
 		}
-	}
-
-	@Override
-	protected Class<SearchResult> getRowDataClass() {
-		return SearchResult.class;
 	}
 }

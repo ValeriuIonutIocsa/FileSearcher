@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 public class ApplicationFileSearcher extends Application {
 
 	private String searchFolderPathString;
+	private String rgExePathString;
 	private String nppExePathString;
 
 	@Override
@@ -32,6 +33,7 @@ public class ApplicationFileSearcher extends Application {
 		CliUtils.fillCliArgsByNameMap(argArray, cliArgsByNameMap);
 
 		searchFolderPathString = cliArgsByNameMap.get("search_folder");
+		rgExePathString = cliArgsByNameMap.get("rg_exe_path");
 		nppExePathString = cliArgsByNameMap.get("npp_exe_path");
 
 		final String debugString = cliArgsByNameMap.get("debug");
@@ -62,7 +64,7 @@ public class ApplicationFileSearcher extends Application {
 		GuiUtils.setAppIcon(primaryStage, ImagesFileSearcher.IMAGE_APP);
 
 		final VBoxFileSearcher vBoxFileSearcher =
-				new VBoxFileSearcher(searchFolderPathString, nppExePathString);
+				new VBoxFileSearcher(searchFolderPathString, rgExePathString, nppExePathString);
 
 		final Scene primaryScene = new Scene(vBoxFileSearcher.getRoot());
 		primaryStage.setScene(primaryScene);

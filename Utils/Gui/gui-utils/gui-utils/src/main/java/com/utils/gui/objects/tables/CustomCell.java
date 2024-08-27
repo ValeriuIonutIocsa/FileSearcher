@@ -48,6 +48,7 @@ public interface CustomCell<
 			final ContextMenu contextMenu) {
 
 		if (contextMenu != null) {
+
 			final Polygon polygon = new Polygon(5, 0, 0, 5, 5, 5);
 			polygon.setFill(Color.DARKORANGE);
 			GuiUtils.addToStackPane(stackPane, polygon, Pos.BOTTOM_RIGHT, 0, 0, 0, 0);

@@ -5,10 +5,10 @@ import com.utils.gui.factories.BasicControlsFactories;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
 
-public abstract class AbstractCustomTableCellSelectText<
+public class CustomTableCellSelectText<
 		RowDataT,
 		CellDataT>
-		extends AbstractCustomTableCell<RowDataT, CellDataT> {
+		extends CustomTableCell<RowDataT, CellDataT> {
 
 	private String text;
 

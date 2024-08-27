@@ -304,6 +304,8 @@ public class CustomTreeTableView<
 					createContextMenuTreeTableColumn(columnIndex, filter);
 			treeTableColumn.setContextMenu(contextMenuTableColumn);
 
+			treeTableColumn.setCellFactory(param -> new CustomTreeTableCell<>());
+
 			treeTableColumn.setCellValueFactory(cellDataFeatures -> {
 
 				ObservableValue<Object> observableValue = null;

@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 
 import com.personal.scripts.file_search.workers.search.SearchResult;
 import com.utils.gui.clipboard.ClipboardUtils;
-import com.utils.gui.objects.tables.table_view.AbstractCustomTableCell;
+import com.utils.gui.objects.tables.table_view.CustomTableCell;
 import com.utils.io.IoUtils;
 import com.utils.io.PathUtils;
 import com.utils.io.WriterUtils;
@@ -15,7 +15,7 @@ import com.utils.string.StrUtils;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 
-class CustomTableCellSearchResultFileName extends AbstractCustomTableCell<SearchResult, Object> {
+class CustomTableCellSearchResultFileName extends CustomTableCell<SearchResult, Object> {
 
 	CustomTableCellSearchResultFileName() {
 	}
@@ -77,10 +77,5 @@ class CustomTableCellSearchResultFileName extends AbstractCustomTableCell<Search
 				FactoryFileDeleter.getInstance().deleteFile(tmpBatFilePathString, false, true);
 			}
 		}
-	}
-
-	@Override
-	protected Class<SearchResult> getRowDataClass() {
-		return SearchResult.class;
 	}
 }

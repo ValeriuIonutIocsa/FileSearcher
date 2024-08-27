@@ -1,7 +1,6 @@
 package com.personal.scripts.file_search.workers.search;
 
 import java.io.Serial;
-import java.nio.charset.Charset;
 import java.time.Instant;
 
 import com.utils.data_types.data_items.DataItem;
@@ -40,7 +39,7 @@ public class SearchResult implements TableRowData {
 				FactoryDataItemObjectComparable.newInstance(extension),
 				FactoryDataItemInstant.newInstance(lastModifiedInstant),
 				FactoryDataItemObjectComparable.newInstance(fileSizeString),
-				FactoryDataItemUInt.newInstance(count)
+				FactoryDataItemUInt.newInstance(occurrenceCount)
 		};
 	}
 
@@ -49,8 +48,9 @@ public class SearchResult implements TableRowData {
 	private final String extension;
 	private final Instant lastModifiedInstant;
 	private final String fileSizeString;
-	private final int count;
-	private final Charset charset;
+	private final int occurrenceCount;
+	private final int firstOccurrenceRow;
+	private final int firstOccurrenceCol;
 
 	SearchResult(
 			final String fileName,
@@ -58,16 +58,18 @@ public class SearchResult implements TableRowData {
 			final String extension,
 			final Instant lastModifiedInstant,
 			final String fileSizeString,
-			final int count,
-			final Charset charset) {
+			final int occurrenceCount,
+			final int firstOccurrenceRow,
+			final int firstOccurrenceCol) {
 
 		this.fileName = fileName;
 		this.folderPathString = folderPathString;
 		this.extension = extension;
 		this.lastModifiedInstant = lastModifiedInstant;
 		this.fileSizeString = fileSizeString;
-		this.count = count;
-		this.charset = charset;
+		this.occurrenceCount = occurrenceCount;
+		this.firstOccurrenceRow = firstOccurrenceRow;
+		this.firstOccurrenceCol = firstOccurrenceCol;
 	}
 
 	public String createDetailsString() {
@@ -76,7 +78,7 @@ public class SearchResult implements TableRowData {
 				"folder path: " + folderPathString + System.lineSeparator() +
 				"extension: " + extension + System.lineSeparator() +
 				"file size: " + fileSizeString + System.lineSeparator() +
-				"count: " + StrUtils.positiveIntToString(count, true);
+				"occurrence count: " + StrUtils.positiveIntToString(occurrenceCount, true);
 	}
 
 	public String createFilePathString() {
@@ -86,7 +88,7 @@ public class SearchResult implements TableRowData {
 
 	public boolean checkHasOccurrences() {
 
-		return count > 0;
+		return occurrenceCount > 0;
 	}
 
 	public void openFolderInExplorer() {
@@ -107,11 +109,15 @@ public class SearchResult implements TableRowData {
 		return folderPathString;
 	}
 
-	int getCount() {
-		return count;
+	int getOccurrenceCount() {
+		return occurrenceCount;
 	}
 
-	public Charset getCharset() {
-		return charset;
+	public int getFirstOccurrenceRow() {
+		return firstOccurrenceRow;
+	}
+
+	public int getFirstOccurrenceCol() {
+		return firstOccurrenceCol;
 	}
 }

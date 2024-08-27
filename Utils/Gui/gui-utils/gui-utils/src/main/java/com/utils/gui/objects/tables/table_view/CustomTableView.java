@@ -309,6 +309,8 @@ public class CustomTableView<
 					createContextMenuTableColumn(columnIndex, sort, filter);
 			tableColumn.setContextMenu(contextMenuTableColumn);
 
+			tableColumn.setCellFactory(param -> new CustomTableCell<>());
+
 			tableColumn.setCellValueFactory(cellDataFeatures -> {
 
 				ObservableValue<Object> observableValue = null;

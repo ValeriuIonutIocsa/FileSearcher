@@ -13,7 +13,9 @@ class AppStartFileSearcherTest {
 		final int input = TestInputUtils.parseTestInputNumber("1");
 		if (input == 1) {
 			args = new String[] {
-					"--npp_exe_path=C:\\IVI\\Apps\\PortableApps\\PortableApps\\Notepad++Portable\\Notepad++Portable.exe"
+					"--rg_exe_path=C:\\IVI\\Apps\\RipGrep\\rg.exe",
+					"--npp_exe_path=C:\\IVI\\Apps\\" +
+							"PortableApps\\PortableApps\\Notepad++Portable\\Notepad++Portable.exe"
 			};
 		} else {
 			throw new RuntimeException();

@@ -1,6 +1,5 @@
 package com.personal.scripts.file_search;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,11 +35,13 @@ import javafx.scene.layout.VBox;
 public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 	private final String searchFolderPathString;
+	private final String rgExePathString;
 	private final String nppExePathString;
 
 	private HBoxTextFieldWithSelectionImpl<SelectionItem> searchPathHBoxTextFieldWithSelection;
 	private HBoxTextFieldWithSelectionImpl<SelectionItem> filePathPatternHBoxTextFieldWithSelection;
 	private HBoxTextFieldWithSelectionImpl<SelectionItem> searchTextHBoxTextFieldWithSelection;
+	private CheckBox caseSensitivePathPatternCheckBox;
 	private CheckBox useRegexCheckBox;
 	private CheckBox caseSensitiveCheckBox;
 	private CheckBox saveHistoryCheckBox;
@@ -58,9 +59,11 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 	VBoxFileSearcher(
 			final String searchFolderPathString,
+			final String rgExePathString,
 			final String nppExePathString) {
 
 		this.searchFolderPathString = searchFolderPathString;
+		this.rgExePathString = rgExePathString;
 		this.nppExePathString = nppExePathString;
 	}
 
@@ -183,9 +186,10 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		if (searchResult != null) {
 
 			final String filePathString = searchResult.createFilePathString();
-			final Charset charset = searchResult.getCharset();
-			new GuiWorkerJumpToFirstOccurrence(getRoot().getScene(),
-					nppExePathString, filePathString, charset, textFinder).start();
+			final int firstOccurrenceRow = searchResult.getFirstOccurrenceRow();
+			final int firstOccurrenceCol = searchResult.getFirstOccurrenceCol();
+			new GuiWorkerJumpToFirstOccurrence(getRoot().getScene(), nppExePathString, filePathString,
+					firstOccurrenceRow, firstOccurrenceCol, textFinder).start();
 		}
 	}
 
@@ -266,10 +270,21 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 		final HBox bottomHBox = LayoutControlsFactories.getInstance().createHBox();
 
+		final Label caseSensitivePathPatternLabel = BasicControlsFactories.getInstance()
+				.createLabel("case sensitive path pattern:", "bold");
+		GuiUtils.addToHBox(bottomHBox, caseSensitivePathPatternLabel,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		caseSensitivePathPatternCheckBox =
+				BasicControlsFactories.getInstance().createCheckBox("");
+		caseSensitivePathPatternCheckBox.setSelected(true);
+		GuiUtils.addToHBox(bottomHBox, caseSensitivePathPatternCheckBox,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
 		final Label useRegexLabel = BasicControlsFactories.getInstance()
 				.createLabel("use regex:", "bold");
 		GuiUtils.addToHBox(bottomHBox, useRegexLabel,
-				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 14);
 
 		useRegexCheckBox =
 				BasicControlsFactories.getInstance().createCheckBox("");
@@ -290,7 +305,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		final Label saveHistoryLabel = BasicControlsFactories.getInstance()
 				.createLabel("save history:", "bold");
 		GuiUtils.addToHBox(bottomHBox, saveHistoryLabel,
-				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 14);
 
 		saveHistoryCheckBox =
 				BasicControlsFactories.getInstance().createCheckBox("");
@@ -317,14 +332,18 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		final String filePathPatternString =
 				filePathPatternHBoxTextFieldWithSelection.computeValue();
 		final String searchText = searchTextHBoxTextFieldWithSelection.computeValue();
+
+		final boolean caseSensitivePathPattern = caseSensitivePathPatternCheckBox.isSelected();
+
 		final boolean useRegex = useRegexCheckBox.isSelected();
 		final boolean caseSensitive = caseSensitiveCheckBox.isSelected();
+
 		final boolean saveHistory = saveHistoryCheckBox.isSelected();
 
 		makeCountsControlsInvisible();
 
-		new GuiWorkerSearch(getRoot().getScene(),
-				searchFolderPathString, filePathPatternString, searchText,
+		new GuiWorkerSearch(getRoot().getScene(), rgExePathString,
+				searchFolderPathString, filePathPatternString, caseSensitivePathPattern, searchText,
 				useRegex, caseSensitive, saveHistory, this).start();
 	}
 

@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.PathMatcher;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -38,13 +40,19 @@ import javafx.scene.Scene;
 
 public class GuiWorkerSearch extends AbstractGuiWorker {
 
+	private final String rgExePathString;
+
 	private final String searchFolderPathString;
+
 	private final String filePathPatternString;
+	private final boolean caseSensitivePathPattern;
+
 	private final String searchText;
 	private final boolean useRegex;
 	private final boolean caseSensitive;
 
 	private final boolean saveHistory;
+
 	private final VBoxFileSearcher vBoxFileSearcher;
 
 	private List<SearchResult> searchResultList;
@@ -54,8 +62,10 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 
 	public GuiWorkerSearch(
 			final Scene scene,
+			final String rgExePathString,
 			final String searchFolderPathString,
 			final String filePathPatternString,
+			final boolean caseSensitivePathPattern,
 			final String searchText,
 			final boolean useRegex,
 			final boolean caseSensitive,
@@ -64,11 +74,17 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 
 		super(scene, new ControlDisablerAll(scene));
 
+		this.rgExePathString = rgExePathString;
+
 		this.searchFolderPathString = searchFolderPathString;
+
 		this.filePathPatternString = filePathPatternString;
+		this.caseSensitivePathPattern = caseSensitivePathPattern;
+
 		this.searchText = searchText;
 		this.useRegex = useRegex;
 		this.caseSensitive = caseSensitive;
+
 		this.saveHistory = saveHistory;
 
 		this.vBoxFileSearcher = vBoxFileSearcher;
@@ -118,41 +134,38 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 							"file path pattern is blank").showAndWait();
 
 				} else {
-					final String filePathPatternString = this.filePathPatternString
-							.replace("*.", ".*\\.").replace("*", ".*");
-					final Pattern filePathPattern =
-							RegexUtils.tryCompile(filePathPatternString, false);
-					if (filePathPattern == null) {
-						new CustomAlertError("invalid file path pattern",
-								"the file path pattern is not a valid pattern").showAndWait();
-
-					} else {
-						workL3(searchFolderPathString, filePathPattern);
-					}
+					workL3();
 				}
 			}
 		}
 	}
 
-	private void workL3(
-			final String searchFolderPathString,
-			final Pattern filePathPattern) {
+	private void workL3() {
 
 		final List<String> dirPathStringList = new ArrayList<>();
 		final List<String> filePathStringList = new ArrayList<>();
-		ListFileUtils.visitFilesRecursively(searchFolderPathString,
-				dirPath -> {
-					final String dirPathString = dirPath.toString();
-					if (filePathPattern.matcher(dirPathString).matches()) {
-						dirPathStringList.add(dirPathString);
-					}
-				},
-				filePath -> {
-					final String filePathString = filePath.toString();
-					if (filePathPattern.matcher(filePathString).matches()) {
-						filePathStringList.add(filePathString);
-					}
-				});
+		final PathMatcher pathMatcher = tryCreatePathMatcher();
+		if (pathMatcher == null) {
+			new CustomAlertError("invalid file path pattern",
+					"the file path pattern is not a valid pattern").showAndWait();
+
+		} else {
+			ListFileUtils.visitFilesRecursively(searchFolderPathString,
+					dirPath -> {
+						if (pathMatcher.matches(dirPath)) {
+
+							final String dirPathString = dirPath.toString();
+							dirPathStringList.add(dirPathString);
+						}
+					},
+					filePath -> {
+						if (pathMatcher.matches(filePath)) {
+
+							final String filePathString = filePath.toString();
+							filePathStringList.add(filePathString);
+						}
+					});
+		}
 
 		searchResultList = new ArrayList<>();
 
@@ -172,6 +185,16 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 
 		fileCount = searchResultList.size();
 		fileContainingTextCount = computeFileContainingTextCount(searchResultList);
+	}
+
+	private PathMatcher tryCreatePathMatcher() {
+
+		PathMatcher pathMatcher = null;
+		try {
+			pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + filePathPatternString);
+		} catch (final Exception ignored) {
+		}
+		return pathMatcher;
 	}
 
 	private static int computeFileContainingTextCount(
@@ -233,16 +256,44 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 			fileSizeString = FileSizeUtils.readableFileSize(filePathString);
 		}
 
-		int count = -1;
-		Charset charset = null;
+		int occurrenceCount = -1;
+		int firstOccurrenceRow = 0;
+		int firstOccurrenceCol = 0;
 		if (!dir && textFinder != null) {
 
-			charset = detectCharset(filePathString);
-			count = computeOccurrenceCount(filePathString, charset, textFinder);
+			occurrenceCount = 0;
+			final Charset charset = detectCharset(filePathString);
+			try (BufferedReader bufferedReader = ReaderUtils.openBufferedReader(filePathString, charset)) {
+
+				String line;
+				int fileRow = 1;
+				while ((line = bufferedReader.readLine()) != null) {
+
+					final int lineOccurrenceCount = textFinder.countOccurrencesInString(line);
+					occurrenceCount += lineOccurrenceCount;
+
+					if (firstOccurrenceRow == 0 && lineOccurrenceCount > 0) {
+
+						final int index = textFinder.findIndexInString(line);
+						if (index >= 0) {
+
+							firstOccurrenceRow = fileRow;
+							firstOccurrenceCol = index + 1;
+						}
+					}
+
+					fileRow++;
+				}
+
+			} catch (final Exception exc) {
+				Logger.printError("failed to compute occurrence count in file:" +
+						System.lineSeparator() + filePathString);
+				Logger.printException(exc);
+			}
 		}
 
 		final SearchResult searchResult = new SearchResult(fileName, folderPathString, extension,
-				lastModifiedInstant, fileSizeString, count, charset);
+				lastModifiedInstant, fileSizeString, occurrenceCount, firstOccurrenceRow, firstOccurrenceCol);
 		searchResultList.add(searchResult);
 	}
 
@@ -271,29 +322,6 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 			charset = StandardCharsets.UTF_8;
 		}
 		return charset;
-	}
-
-	private static int computeOccurrenceCount(
-			final String filePathString,
-			final Charset charset,
-			final TextFinder textFinder) {
-
-		int occurrenceCount = 0;
-		try (BufferedReader bufferedReader = ReaderUtils.openBufferedReader(filePathString, charset)) {
-
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-
-				final int lineOccurrenceCount = textFinder.countOccurrencesInString(line);
-				occurrenceCount += lineOccurrenceCount;
-			}
-
-		} catch (final Exception exc) {
-			Logger.printError("failed to compute occurrence count in file:" +
-					System.lineSeparator() + filePathString);
-			Logger.printException(exc);
-		}
-		return occurrenceCount;
 	}
 
 	@Override
