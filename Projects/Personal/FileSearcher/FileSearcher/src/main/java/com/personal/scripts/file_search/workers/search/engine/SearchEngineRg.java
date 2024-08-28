@@ -45,12 +45,16 @@ public class SearchEngineRg implements SearchEngine {
 			}
 
 			final String filePathPatternString = searchData.filePathPatternString();
+			final String[] globPatternStringArray = StringUtils.split(filePathPatternString.trim(), ' ');
 
 			final String searchFolderPathString = searchData.searchFolderPathString();
 
 			final List<String> commandPartList = new ArrayList<>();
-			Collections.addAll(commandPartList, rgExePathString,
-					globOption, filePathPatternString, "--files", searchFolderPathString);
+			Collections.addAll(commandPartList, rgExePathString);
+			for (final String globPatternString : globPatternStringArray) {
+				Collections.addAll(commandPartList, globOption, globPatternString);
+			}
+			Collections.addAll(commandPartList, "--files", searchFolderPathString);
 
 			Logger.printProgress("executing command:");
 			Logger.printLine(StringUtils.join(commandPartList, ' '));
@@ -105,6 +109,7 @@ public class SearchEngineRg implements SearchEngine {
 			}
 
 			final String filePathPatternString = searchData.filePathPatternString();
+			final String[] globPatternStringArray = StringUtils.split(filePathPatternString.trim(), ' ');
 
 			final String regexOption;
 			final boolean useRegex = searchData.useRegex();
@@ -127,8 +132,12 @@ public class SearchEngineRg implements SearchEngine {
 			final String searchFolderPathString = searchData.searchFolderPathString();
 
 			final List<String> commandPartList = new ArrayList<>();
-			Collections.addAll(commandPartList, rgExePathString, globOption, filePathPatternString,
-					regexOption, caseSensitiveOption, "--count-matches", searchText, searchFolderPathString);
+			Collections.addAll(commandPartList, rgExePathString);
+			for (final String globPatternString : globPatternStringArray) {
+				Collections.addAll(commandPartList, globOption, globPatternString);
+			}
+			Collections.addAll(commandPartList, regexOption, caseSensitiveOption,
+					"--count-matches", "--text", searchText, searchFolderPathString);
 
 			Logger.printProgress("executing command:");
 			Logger.printLine(StringUtils.join(commandPartList, ' '));
@@ -211,7 +220,7 @@ public class SearchEngineRg implements SearchEngine {
 
 			final List<String> commandPartList = new ArrayList<>();
 			Collections.addAll(commandPartList, rgExePathString, regexOption, caseSensitiveOption,
-					"--line-number", "--column", searchText, filePathString);
+					"--text", "--line-number", "--column", searchText, filePathString);
 
 			Logger.printProgress("executing command:");
 			Logger.printLine(StringUtils.join(commandPartList, ' '));
@@ -245,7 +254,11 @@ public class SearchEngineRg implements SearchEngine {
 					final int tmpFirstOccurrenceRow = StrUtils.tryParsePositiveInt(firstOccurrenceRowString);
 
 					final String firstOccurrenceColString = splitPartArray[1];
-					final int tmpFirstOccurrenceCol = StrUtils.tryParsePositiveInt(firstOccurrenceColString);
+					int tmpFirstOccurrenceCol = StrUtils.tryParsePositiveInt(firstOccurrenceColString);
+
+					final String matchedLine = splitPartArray[2];
+					final int tabOccurrenceCount = StringUtils.countMatches(matchedLine, '\t');
+					tmpFirstOccurrenceCol += tabOccurrenceCount * 3;
 
 					if (tmpFirstOccurrenceRow > 0 && tmpFirstOccurrenceCol > 0) {
 

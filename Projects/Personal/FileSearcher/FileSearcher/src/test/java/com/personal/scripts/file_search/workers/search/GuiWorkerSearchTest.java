@@ -51,6 +51,19 @@ class GuiWorkerSearchTest {
 			useRegex = true;
 			caseSensitive = false;
 
+		} else if (input == 3) {
+
+			searchEngineType = SearchEngineType.RG;
+			searchFolderPathString = "D:\\casdev\\gbe\\gbe_dev_repo\\" +
+					"1TGBE-BUILD_PLATFORM\\src\\projects\\VWA22_0U0_B00\\build";
+
+			filePathPatternString = "**/*.o";
+			caseSensitivePathPattern = true;
+
+			searchText = "cro_dbg_trace";
+			useRegex = false;
+			caseSensitive = true;
+
 		} else {
 			throw new RuntimeException();
 		}

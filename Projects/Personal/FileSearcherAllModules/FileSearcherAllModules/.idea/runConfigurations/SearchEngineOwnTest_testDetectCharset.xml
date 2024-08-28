@@ -1,14 +1,14 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" factoryName="JUnit" folderName="FileSearcher" name="GuiWorkerSearchTest.testDetectCharset" nameIsGenerated="true" type="JUnit">
+    <configuration default="false" factoryName="JUnit" folderName="FileSearcher" name="SearchEngineOwnTest.testDetectCharset" nameIsGenerated="true" type="JUnit">
         <module name="FileSearcherAllModules.FileSearcher.test"/>
         <extension name="coverage">
             <pattern>
-                <option name="PATTERN" value="com.personal.scripts.file_search.workers.search.*"/>
+                <option name="PATTERN" value="com.personal.scripts.file_search.workers.search.engine.*"/>
                 <option name="ENABLED" value="true"/>
             </pattern>
         </extension>
-        <option name="PACKAGE_NAME" value="com.personal.scripts.file_search.workers.search"/>
-        <option name="MAIN_CLASS_NAME" value="com.personal.scripts.file_search.workers.search.GuiWorkerSearchTest"/>
+        <option name="PACKAGE_NAME" value="com.personal.scripts.file_search.workers.search.engine"/>
+        <option name="MAIN_CLASS_NAME" value="com.personal.scripts.file_search.workers.search.engine.SearchEngineOwnTest"/>
         <option name="METHOD_NAME" value="testDetectCharset"/>
         <option name="TEST_OBJECT" value="method"/>
         <method v="2">
