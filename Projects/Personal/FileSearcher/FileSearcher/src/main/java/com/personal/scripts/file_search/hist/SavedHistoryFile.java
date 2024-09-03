@@ -20,6 +20,8 @@ public final class SavedHistoryFile {
 	public static final SavedHistoryFile SEARCH_TEXT_SAVED_HISTORY_FILE =
 			new SavedHistoryFile("SearchText");
 
+	private static final int MAX_SAVED_HISTORY_ENTRY_COUNT = 100;
+
 	private final String name;
 
 	private final List<String> savedHistoryEntryList;
@@ -62,7 +64,7 @@ public final class SavedHistoryFile {
 
 		savedHistoryEntryList.remove(savedHistoryEntry);
 		savedHistoryEntryList.addFirst(savedHistoryEntry);
-		if (savedHistoryEntryList.size() > 10) {
+		if (savedHistoryEntryList.size() > MAX_SAVED_HISTORY_ENTRY_COUNT) {
 			savedHistoryEntryList.removeLast();
 		}
 	}
