@@ -32,11 +32,11 @@ public class CustomTableCell<
 
 		super.updateItem(item, empty);
 
-		setPadding(new Insets(0));
+		setPadding(new Insets(2, 0, 0, 0));
 		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
 		final StackPane stackPane =
-				LayoutControlsFactories.getInstance().createStackPane(Pos.CENTER_LEFT);
+				LayoutControlsFactories.getInstance().createStackPane(Pos.TOP_LEFT);
 		setGraphic(stackPane);
 
 		if (empty || item == null) {
@@ -115,7 +115,7 @@ public class CustomTableCell<
 
 	@Override
 	public Pos getTextAlignmentValue() {
-		return Pos.CENTER_LEFT;
+		return Pos.TOP_LEFT;
 	}
 
 	@Override

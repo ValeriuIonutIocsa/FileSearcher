@@ -56,8 +56,12 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 			}
 		}
 
-		final FirstOccurrenceData firstOccurrenceData =
-				searchEngine.parseFirstOccurrenceData(filePathString, textFinder);
+		final FirstOccurrenceData firstOccurrenceData;
+		if (textFinder != null) {
+			firstOccurrenceData = searchEngine.parseFirstOccurrenceData(filePathString, textFinder);
+		} else {
+			firstOccurrenceData = new FirstOccurrenceData(0, 0);
+		}
 		final int firstOccurrenceRow = firstOccurrenceData.firstOccurrenceRow();
 		final int firstOccurrenceCol = firstOccurrenceData.firstOccurrenceCol();
 

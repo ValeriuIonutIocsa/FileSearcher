@@ -54,7 +54,8 @@ public class SearchEngineRg implements SearchEngine {
 			for (final String globPatternString : globPatternStringArray) {
 				Collections.addAll(commandPartList, globOption, globPatternString);
 			}
-			Collections.addAll(commandPartList, "--files", searchFolderPathString);
+			Collections.addAll(commandPartList, "--unrestricted", "--hidden", "--files",
+					searchFolderPathString);
 
 			Logger.printProgress("executing command:");
 			Logger.printLine(StringUtils.join(commandPartList, ' '));
@@ -136,8 +137,9 @@ public class SearchEngineRg implements SearchEngine {
 			for (final String globPatternString : globPatternStringArray) {
 				Collections.addAll(commandPartList, globOption, globPatternString);
 			}
-			Collections.addAll(commandPartList, regexOption, caseSensitiveOption,
-					"--count-matches", "--text", searchText, searchFolderPathString);
+			Collections.addAll(commandPartList, "--unrestricted", "--hidden",
+					regexOption, caseSensitiveOption, "--count-matches", "--text", searchText,
+					searchFolderPathString);
 
 			Logger.printProgress("executing command:");
 			Logger.printLine(StringUtils.join(commandPartList, ' '));

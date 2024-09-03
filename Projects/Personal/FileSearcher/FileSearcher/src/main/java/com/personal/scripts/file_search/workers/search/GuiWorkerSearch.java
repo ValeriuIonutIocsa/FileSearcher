@@ -135,7 +135,9 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 
 		final Map<String, Integer> filePathStringToOccurrenceCountMap = new HashMap<>();
 		textFinder = createTextFinder();
-		searchEngine.searchText(filePathStringList, textFinder, filePathStringToOccurrenceCountMap);
+		if (textFinder != null) {
+			searchEngine.searchText(filePathStringList, textFinder, filePathStringToOccurrenceCountMap);
+		}
 
 		searchResultList = new ArrayList<>();
 		for (final String dirPathString : dirPathStringList) {

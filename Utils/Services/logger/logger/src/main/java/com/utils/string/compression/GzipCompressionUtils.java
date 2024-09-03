@@ -7,9 +7,9 @@ import java.util.zip.GZIPOutputStream;
 
 import com.utils.annotations.ApiMethod;
 
-public final class GzipCompressionUtils {
+public final class GZipCompressionUtils {
 
-	private GzipCompressionUtils() {
+	private GZipCompressionUtils() {
 	}
 
 	@ApiMethod

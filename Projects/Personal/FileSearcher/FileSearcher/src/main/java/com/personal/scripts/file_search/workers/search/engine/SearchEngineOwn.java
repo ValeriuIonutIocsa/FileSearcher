@@ -83,27 +83,22 @@ public class SearchEngineOwn implements SearchEngine {
 
 		for (final String filePathString : filePathStringList) {
 
-			int occurrenceCount = -1;
-			if (textFinder != null) {
+			int occurrenceCount = 0;
+			final Charset charset = detectCharset(filePathString);
+			try (BufferedReader bufferedReader = ReaderUtils.openBufferedReader(filePathString, charset)) {
 
-				occurrenceCount = 0;
-				final Charset charset = detectCharset(filePathString);
-				try (BufferedReader bufferedReader = ReaderUtils.openBufferedReader(filePathString, charset)) {
+				String line;
+				while ((line = bufferedReader.readLine()) != null) {
 
-					String line;
-					while ((line = bufferedReader.readLine()) != null) {
-
-						final int lineOccurrenceCount = textFinder.countOccurrencesInString(line);
-						occurrenceCount += lineOccurrenceCount;
-					}
-
-				} catch (final Exception exc) {
-					Logger.printError("failed to compute occurrence count in file:" +
-							System.lineSeparator() + filePathString);
-					Logger.printException(exc);
+					final int lineOccurrenceCount = textFinder.countOccurrencesInString(line);
+					occurrenceCount += lineOccurrenceCount;
 				}
-			}
 
+			} catch (final Exception exc) {
+				Logger.printError("failed to compute occurrence count in file:" +
+						System.lineSeparator() + filePathString);
+				Logger.printException(exc);
+			}
 			filePathStringToOccurrenceCountMap.put(filePathString, occurrenceCount);
 		}
 	}
