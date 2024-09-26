@@ -16,6 +16,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.utils.annotations.ApiMethod;
+import com.utils.io.file_deleters.FactoryFileDeleter;
 import com.utils.io.processes.InputStreamReaderThread;
 import com.utils.io.processes.ReadBytesHandlerLinesPrint;
 import com.utils.log.Logger;
@@ -257,7 +258,7 @@ public final class IoUtils {
 		boolean success = false;
 		try {
 			final Process process = new ProcessBuilder()
-					.command("cmd", "/c", "start", filePathString)
+					.command("cmd", "/c", "start", "open file with default app", filePathString)
 					.redirectErrorStream(true)
 					.start();
 
@@ -277,5 +278,36 @@ public final class IoUtils {
 			Logger.printException(exc);
 		}
 		return success;
+	}
+
+	@ApiMethod
+	public static void selectFileInExplorer(
+			final String filePathString,
+			final String appFolderPathString) {
+
+		String tmpBatFilePathString = null;
+		try {
+			final String pathDateTimeString = StrUtils.createPathDateTimeString();
+			tmpBatFilePathString =
+					PathUtils.computePath(appFolderPathString, pathDateTimeString + ".bat");
+
+			WriterUtils.tryStringToFile("start explorer /select,\"" + filePathString + "\"",
+					StandardCharsets.UTF_8, tmpBatFilePathString);
+
+			final Process process = new ProcessBuilder()
+					.command("cmd", "/c", tmpBatFilePathString)
+					.inheritIO()
+					.start();
+			process.waitFor();
+
+		} catch (final Exception exc) {
+			Logger.printError("failed to select file in explorer");
+			Logger.printException(exc);
+
+		} finally {
+			if (IoUtils.fileExists(tmpBatFilePathString)) {
+				FactoryFileDeleter.getInstance().deleteFile(tmpBatFilePathString, false, true);
+			}
+		}
 	}
 }

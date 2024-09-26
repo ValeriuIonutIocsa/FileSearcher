@@ -19,8 +19,6 @@ public record DataInfo(
 	@Serial
 	private static final long serialVersionUID = 3078827620097666118L;
 
-	public static final int DEFAULT_TOTAL_COLUMN_WIDTH = 54_000;
-
 	public DataInfo cloneOtherDisplayName(
 			final String displayName) {
 
