@@ -37,23 +37,23 @@ public final class SavedHistoryFile {
 	public void parse() {
 
 		savedHistoryEntryList.clear();
-		final String savedHistoryFilePathString = computeSavedHistoryFilePathString();
-		if (IoUtils.fileExists(savedHistoryFilePathString)) {
+		final String filePathString = createFilePathString();
+		if (IoUtils.fileExists(filePathString)) {
 
 			final List<String> lineList =
-					ReaderUtils.tryFileToLineList(savedHistoryFilePathString, StandardCharsets.UTF_8);
+					ReaderUtils.tryFileToLineList(filePathString, StandardCharsets.UTF_8);
 			savedHistoryEntryList.addAll(lineList);
 		}
 	}
 
 	public void save() {
 
-		final String savedHistoryFilePathString = computeSavedHistoryFilePathString();
-		WriterUtils.tryLineListToFile(savedHistoryEntryList, StandardCharsets.UTF_8,
-				savedHistoryFilePathString);
+		final String filePathString = createFilePathString();
+		WriterUtils.tryLineListToFile(savedHistoryEntryList,
+				StandardCharsets.UTF_8, filePathString);
 	}
 
-	private String computeSavedHistoryFilePathString() {
+	private String createFilePathString() {
 
 		final String savedHistoryFolderPathString = FileSearcherUtils.createAppFolderPathString();
 		return PathUtils.computePath(savedHistoryFolderPathString, name + "SavedHistory.txt");

@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import com.personal.scripts.file_search.hist.SavedHistoryFile;
+import com.personal.scripts.file_search.hist.SavedOptionsFile;
 import com.personal.scripts.file_search.text_find.TextFinder;
 import com.personal.scripts.file_search.workers.jump.GuiWorkerJumpToFirstOccurrence;
 import com.personal.scripts.file_search.workers.search.GuiWorkerSearch;
@@ -282,7 +283,8 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 		searchEngineTypeComboBox = BasicControlsFactories.getInstance().createComboBox();
 		searchEngineTypeComboBox.getItems().addAll(SearchEngineType.values());
-		searchEngineTypeComboBox.getSelectionModel().selectLast();
+		final SearchEngineType searchEngineType = SavedOptionsFile.INSTANCE.getSearchEngineType();
+		searchEngineTypeComboBox.getSelectionModel().select(searchEngineType);
 		GuiUtils.addToHBox(bottomHBox, searchEngineTypeComboBox,
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
@@ -293,7 +295,9 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 		caseSensitivePathPatternCheckBox =
 				BasicControlsFactories.getInstance().createCheckBox("");
-		caseSensitivePathPatternCheckBox.setSelected(true);
+		final boolean caseSensitivePathPattern =
+				SavedOptionsFile.INSTANCE.isCaseSensitivePathPattern();
+		caseSensitivePathPatternCheckBox.setSelected(caseSensitivePathPattern);
 		GuiUtils.addToHBox(bottomHBox, caseSensitivePathPatternCheckBox,
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
@@ -304,6 +308,8 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 		useRegexCheckBox =
 				BasicControlsFactories.getInstance().createCheckBox("");
+		final boolean useRegex = SavedOptionsFile.INSTANCE.isUseRegex();
+		useRegexCheckBox.setSelected(useRegex);
 		GuiUtils.addToHBox(bottomHBox, useRegexCheckBox,
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
@@ -314,7 +320,8 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 		caseSensitiveCheckBox =
 				BasicControlsFactories.getInstance().createCheckBox("");
-		caseSensitiveCheckBox.setSelected(true);
+		final boolean caseSensitive = SavedOptionsFile.INSTANCE.isCaseSensitive();
+		caseSensitiveCheckBox.setSelected(caseSensitive);
 		GuiUtils.addToHBox(bottomHBox, caseSensitiveCheckBox,
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 

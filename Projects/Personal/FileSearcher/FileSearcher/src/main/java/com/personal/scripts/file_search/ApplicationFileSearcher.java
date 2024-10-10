@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.personal.scripts.file_search.app_info.FileSearcherAppInfoUtils;
 import com.personal.scripts.file_search.hist.SavedHistoryFile;
+import com.personal.scripts.file_search.hist.SavedOptionsFile;
 import com.utils.app_info.AppInfo;
 import com.utils.cli.CliUtils;
 import com.utils.gui.GuiUtils;
@@ -41,6 +42,8 @@ public class ApplicationFileSearcher extends Application {
 		if (debug) {
 			Logger.setDebugMode(true);
 		}
+
+		SavedOptionsFile.INSTANCE.parse();
 
 		SavedHistoryFile.SEARCH_PATH_SAVED_HISTORY_FILE.parse();
 		SavedHistoryFile.FILE_PATH_PATTERN_SAVED_HISTORY_FILE.parse();

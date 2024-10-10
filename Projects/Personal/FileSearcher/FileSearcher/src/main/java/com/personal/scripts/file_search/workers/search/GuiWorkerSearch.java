@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.personal.scripts.file_search.FileSearcherUtils;
 import com.personal.scripts.file_search.VBoxFileSearcher;
 import com.personal.scripts.file_search.hist.SavedHistoryFile;
+import com.personal.scripts.file_search.hist.SavedOptionsFile;
 import com.personal.scripts.file_search.text_find.TextFinder;
 import com.personal.scripts.file_search.text_find.TextFinderRegex;
 import com.personal.scripts.file_search.text_find.TextFinderRegular;
@@ -65,6 +66,20 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 
 		Logger.printNewLine();
 		Logger.printProgress("starting search");
+
+		final SearchEngineType searchEngineType = searchData.searchEngineType();
+		SavedOptionsFile.INSTANCE.setSearchEngineType(searchEngineType);
+
+		final boolean caseSensitivePathPattern = searchData.caseSensitivePathPattern();
+		SavedOptionsFile.INSTANCE.setCaseSensitivePathPattern(caseSensitivePathPattern);
+
+		final boolean useRegex = searchData.useRegex();
+		SavedOptionsFile.INSTANCE.setUseRegex(useRegex);
+
+		final boolean caseSensitive = searchData.caseSensitive();
+		SavedOptionsFile.INSTANCE.setCaseSensitive(caseSensitive);
+
+		SavedOptionsFile.INSTANCE.save();
 
 		if (saveHistory) {
 
