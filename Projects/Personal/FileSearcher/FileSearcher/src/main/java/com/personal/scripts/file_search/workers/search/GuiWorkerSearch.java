@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.personal.scripts.file_search.ControlDisablerFileSearcher;
 import com.personal.scripts.file_search.FileSearcherUtils;
 import com.personal.scripts.file_search.VBoxFileSearcher;
 import com.personal.scripts.file_search.hist.SavedHistoryFile;
@@ -24,7 +25,6 @@ import com.personal.scripts.file_search.workers.search.engine.SearchEngineRg;
 import com.personal.scripts.file_search.workers.search.engine.type.SearchEngineType;
 import com.utils.gui.alerts.CustomAlertError;
 import com.utils.gui.workers.AbstractGuiWorker;
-import com.utils.gui.workers.ControlDisablerAll;
 import com.utils.io.FileSizeUtils;
 import com.utils.io.IoUtils;
 import com.utils.io.PathUtils;
@@ -37,6 +37,7 @@ import javafx.scene.Scene;
 public class GuiWorkerSearch extends AbstractGuiWorker {
 
 	private final SearchData searchData;
+	private final RunningProcesses runningProcesses;
 	private final boolean saveHistory;
 
 	private final VBoxFileSearcher vBoxFileSearcher;
@@ -51,11 +52,13 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 			final Scene scene,
 			final SearchData searchData,
 			final boolean saveHistory,
+			final RunningProcesses runningProcesses,
 			final VBoxFileSearcher vBoxFileSearcher) {
 
-		super(scene, new ControlDisablerAll(scene));
+		super(scene, new ControlDisablerFileSearcher(scene, vBoxFileSearcher));
 
 		this.searchData = searchData;
+		this.runningProcesses = runningProcesses;
 		this.saveHistory = saveHistory;
 
 		this.vBoxFileSearcher = vBoxFileSearcher;
@@ -146,12 +149,14 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 		} else {
 			searchEngine = new SearchEngineOwn(searchData);
 		}
-		searchEngine.parseFilePaths(dirPathStringList, filePathStringList);
+		searchEngine.parseFilePaths(dirPathStringList, filePathStringList, runningProcesses);
 
 		final Map<String, Integer> filePathStringToOccurrenceCountMap = new HashMap<>();
 		textFinder = createTextFinder();
 		if (textFinder != null) {
-			searchEngine.searchText(filePathStringList, textFinder, filePathStringToOccurrenceCountMap);
+
+			searchEngine.searchText(filePathStringList, textFinder,
+					filePathStringToOccurrenceCountMap, runningProcesses);
 		}
 
 		searchResultList = new ArrayList<>();

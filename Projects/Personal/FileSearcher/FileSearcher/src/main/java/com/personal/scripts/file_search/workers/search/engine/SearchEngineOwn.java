@@ -14,6 +14,7 @@ import org.apache.tika.parser.txt.CharsetDetector;
 import org.apache.tika.parser.txt.CharsetMatch;
 
 import com.personal.scripts.file_search.text_find.TextFinder;
+import com.personal.scripts.file_search.workers.search.RunningProcesses;
 import com.personal.scripts.file_search.workers.search.SearchData;
 import com.personal.scripts.file_search.workers.search.engine.data.FirstOccurrenceData;
 import com.utils.gui.alerts.CustomAlertError;
@@ -36,7 +37,8 @@ public class SearchEngineOwn implements SearchEngine {
 	@Override
 	public void parseFilePaths(
 			final List<String> dirPathStringList,
-			final List<String> filePathStringList) {
+			final List<String> filePathStringList,
+			final RunningProcesses runningProcesses) {
 
 		final String filePathPatternString = searchData.filePathPatternString();
 		final PathMatcher pathMatcher = tryCreatePathMatcher(filePathPatternString);
@@ -79,7 +81,8 @@ public class SearchEngineOwn implements SearchEngine {
 	public void searchText(
 			final List<String> filePathStringList,
 			final TextFinder textFinder,
-			final Map<String, Integer> filePathStringToOccurrenceCountMap) {
+			final Map<String, Integer> filePathStringToOccurrenceCountMap,
+			final RunningProcesses runningProcesses) {
 
 		for (final String filePathString : filePathStringList) {
 
@@ -133,7 +136,8 @@ public class SearchEngineOwn implements SearchEngine {
 	@Override
 	public FirstOccurrenceData parseFirstOccurrenceData(
 			final String filePathString,
-			final TextFinder textFinder) {
+			final TextFinder textFinder,
+			final RunningProcesses runningProcesses) {
 
 		int firstOccurrenceRow = 0;
 		int firstOccurrenceCol = 0;

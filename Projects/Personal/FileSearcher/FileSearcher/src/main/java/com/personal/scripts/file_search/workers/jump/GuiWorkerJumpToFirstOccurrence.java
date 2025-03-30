@@ -6,13 +6,15 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.personal.scripts.file_search.ControlDisablerFileSearcher;
+import com.personal.scripts.file_search.VBoxFileSearcher;
 import com.personal.scripts.file_search.text_find.TextFinder;
+import com.personal.scripts.file_search.workers.search.RunningProcesses;
 import com.personal.scripts.file_search.workers.search.engine.SearchEngine;
 import com.personal.scripts.file_search.workers.search.engine.data.FirstOccurrenceData;
 import com.utils.gui.alerts.CustomAlertError;
 import com.utils.gui.clipboard.ClipboardUtils;
 import com.utils.gui.workers.AbstractGuiWorker;
-import com.utils.gui.workers.ControlDisablerAll;
 import com.utils.log.Logger;
 
 import javafx.scene.Scene;
@@ -24,21 +26,25 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 	private final String filePathString;
 	private final SearchEngine searchEngine;
 	private final TextFinder textFinder;
+	private final RunningProcesses runningProcesses;
 
 	public GuiWorkerJumpToFirstOccurrence(
 			final Scene scene,
 			final String nppExePathString,
 			final String filePathString,
 			final SearchEngine searchEngine,
-			final TextFinder textFinder) {
+			final TextFinder textFinder,
+			final RunningProcesses runningProcesses,
+			final VBoxFileSearcher vBoxFileSearcher) {
 
-		super(scene, new ControlDisablerAll(scene));
+		super(scene, new ControlDisablerFileSearcher(scene, vBoxFileSearcher));
 
 		this.nppExePathString = nppExePathString;
 
 		this.filePathString = filePathString;
 		this.searchEngine = searchEngine;
 		this.textFinder = textFinder;
+		this.runningProcesses = runningProcesses;
 	}
 
 	@Override
@@ -58,7 +64,8 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 
 		final FirstOccurrenceData firstOccurrenceData;
 		if (textFinder != null) {
-			firstOccurrenceData = searchEngine.parseFirstOccurrenceData(filePathString, textFinder);
+			firstOccurrenceData = searchEngine
+					.parseFirstOccurrenceData(filePathString, textFinder, runningProcesses);
 		} else {
 			firstOccurrenceData = new FirstOccurrenceData(0, 0);
 		}

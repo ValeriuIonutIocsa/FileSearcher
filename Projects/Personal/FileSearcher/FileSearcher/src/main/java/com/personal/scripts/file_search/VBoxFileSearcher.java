@@ -10,6 +10,7 @@ import com.personal.scripts.file_search.hist.SavedOptionsFile;
 import com.personal.scripts.file_search.text_find.TextFinder;
 import com.personal.scripts.file_search.workers.jump.GuiWorkerJumpToFirstOccurrence;
 import com.personal.scripts.file_search.workers.search.GuiWorkerSearch;
+import com.personal.scripts.file_search.workers.search.RunningProcesses;
 import com.personal.scripts.file_search.workers.search.SearchData;
 import com.personal.scripts.file_search.workers.search.SearchResult;
 import com.personal.scripts.file_search.workers.search.engine.SearchEngine;
@@ -25,6 +26,8 @@ import com.utils.gui.objects.tables.table_view.CustomTableView;
 import com.utils.string.StrUtils;
 
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -53,6 +56,8 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 	private CheckBox caseSensitiveCheckBox;
 	private CheckBox saveHistoryCheckBox;
 
+	private Button stopButton;
+
 	private CustomTableView<SearchResult> customTableView;
 
 	private Label fileCountLabel;
@@ -65,6 +70,8 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 	private SearchEngine searchEngine;
 	private TextFinder textFinder;
 
+	private final RunningProcesses runningProcesses;
+
 	VBoxFileSearcher(
 			final String searchFolderPathString,
 			final String rgExePathString,
@@ -73,6 +80,8 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		this.searchFolderPathString = searchFolderPathString;
 		this.rgExePathString = rgExePathString;
 		this.nppExePathString = nppExePathString;
+
+		runningProcesses = new RunningProcesses();
 	}
 
 	@Override
@@ -195,7 +204,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 			final String filePathString = searchResult.createFilePathString();
 			new GuiWorkerJumpToFirstOccurrence(getRoot().getScene(),
-					nppExePathString, filePathString, searchEngine, textFinder).start();
+					nppExePathString, filePathString, searchEngine, textFinder, runningProcesses, this).start();
 		}
 	}
 
@@ -343,6 +352,11 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 				BasicControlsFactories.getInstance().createButton("Search");
 		searchButton.setOnAction(event -> search());
 		GuiUtils.addToHBox(bottomHBox, searchButton,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		stopButton = BasicControlsFactories.getInstance().createButton("Stop");
+		stopButton.setOnAction(event -> stop());
+		GuiUtils.addToHBox(bottomHBox, stopButton,
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 7, 0, 7);
 
 		return bottomHBox;
@@ -356,7 +370,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 		makeCountsControlsInvisible();
 
-		new GuiWorkerSearch(getRoot().getScene(), searchData, saveHistory, this).start();
+		new GuiWorkerSearch(getRoot().getScene(), searchData, saveHistory, runningProcesses, this).start();
 	}
 
 	private SearchData createSearchData() {
@@ -387,6 +401,27 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		fileCountTextField.setVisible(false);
 		fileContainingTextCountLabel.setVisible(false);
 		fileContainingTextCountTextField.setVisible(false);
+	}
+
+	void enableStopSearchButton() {
+
+		enableNodeRec(stopButton);
+	}
+
+	private static void enableNodeRec(
+			final Node node) {
+
+		node.setDisable(false);
+
+		final Parent parent = node.getParent();
+		if (parent != null) {
+			enableNodeRec(parent);
+		}
+	}
+
+	private void stop() {
+
+		runningProcesses.stop();
 	}
 
 	public void updateSearchResults(

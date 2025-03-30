@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import com.personal.scripts.file_search.text_find.TextFinder;
+import com.personal.scripts.file_search.workers.search.RunningProcesses;
 import com.personal.scripts.file_search.workers.search.SearchData;
 import com.personal.scripts.file_search.workers.search.engine.data.FirstOccurrenceData;
 import com.utils.gui.alerts.CustomAlertError;
@@ -30,7 +31,8 @@ public class SearchEngineRg implements SearchEngine {
 	@Override
 	public void parseFilePaths(
 			final List<String> dirPathStringList,
-			final List<String> filePathStringList) {
+			final List<String> filePathStringList,
+			final RunningProcesses runningProcesses) {
 
 		try {
 			final List<String> commandPartList = new ArrayList<>();
@@ -71,6 +73,7 @@ public class SearchEngineRg implements SearchEngine {
 			final Process process = new ProcessBuilder()
 					.command(commandPartList)
 					.start();
+			runningProcesses.setRunningProcess(process);
 
 			final InputStreamReaderThread inputStreamReaderThread = new InputStreamReaderThread(
 					"rg parse file paths input stream reader", process.getInputStream(),
@@ -89,14 +92,22 @@ public class SearchEngineRg implements SearchEngine {
 			errorInputStreamReaderThread.join();
 
 			if (exitCode != 0) {
-				new CustomAlertError("failed to parse file paths",
-						"parse file paths command exited with non-zero code").showAndWait();
+
+				final boolean processStopped = runningProcesses.isProcessStopped();
+				if (!processStopped) {
+
+					new CustomAlertError("failed to parse file paths",
+							"parse file paths command exited with non-zero code").showAndWait();
+				}
 			}
 
 		} catch (final Exception exc) {
 			Logger.printException(exc);
 			new CustomAlertException("failed to parse file paths",
 					"error occurred while parsing file paths", exc).showAndWait();
+
+		} finally {
+			runningProcesses.setRunningProcess(null);
 		}
 	}
 
@@ -104,7 +115,8 @@ public class SearchEngineRg implements SearchEngine {
 	public void searchText(
 			final List<String> filePathStringList,
 			final TextFinder textFinder,
-			final Map<String, Integer> filePathStringToOccurrenceCountMap) {
+			final Map<String, Integer> filePathStringToOccurrenceCountMap,
+			final RunningProcesses runningProcesses) {
 
 		try {
 			final List<String> commandPartList = new ArrayList<>();
@@ -169,6 +181,7 @@ public class SearchEngineRg implements SearchEngine {
 			final Process process = new ProcessBuilder()
 					.command(commandPartList)
 					.start();
+			runningProcesses.setRunningProcess(process);
 
 			final InputStreamReaderThread inputStreamReaderThread = new InputStreamReaderThread(
 					"rg search text input stream reader", process.getInputStream(),
@@ -187,21 +200,30 @@ public class SearchEngineRg implements SearchEngine {
 			errorInputStreamReaderThread.join();
 
 			if (exitCode != 0) {
-				new CustomAlertError("failed to search text in files",
-						"search text in files command exited with non-zero code").showAndWait();
+
+				final boolean processStopped = runningProcesses.isProcessStopped();
+				if (!processStopped) {
+
+					new CustomAlertError("failed to search text in files",
+							"search text in files command exited with non-zero code").showAndWait();
+				}
 			}
 
 		} catch (final Exception exc) {
 			Logger.printException(exc);
 			new CustomAlertException("failed to search text in files",
 					"error occurred while searching for text in files", exc).showAndWait();
+
+		} finally {
+			runningProcesses.setRunningProcess(null);
 		}
 	}
 
 	@Override
 	public FirstOccurrenceData parseFirstOccurrenceData(
 			final String filePathString,
-			final TextFinder textFinder) {
+			final TextFinder textFinder,
+			final RunningProcesses runningProcesses) {
 
 		int firstOccurrenceRow = 0;
 		int firstOccurrenceCol = 0;
@@ -250,6 +272,7 @@ public class SearchEngineRg implements SearchEngine {
 			final Process process = new ProcessBuilder()
 					.command(commandPartList)
 					.start();
+			runningProcesses.setRunningProcess(process);
 
 			final ReadBytesHandlerLinesRgParseFirstOccurrenceData readBytesHandlerLinesRgParseFirstOccurrenceData =
 					new ReadBytesHandlerLinesRgParseFirstOccurrenceData();
@@ -273,8 +296,13 @@ public class SearchEngineRg implements SearchEngine {
 			firstOccurrenceCol = readBytesHandlerLinesRgParseFirstOccurrenceData.getFirstOccurrenceCol();
 
 			if (exitCode != 0) {
-				new CustomAlertError("failed to find first occurrence in file",
-						"find first occurrence in file command exited with non-zero code").showAndWait();
+
+				final boolean processStopped = runningProcesses.isProcessStopped();
+				if (!processStopped) {
+
+					new CustomAlertError("failed to find first occurrence in file",
+							"find first occurrence in file command exited with non-zero code").showAndWait();
+				}
 			}
 
 		} catch (final Exception exc) {
@@ -282,7 +310,11 @@ public class SearchEngineRg implements SearchEngine {
 			new CustomAlertException("failed to find first occurrence in file",
 					"error occurred while searching for first text occurrence " +
 							"in file:" + System.lineSeparator() + filePathString, exc).showAndWait();
+
+		} finally {
+			runningProcesses.setRunningProcess(null);
 		}
+
 		return new FirstOccurrenceData(firstOccurrenceRow, firstOccurrenceCol);
 	}
 }

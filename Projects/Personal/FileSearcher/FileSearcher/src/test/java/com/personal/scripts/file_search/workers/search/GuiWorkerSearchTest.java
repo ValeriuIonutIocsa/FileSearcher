@@ -108,7 +108,8 @@ class GuiWorkerSearchTest {
 				searchFolderPathString, filePathPatternString, caseSensitivePathPattern,
 				searchText, useRegex, caseSensitive);
 
-		final GuiWorkerSearch guiWorkerSearch = new GuiWorkerSearch(null, searchData, false, null);
+		final GuiWorkerSearch guiWorkerSearch = new GuiWorkerSearch(null, searchData, false,
+				new RunningProcesses(), null);
 		guiWorkerSearch.workL2();
 
 		Logger.printNewLine();
