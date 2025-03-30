@@ -7,9 +7,9 @@ import com.utils.string.StrUtils;
 
 class ReadBytesHandlerLinesRgParseFirstOccurrenceData extends AbstractReadBytesHandlerLines {
 
+	private boolean foundFirstOccurrence;
 	private int firstOccurrenceRow;
 	private int firstOccurrenceCol;
-	private boolean foundFirstOccurrence;
 
 	ReadBytesHandlerLinesRgParseFirstOccurrenceData() {
 	}
@@ -35,12 +35,16 @@ class ReadBytesHandlerLinesRgParseFirstOccurrenceData extends AbstractReadBytesH
 
 				if (tmpFirstOccurrenceRow > 0 && tmpFirstOccurrenceCol > 0) {
 
+					foundFirstOccurrence = true;
 					firstOccurrenceRow = tmpFirstOccurrenceRow;
 					firstOccurrenceCol = tmpFirstOccurrenceCol;
-					foundFirstOccurrence = true;
 				}
 			}
 		}
+	}
+
+	boolean isFoundFirstOccurrence() {
+		return foundFirstOccurrence;
 	}
 
 	int getFirstOccurrenceRow() {

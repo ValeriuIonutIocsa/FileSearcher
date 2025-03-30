@@ -260,7 +260,7 @@ public class SearchEngineRg implements SearchEngine {
 			searchText = searchText.replace("\"", "\"\"");
 			commandPartList.add(searchText);
 			final String escapedSearchText = "\"" + searchText + "\"";
-			commandPartList.add(escapedSearchText);
+			escapedCommandPartList.add(escapedSearchText);
 
 			commandPartList.add(filePathString);
 			final String escapedFilePathString = "\"" + filePathString + "\"";
@@ -292,9 +292,6 @@ public class SearchEngineRg implements SearchEngine {
 			inputStreamReaderThread.join();
 			errorInputStreamReaderThread.join();
 
-			firstOccurrenceRow = readBytesHandlerLinesRgParseFirstOccurrenceData.getFirstOccurrenceRow();
-			firstOccurrenceCol = readBytesHandlerLinesRgParseFirstOccurrenceData.getFirstOccurrenceCol();
-
 			if (exitCode != 0) {
 
 				final boolean processStopped = runningProcesses.isProcessStopped();
@@ -303,7 +300,19 @@ public class SearchEngineRg implements SearchEngine {
 					new CustomAlertError("failed to find first occurrence in file",
 							"find first occurrence in file command exited with non-zero code").showAndWait();
 				}
+
+			} else {
+				final boolean foundFirstOccurrence =
+						readBytesHandlerLinesRgParseFirstOccurrenceData.isFoundFirstOccurrence();
+				if (!foundFirstOccurrence) {
+
+					new CustomAlertError("failed to find first occurrence in file",
+							"no first occurrence found in file").showAndWait();
+				}
 			}
+
+			firstOccurrenceRow = readBytesHandlerLinesRgParseFirstOccurrenceData.getFirstOccurrenceRow();
+			firstOccurrenceCol = readBytesHandlerLinesRgParseFirstOccurrenceData.getFirstOccurrenceCol();
 
 		} catch (final Exception exc) {
 			Logger.printException(exc);
