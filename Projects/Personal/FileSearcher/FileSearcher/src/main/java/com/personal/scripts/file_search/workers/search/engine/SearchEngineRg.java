@@ -91,10 +91,10 @@ public class SearchEngineRg implements SearchEngine {
 			inputStreamReaderThread.join();
 			errorInputStreamReaderThread.join();
 
-			if (exitCode != 0) {
+			final boolean processStopped = runningProcesses.isProcessStopped();
+			if (!processStopped) {
 
-				final boolean processStopped = runningProcesses.isProcessStopped();
-				if (!processStopped) {
+				if (exitCode != 0) {
 
 					new CustomAlertError("failed to parse file paths",
 							"parse file paths command exited with non-zero code").showAndWait();
@@ -199,11 +199,10 @@ public class SearchEngineRg implements SearchEngine {
 			inputStreamReaderThread.join();
 			errorInputStreamReaderThread.join();
 
-			if (exitCode != 0) {
+			final boolean processStopped = runningProcesses.isProcessStopped();
+			if (!processStopped) {
 
-				final boolean processStopped = runningProcesses.isProcessStopped();
-				if (!processStopped) {
-
+				if (exitCode != 0) {
 					new CustomAlertError("failed to search text in files",
 							"search text in files command exited with non-zero code").showAndWait();
 				}
@@ -292,22 +291,21 @@ public class SearchEngineRg implements SearchEngine {
 			inputStreamReaderThread.join();
 			errorInputStreamReaderThread.join();
 
-			if (exitCode != 0) {
+			final boolean processStopped = runningProcesses.isProcessStopped();
+			if (!processStopped) {
 
-				final boolean processStopped = runningProcesses.isProcessStopped();
-				if (!processStopped) {
-
+				if (exitCode != 0) {
 					new CustomAlertError("failed to find first occurrence in file",
 							"find first occurrence in file command exited with non-zero code").showAndWait();
-				}
 
-			} else {
-				final boolean foundFirstOccurrence =
-						readBytesHandlerLinesRgParseFirstOccurrenceData.isFoundFirstOccurrence();
-				if (!foundFirstOccurrence) {
+				} else {
+					final boolean foundFirstOccurrence =
+							readBytesHandlerLinesRgParseFirstOccurrenceData.isFoundFirstOccurrence();
+					if (!foundFirstOccurrence) {
 
-					new CustomAlertError("failed to find first occurrence in file",
-							"no first occurrence found in file").showAndWait();
+						new CustomAlertError("failed to find first occurrence in file",
+								"no first occurrence found in file").showAndWait();
+					}
 				}
 			}
 
