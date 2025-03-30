@@ -1,9 +1,9 @@
 package com.utils.data_types.data_items;
 
-import java.io.PrintStream;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.utils.json.JsonWriter;
 import com.utils.xml.stax.XmlStAXWriter;
 
 public interface DataItem<
@@ -23,11 +23,16 @@ public interface DataItem<
 			String columnName,
 			boolean notLastAttribute,
 			int indentCount,
-			PrintStream printStream);
+			JsonWriter jsonWriter);
 
 	void writeToXml(
 			XmlStAXWriter xmlStAXWriter,
 			String columnTitleName);
 
 	ObjectT createXlsxValue();
+
+	void setIndent(
+			short indent);
+
+	short getIndent();
 }

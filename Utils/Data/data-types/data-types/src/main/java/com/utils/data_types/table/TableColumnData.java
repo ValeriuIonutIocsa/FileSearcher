@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class TableColumnData implements Serializable {
 
 	@Serial
-    private static final long serialVersionUID = 1248266274147407246L;
+	private static final long serialVersionUID = 1248266274147407246L;
 
 	private final String name;
 	private final String serializeName;

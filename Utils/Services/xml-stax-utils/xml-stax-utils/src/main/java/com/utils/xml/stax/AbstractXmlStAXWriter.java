@@ -115,9 +115,28 @@ public abstract class AbstractXmlStAXWriter implements XmlStAXWriter {
 		return success;
 	}
 
+	@Override
+	public boolean writeXmlWithoutClosing() {
+
+		boolean success = false;
+		if (xmlEventWriter != null) {
+
+			try {
+				write();
+				success = true;
+
+			} catch (final Exception exc) {
+				Logger.printError("failed to write XML file");
+				Logger.printException(exc);
+			}
+		}
+		return success;
+	}
+
 	protected abstract void write();
 
-	private void closeStreams() {
+	@Override
+	public void closeStreams() {
 
 		try {
 			xmlEventWriter.close();

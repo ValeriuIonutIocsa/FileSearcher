@@ -11,6 +11,9 @@ public interface XmlStAXWriter {
 	boolean writeXml();
 
 	@ApiMethod
+	boolean writeXmlWithoutClosing();
+
+	@ApiMethod
 	void writeStartDocument();
 
 	@ApiMethod
@@ -56,4 +59,6 @@ public interface XmlStAXWriter {
 
 	@ApiMethod
 	void flush();
+
+	void closeStreams();
 }

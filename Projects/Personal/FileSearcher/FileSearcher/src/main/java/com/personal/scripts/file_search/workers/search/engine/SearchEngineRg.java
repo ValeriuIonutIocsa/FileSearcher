@@ -11,12 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 import com.personal.scripts.file_search.text_find.TextFinder;
 import com.personal.scripts.file_search.workers.search.SearchData;
 import com.personal.scripts.file_search.workers.search.engine.data.FirstOccurrenceData;
+import com.utils.gui.alerts.CustomAlertError;
 import com.utils.gui.alerts.CustomAlertException;
 import com.utils.io.processes.InputStreamReaderThread;
-import com.utils.io.processes.ReadBytesHandlerLinesCollect;
 import com.utils.io.processes.ReadBytesHandlerLinesPrint;
 import com.utils.log.Logger;
-import com.utils.string.StrUtils;
 
 public class SearchEngineRg implements SearchEngine {
 
@@ -34,7 +33,12 @@ public class SearchEngineRg implements SearchEngine {
 			final List<String> filePathStringList) {
 
 		try {
+			final List<String> commandPartList = new ArrayList<>();
+			final List<String> escapedCommandPartList = new ArrayList<>();
+
 			final String rgExePathString = searchData.rgExePathString();
+			commandPartList.add(rgExePathString);
+			escapedCommandPartList.add(rgExePathString);
 
 			final String globOption;
 			final boolean caseSensitivePathPattern = searchData.caseSensitivePathPattern();
@@ -47,29 +51,31 @@ public class SearchEngineRg implements SearchEngine {
 			final String filePathPatternString = searchData.filePathPatternString();
 			final String[] globPatternStringArray = StringUtils.split(filePathPatternString.trim(), ' ');
 
-			final String searchFolderPathString = searchData.searchFolderPathString();
-
-			final List<String> commandPartList = new ArrayList<>();
-			Collections.addAll(commandPartList, rgExePathString);
 			for (final String globPatternString : globPatternStringArray) {
+
 				Collections.addAll(commandPartList, globOption, globPatternString);
+				Collections.addAll(escapedCommandPartList, globOption, "\"" + globPatternString + "\"");
 			}
-			Collections.addAll(commandPartList, "--unrestricted", "--hidden", "--files",
-					searchFolderPathString);
+
+			Collections.addAll(commandPartList, "--unrestricted", "--hidden", "--files");
+			Collections.addAll(escapedCommandPartList, "--unrestricted", "--hidden", "--files");
+
+			final String searchFolderPathString = searchData.searchFolderPathString();
+			commandPartList.add(searchFolderPathString);
+			final String escapedSearchFolderPathString = "\"" + searchFolderPathString + "\"";
+			escapedCommandPartList.add(escapedSearchFolderPathString);
 
 			Logger.printProgress("executing command:");
-			Logger.printLine(StringUtils.join(commandPartList, ' '));
+			Logger.printLine(StringUtils.join(escapedCommandPartList, ' '));
 
 			final Process process = new ProcessBuilder()
 					.command(commandPartList)
 					.start();
 
-			final ReadBytesHandlerLinesCollect readBytesHandlerLinesCollect =
-					new ReadBytesHandlerLinesCollect();
-
 			final InputStreamReaderThread inputStreamReaderThread = new InputStreamReaderThread(
 					"rg parse file paths input stream reader", process.getInputStream(),
-					StandardCharsets.UTF_8, readBytesHandlerLinesCollect);
+					StandardCharsets.UTF_8, new ReadBytesHandlerLinesRgParseFilePaths(
+							searchFolderPathString, filePathStringList));
 			inputStreamReaderThread.start();
 
 			final InputStreamReaderThread errorInputStreamReaderThread = new InputStreamReaderThread(
@@ -77,18 +83,20 @@ public class SearchEngineRg implements SearchEngine {
 					StandardCharsets.UTF_8, new ReadBytesHandlerLinesPrint());
 			errorInputStreamReaderThread.start();
 
-			process.waitFor();
+			final int exitCode = process.waitFor();
 
-			final List<String> lineList = readBytesHandlerLinesCollect.getLineList();
-			for (final String line : lineList) {
+			inputStreamReaderThread.join();
+			errorInputStreamReaderThread.join();
 
-				if (line.startsWith(searchFolderPathString)) {
-					filePathStringList.add(line);
-				}
+			if (exitCode != 0) {
+				new CustomAlertError("failed to parse file paths",
+						"parse file paths command exited with non-zero code").showAndWait();
 			}
 
 		} catch (final Exception exc) {
 			Logger.printException(exc);
+			new CustomAlertException("failed to parse file paths",
+					"error occurred while parsing file paths", exc).showAndWait();
 		}
 	}
 
@@ -99,7 +107,12 @@ public class SearchEngineRg implements SearchEngine {
 			final Map<String, Integer> filePathStringToOccurrenceCountMap) {
 
 		try {
+			final List<String> commandPartList = new ArrayList<>();
+			final List<String> escapedCommandPartList = new ArrayList<>();
+
 			final String rgExePathString = searchData.rgExePathString();
+			commandPartList.add(rgExePathString);
+			escapedCommandPartList.add(rgExePathString);
 
 			final String globOption;
 			final boolean caseSensitivePathPattern = searchData.caseSensitivePathPattern();
@@ -111,6 +124,12 @@ public class SearchEngineRg implements SearchEngine {
 
 			final String filePathPatternString = searchData.filePathPatternString();
 			final String[] globPatternStringArray = StringUtils.split(filePathPatternString.trim(), ' ');
+
+			for (final String globPatternString : globPatternStringArray) {
+
+				Collections.addAll(commandPartList, globOption, globPatternString);
+				Collections.addAll(escapedCommandPartList, globOption, "\"" + globPatternString + "\"");
+			}
 
 			final String regexOption;
 			final boolean useRegex = searchData.useRegex();
@@ -128,32 +147,33 @@ public class SearchEngineRg implements SearchEngine {
 				caseSensitiveOption = "--ignore-case";
 			}
 
-			final String searchText = searchData.searchText();
+			Collections.addAll(commandPartList, "--unrestricted", "--hidden",
+					regexOption, caseSensitiveOption, "--count-matches", "--text");
+			Collections.addAll(escapedCommandPartList, "--unrestricted", "--hidden",
+					regexOption, caseSensitiveOption, "--count-matches", "--text");
+
+			String searchText = searchData.searchText();
+			searchText = searchText.replace("\"", "\"\"");
+			commandPartList.add(searchText);
+			final String escapedSearchText = "\"" + searchText + "\"";
+			escapedCommandPartList.add(escapedSearchText);
 
 			final String searchFolderPathString = searchData.searchFolderPathString();
-
-			final List<String> commandPartList = new ArrayList<>();
-			Collections.addAll(commandPartList, rgExePathString);
-			for (final String globPatternString : globPatternStringArray) {
-				Collections.addAll(commandPartList, globOption, globPatternString);
-			}
-			Collections.addAll(commandPartList, "--unrestricted", "--hidden",
-					regexOption, caseSensitiveOption, "--count-matches", "--text", searchText,
-					searchFolderPathString);
+			commandPartList.add(searchFolderPathString);
+			final String escapedSearchFolderPathString = "\"" + searchFolderPathString + "\"";
+			escapedCommandPartList.add(escapedSearchFolderPathString);
 
 			Logger.printProgress("executing command:");
-			Logger.printLine(StringUtils.join(commandPartList, ' '));
+			Logger.printLine(StringUtils.join(escapedCommandPartList, ' '));
 
 			final Process process = new ProcessBuilder()
 					.command(commandPartList)
 					.start();
 
-			final ReadBytesHandlerLinesCollect readBytesHandlerLinesCollect =
-					new ReadBytesHandlerLinesCollect();
-
 			final InputStreamReaderThread inputStreamReaderThread = new InputStreamReaderThread(
 					"rg search text input stream reader", process.getInputStream(),
-					StandardCharsets.UTF_8, readBytesHandlerLinesCollect);
+					StandardCharsets.UTF_8, new ReadBytesHandlerLinesRgSearchText(
+							filePathStringToOccurrenceCountMap));
 			inputStreamReaderThread.start();
 
 			final InputStreamReaderThread errorInputStreamReaderThread = new InputStreamReaderThread(
@@ -161,34 +181,20 @@ public class SearchEngineRg implements SearchEngine {
 					StandardCharsets.UTF_8, new ReadBytesHandlerLinesPrint());
 			errorInputStreamReaderThread.start();
 
-			process.waitFor();
+			final int exitCode = process.waitFor();
 
-			final List<String> lineList = readBytesHandlerLinesCollect.getLineList();
-			fillFilePathStringToTextFinderDataMap(lineList, filePathStringToOccurrenceCountMap);
+			inputStreamReaderThread.join();
+			errorInputStreamReaderThread.join();
+
+			if (exitCode != 0) {
+				new CustomAlertError("failed to search text in files",
+						"search text in files command exited with non-zero code").showAndWait();
+			}
 
 		} catch (final Exception exc) {
 			Logger.printException(exc);
-		}
-	}
-
-	private static void fillFilePathStringToTextFinderDataMap(
-			final List<String> lineList,
-			final Map<String, Integer> filePathStringToOccurrenceCountMap) {
-
-		for (final String line : lineList) {
-
-			final int indexOf = line.lastIndexOf(':');
-			if (indexOf > 0) {
-
-				final String filePathString = line.substring(0, indexOf);
-
-				final String occurrenceCountString = line.substring(indexOf + 1);
-				final int occurrenceCount = StrUtils.tryParsePositiveInt(occurrenceCountString);
-
-				if (occurrenceCount > 0) {
-					filePathStringToOccurrenceCountMap.put(filePathString, occurrenceCount);
-				}
-			}
+			new CustomAlertException("failed to search text in files",
+					"error occurred while searching for text in files", exc).showAndWait();
 		}
 	}
 
@@ -200,7 +206,12 @@ public class SearchEngineRg implements SearchEngine {
 		int firstOccurrenceRow = 0;
 		int firstOccurrenceCol = 0;
 		try {
+			final List<String> commandPartList = new ArrayList<>();
+			final List<String> escapedCommandPartList = new ArrayList<>();
+
 			final String rgExePathString = searchData.rgExePathString();
+			commandPartList.add(rgExePathString);
+			escapedCommandPartList.add(rgExePathString);
 
 			final String regexOption;
 			final boolean useRegex = searchData.useRegex();
@@ -218,25 +229,34 @@ public class SearchEngineRg implements SearchEngine {
 				caseSensitiveOption = "--ignore-case";
 			}
 
-			final String searchText = searchData.searchText();
+			Collections.addAll(commandPartList, regexOption, caseSensitiveOption,
+					"--text", "--line-number", "--column");
+			Collections.addAll(escapedCommandPartList, regexOption, caseSensitiveOption,
+					"--text", "--line-number", "--column");
 
-			final List<String> commandPartList = new ArrayList<>();
-			Collections.addAll(commandPartList, rgExePathString, regexOption, caseSensitiveOption,
-					"--text", "--line-number", "--column", searchText, filePathString);
+			String searchText = searchData.searchText();
+			searchText = searchText.replace("\"", "\"\"");
+			commandPartList.add(searchText);
+			final String escapedSearchText = "\"" + searchText + "\"";
+			commandPartList.add(escapedSearchText);
+
+			commandPartList.add(filePathString);
+			final String escapedFilePathString = "\"" + filePathString + "\"";
+			escapedCommandPartList.add(escapedFilePathString);
 
 			Logger.printProgress("executing command:");
-			Logger.printLine(StringUtils.join(commandPartList, ' '));
+			Logger.printLine(StringUtils.join(escapedCommandPartList, ' '));
 
 			final Process process = new ProcessBuilder()
 					.command(commandPartList)
 					.start();
 
-			final ReadBytesHandlerLinesCollect readBytesHandlerLinesCollect =
-					new ReadBytesHandlerLinesCollect();
+			final ReadBytesHandlerLinesRgParseFirstOccurrenceData readBytesHandlerLinesRgParseFirstOccurrenceData =
+					new ReadBytesHandlerLinesRgParseFirstOccurrenceData();
 
 			final InputStreamReaderThread inputStreamReaderThread = new InputStreamReaderThread(
 					"rg search text input stream reader", process.getInputStream(),
-					StandardCharsets.UTF_8, readBytesHandlerLinesCollect);
+					StandardCharsets.UTF_8, readBytesHandlerLinesRgParseFirstOccurrenceData);
 			inputStreamReaderThread.start();
 
 			final InputStreamReaderThread errorInputStreamReaderThread = new InputStreamReaderThread(
@@ -244,34 +264,21 @@ public class SearchEngineRg implements SearchEngine {
 					StandardCharsets.UTF_8, new ReadBytesHandlerLinesPrint());
 			errorInputStreamReaderThread.start();
 
-			process.waitFor();
+			final int exitCode = process.waitFor();
 
-			final List<String> lineList = readBytesHandlerLinesCollect.getLineList();
-			for (final String line : lineList) {
+			inputStreamReaderThread.join();
+			errorInputStreamReaderThread.join();
 
-				final String[] splitPartArray = StringUtils.split(line, ':');
-				if (splitPartArray.length >= 3) {
+			firstOccurrenceRow = readBytesHandlerLinesRgParseFirstOccurrenceData.getFirstOccurrenceRow();
+			firstOccurrenceCol = readBytesHandlerLinesRgParseFirstOccurrenceData.getFirstOccurrenceCol();
 
-					final String firstOccurrenceRowString = splitPartArray[0];
-					final int tmpFirstOccurrenceRow = StrUtils.tryParsePositiveInt(firstOccurrenceRowString);
-
-					final String firstOccurrenceColString = splitPartArray[1];
-					int tmpFirstOccurrenceCol = StrUtils.tryParsePositiveInt(firstOccurrenceColString);
-
-					final String matchedLine = splitPartArray[2];
-					final int tabOccurrenceCount = StringUtils.countMatches(matchedLine, '\t');
-					tmpFirstOccurrenceCol += tabOccurrenceCount * 3;
-
-					if (tmpFirstOccurrenceRow > 0 && tmpFirstOccurrenceCol > 0) {
-
-						firstOccurrenceRow = tmpFirstOccurrenceRow;
-						firstOccurrenceCol = tmpFirstOccurrenceCol;
-						break;
-					}
-				}
+			if (exitCode != 0) {
+				new CustomAlertError("failed to find first occurrence in file",
+						"find first occurrence in file command exited with non-zero code").showAndWait();
 			}
 
 		} catch (final Exception exc) {
+			Logger.printException(exc);
 			new CustomAlertException("failed to find first occurrence in file",
 					"error occurred while searching for first text occurrence " +
 							"in file:" + System.lineSeparator() + filePathString, exc).showAndWait();

@@ -8,6 +8,7 @@ public class HtmlSectionText extends AbstractHtmlSection {
 
 	public HtmlSectionText(
 			final Object obj) {
+
 		this(String.valueOf(obj));
 	}
 
@@ -20,6 +21,7 @@ public class HtmlSectionText extends AbstractHtmlSection {
 	@Override
 	public void write(
 			final XmlStAXWriter xmlStAXWriter) {
+
 		xmlStAXWriter.writeCharacters(text);
 	}
 }

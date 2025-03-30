@@ -10,7 +10,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import com.utils.data_types.data_items.DataItem;
-import com.utils.json.JsonUtils;
+import com.utils.json.JsonWriter;
 import com.utils.xml.stax.XmlStAXWriter;
 
 public interface TableRowData extends Serializable {
@@ -104,7 +104,7 @@ public interface TableRowData extends Serializable {
 	default void writeToJson(
 			final TableColumnData[] columnsData,
 			final int indentCount,
-			final PrintStream printStream) {
+			final JsonWriter jsonWriter) {
 
 		final Map<TableColumnData, DataItem<?>> notBlankColumnDataMap = new LinkedHashMap<>();
 		final DataItem<?>[] dataItemArray = getDataItemArray();
@@ -128,10 +128,9 @@ public interface TableRowData extends Serializable {
 			final String columnName = tableColumnData.getSerializeName();
 			final boolean notLastAttribute = i < notBlankColumnDataMap.size() - 1;
 			if (dataItem != null) {
-				dataItem.writeToJson(columnName, notLastAttribute, indentCount, printStream);
+				dataItem.writeToJson(columnName, notLastAttribute, indentCount, jsonWriter);
 			} else {
-				JsonUtils.writeStringAttribute(columnName, "", notLastAttribute,
-						indentCount, printStream);
+				jsonWriter.writeStringAttribute(columnName, "", notLastAttribute, indentCount);
 			}
 			i++;
 		}

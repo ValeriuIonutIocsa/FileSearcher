@@ -5,7 +5,6 @@ import java.sql.SQLException;
 
 import com.utils.data_types.data_items.AbstractDataItem;
 import com.utils.string.converters.ConverterByteArray;
-import com.utils.xml.stax.XmlStAXWriter;
 
 public class DataItemByteArray extends AbstractDataItem<byte[]> implements Comparable<DataItemByteArray> {
 
@@ -27,15 +26,6 @@ public class DataItemByteArray extends AbstractDataItem<byte[]> implements Compa
 	@Override
 	public String createCopyString() {
 		return ConverterByteArray.byteArrayToString(bytes);
-	}
-
-	@Override
-	public void writeToXml(
-			final XmlStAXWriter xmlStAXWriter,
-			final String columnTitleName) {
-
-		final String csvString = createCsvString();
-		xmlStAXWriter.writeAttribute(columnTitleName, csvString);
 	}
 
 	@Override

@@ -16,7 +16,7 @@ import com.utils.string.StrUtils;
 public class TableRowDataMessage implements TableRowData {
 
 	@Serial
-    private static final long serialVersionUID = -4482668257460205647L;
+	private static final long serialVersionUID = -4482668257460205647L;
 
 	public static final String MESSAGES_COLUMN_NAME = "Messages";
 

@@ -1,12 +1,12 @@
 package com.utils.data_types.data_items;
 
-import java.io.PrintStream;
-
-import com.utils.json.JsonUtils;
+import com.utils.json.JsonWriter;
 import com.utils.xml.stax.XmlStAXWriter;
 
 public abstract class AbstractDataItem<
 		ObjectT> implements DataItem<ObjectT> {
+
+	private short indent;
 
 	@Override
 	public String createCsvString() {
@@ -27,10 +27,10 @@ public abstract class AbstractDataItem<
 			final String columnName,
 			final boolean notLastAttribute,
 			final int indentCount,
-			final PrintStream printStream) {
+			final JsonWriter jsonWriter) {
 
 		final String copyString = createCopyString();
-		JsonUtils.writeStringAttribute(columnName, copyString, notLastAttribute, indentCount, printStream);
+		jsonWriter.writeStringAttribute(columnName, copyString, notLastAttribute, indentCount);
 	}
 
 	@Override
@@ -45,5 +45,16 @@ public abstract class AbstractDataItem<
 	@Override
 	public ObjectT createXlsxValue() {
 		return getValue();
+	}
+
+	@Override
+	public void setIndent(
+			final short indent) {
+		this.indent = indent;
+	}
+
+	@Override
+	public short getIndent() {
+		return indent;
 	}
 }

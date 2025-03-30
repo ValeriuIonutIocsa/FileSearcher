@@ -26,7 +26,7 @@ class GuiWorkerSearchTest {
 		final boolean useRegex;
 		final boolean caseSensitive;
 
-		final int input = TestInputUtils.parseTestInputNumber("1");
+		final int input = TestInputUtils.parseTestInputNumber("22");
 		if (input == 1) {
 
 			searchEngineType = SearchEngineType.RG;
@@ -51,7 +51,43 @@ class GuiWorkerSearchTest {
 			useRegex = true;
 			caseSensitive = false;
 
-		} else if (input == 3) {
+		} else if (input == 11) {
+
+			searchEngineType = SearchEngineType.RG;
+			searchFolderPathString = "D:\\IVI_MISC\\Tmp\\FileSearcher\\folder with spaces";
+
+			filePathPatternString = "**/*.h";
+			caseSensitivePathPattern = false;
+
+			searchText = "s    */";
+			useRegex = false;
+			caseSensitive = false;
+
+		} else if (input == 21) {
+
+			searchEngineType = SearchEngineType.RG;
+			searchFolderPathString = "D:\\IVI_MISC\\Tmp\\FileSearcher\\folder with spaces";
+
+			filePathPatternString = "**/*.h";
+			caseSensitivePathPattern = false;
+
+			searchText = "echo > \"abc\"";
+			useRegex = false;
+			caseSensitive = false;
+
+		} else if (input == 22) {
+
+			searchEngineType = SearchEngineType.RG;
+			searchFolderPathString = "D:\\gbe\\DAMDA_000U0_000\\work";
+
+			filePathPatternString = "**/*.kts";
+			caseSensitivePathPattern = false;
+
+			searchText = ".putInternal(\"PATH\", System.getenv(\"PATH\"))";
+			useRegex = false;
+			caseSensitive = false;
+
+		} else if (input == 101) {
 
 			searchEngineType = SearchEngineType.RG;
 			searchFolderPathString = "D:\\casdev\\gbe\\gbe_dev_repo\\" +

@@ -152,6 +152,22 @@ public class CustomTreeTableCell<
 	}
 
 	@ApiMethod
+	protected void expandAll() {
+
+		final TreeItem<RowDataT> rootTreeItem = getTreeTableView().getRoot();
+		expandAllRec(rootTreeItem);
+	}
+
+	private void expandAllRec(
+			final TreeItem<RowDataT> treeItem) {
+
+		treeItem.setExpanded(true);
+		for (final TreeItem<RowDataT> childTreeItem : treeItem.getChildren()) {
+			expandAllRec(childTreeItem);
+		}
+	}
+
+	@ApiMethod
 	protected void collapseTreeViewToLevel() {
 
 		final TreeItem<RowDataT> treeItem = getTableRow().getTreeItem();

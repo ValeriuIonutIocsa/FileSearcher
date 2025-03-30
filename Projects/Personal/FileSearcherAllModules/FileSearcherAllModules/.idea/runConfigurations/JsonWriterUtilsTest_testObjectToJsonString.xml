@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" factoryName="JUnit" folderName="json-utils" name="JsonWriterUtilsTest.testObjectToJsonString" nameIsGenerated="true" type="JUnit">
+        <module name="FileSearcherAllModules.json-utils.test"/>
+        <extension name="coverage">
+            <pattern>
+                <option name="PATTERN" value="com.utils.json.*"/>
+                <option name="ENABLED" value="true"/>
+            </pattern>
+        </extension>
+        <option name="PACKAGE_NAME" value="com.utils.json"/>
+        <option name="MAIN_CLASS_NAME" value="com.utils.json.JsonWriterUtilsTest"/>
+        <option name="METHOD_NAME" value="testObjectToJsonString"/>
+        <option name="TEST_OBJECT" value="method"/>
+        <method v="2">
+            <option enabled="true" name="Make"/>
+        </method>
+    </configuration>
+</component>

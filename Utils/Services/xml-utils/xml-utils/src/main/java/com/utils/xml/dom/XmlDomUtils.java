@@ -190,22 +190,25 @@ public final class XmlDomUtils {
 	public static void processTextNodesRec(
 			final Node parentNode) {
 
-		final NodeList nodeList = parentNode.getChildNodes();
-		for (int i = nodeList.getLength() - 1; i >= 0; i--) {
+		if (parentNode != null) {
 
-			final Node childNode = nodeList.item(i);
-			final int nodeType = childNode.getNodeType();
-			if (nodeType == Node.ELEMENT_NODE) {
-				processTextNodesRec(childNode);
+			final NodeList nodeList = parentNode.getChildNodes();
+			for (int i = nodeList.getLength() - 1; i >= 0; i--) {
 
-			} else if (nodeType == Node.TEXT_NODE) {
+				final Node childNode = nodeList.item(i);
+				final int nodeType = childNode.getNodeType();
+				if (nodeType == Node.ELEMENT_NODE) {
+					processTextNodesRec(childNode);
 
-				final String nodeValue = childNode.getNodeValue();
-				final String trimmedNodeVal = nodeValue.trim();
-				if (trimmedNodeVal.isEmpty()) {
-					parentNode.removeChild(childNode);
-				} else {
-					childNode.setNodeValue(trimmedNodeVal);
+				} else if (nodeType == Node.TEXT_NODE) {
+
+					final String nodeValue = childNode.getNodeValue();
+					final String trimmedNodeVal = nodeValue.trim();
+					if (trimmedNodeVal.isEmpty()) {
+						parentNode.removeChild(childNode);
+					} else {
+						childNode.setNodeValue(trimmedNodeVal);
+					}
 				}
 			}
 		}
