@@ -43,10 +43,6 @@ class ReadBytesHandlerLinesRgParseFirstOccurrenceData extends AbstractReadBytesH
 		}
 	}
 
-	boolean isFoundFirstOccurrence() {
-		return foundFirstOccurrence;
-	}
-
 	int getFirstOccurrenceRow() {
 		return firstOccurrenceRow;
 	}

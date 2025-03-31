@@ -194,19 +194,10 @@ public class SearchEngineRg implements SearchEngine {
 					StandardCharsets.UTF_8, new ReadBytesHandlerLinesPrint());
 			errorInputStreamReaderThread.start();
 
-			final int exitCode = process.waitFor();
+			process.waitFor();
 
 			inputStreamReaderThread.join();
 			errorInputStreamReaderThread.join();
-
-			final boolean processStopped = runningProcesses.isProcessStopped();
-			if (!processStopped) {
-
-				if (exitCode != 0) {
-					new CustomAlertError("failed to search text in files",
-							"search text in files command exited with non-zero code").showAndWait();
-				}
-			}
 
 		} catch (final Exception exc) {
 			Logger.printException(exc);
@@ -286,28 +277,10 @@ public class SearchEngineRg implements SearchEngine {
 					StandardCharsets.UTF_8, new ReadBytesHandlerLinesPrint());
 			errorInputStreamReaderThread.start();
 
-			final int exitCode = process.waitFor();
+			process.waitFor();
 
 			inputStreamReaderThread.join();
 			errorInputStreamReaderThread.join();
-
-			final boolean processStopped = runningProcesses.isProcessStopped();
-			if (!processStopped) {
-
-				if (exitCode != 0) {
-					new CustomAlertError("failed to find first occurrence in file",
-							"find first occurrence in file command exited with non-zero code").showAndWait();
-
-				} else {
-					final boolean foundFirstOccurrence =
-							readBytesHandlerLinesRgParseFirstOccurrenceData.isFoundFirstOccurrence();
-					if (!foundFirstOccurrence) {
-
-						new CustomAlertError("failed to find first occurrence in file",
-								"no first occurrence found in file").showAndWait();
-					}
-				}
-			}
 
 			firstOccurrenceRow = readBytesHandlerLinesRgParseFirstOccurrenceData.getFirstOccurrenceRow();
 			firstOccurrenceCol = readBytesHandlerLinesRgParseFirstOccurrenceData.getFirstOccurrenceCol();
