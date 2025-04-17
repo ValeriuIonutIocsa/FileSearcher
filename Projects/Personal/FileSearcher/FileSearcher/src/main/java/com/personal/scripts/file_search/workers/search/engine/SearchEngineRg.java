@@ -12,7 +12,6 @@ import com.personal.scripts.file_search.text_find.TextFinder;
 import com.personal.scripts.file_search.workers.search.RunningProcesses;
 import com.personal.scripts.file_search.workers.search.SearchData;
 import com.personal.scripts.file_search.workers.search.engine.data.FirstOccurrenceData;
-import com.utils.gui.alerts.CustomAlertError;
 import com.utils.gui.alerts.CustomAlertException;
 import com.utils.io.processes.InputStreamReaderThread;
 import com.utils.io.processes.ReadBytesHandlerLinesPrint;
@@ -86,20 +85,10 @@ public class SearchEngineRg implements SearchEngine {
 					StandardCharsets.UTF_8, new ReadBytesHandlerLinesPrint());
 			errorInputStreamReaderThread.start();
 
-			final int exitCode = process.waitFor();
+			process.waitFor();
 
 			inputStreamReaderThread.join();
 			errorInputStreamReaderThread.join();
-
-			final boolean processStopped = runningProcesses.isProcessStopped();
-			if (!processStopped) {
-
-				if (exitCode != 0) {
-
-					new CustomAlertError("failed to parse file paths",
-							"parse file paths command exited with non-zero code").showAndWait();
-				}
-			}
 
 		} catch (final Exception exc) {
 			Logger.printException(exc);
