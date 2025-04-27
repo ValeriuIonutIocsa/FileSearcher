@@ -151,7 +151,7 @@ public class SplitPaneMessages extends AbstractCustomControl<SplitPane> {
 
 		final UnfilteredTreeItem<TableRowDataMessage> unfilteredTreeItemRoot =
 				customTreeTableView.getUnfilteredTreeItemRoot();
-		unfilteredTreeItemRoot.getChildrenList().clear();
+		unfilteredTreeItemRoot.getChildList().clear();
 
 		final List<TableRowDataMessage> tableRowDataMessageList = new ArrayList<>();
 		MessagesTreeTableUtils.fillTableRowDataMessageList(messages, tableRowDataMessageList);
@@ -168,7 +168,7 @@ public class SplitPaneMessages extends AbstractCustomControl<SplitPane> {
 
 			final UnfilteredTreeItem<TableRowDataMessage> unfilteredTreeItem =
 					new UnfilteredTreeItem<>(tableRowDataMessage, true);
-			parentUnfilteredTreeItem.getChildrenList().add(unfilteredTreeItem);
+			parentUnfilteredTreeItem.getChildList().add(unfilteredTreeItem);
 
 			final List<TableRowDataMessage> childTableRowDataMessageList =
 					tableRowDataMessage.getChildTableRowDataMessageList();

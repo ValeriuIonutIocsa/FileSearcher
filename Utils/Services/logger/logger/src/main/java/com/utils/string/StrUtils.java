@@ -196,6 +196,44 @@ public final class StrUtils {
 	}
 
 	@ApiMethod
+	public static long parseStartAddressFromAddressInterval(
+			final String addressInterval) {
+
+		long startAddress = -1;
+		try {
+			final String middleString = " - ";
+			final int index = addressInterval.indexOf(middleString);
+			if (index > 0) {
+
+				final String startAddressString = addressInterval.substring(0, index);
+				startAddress = StrUtils.tryParsePositiveLongFromHexString(startAddressString);
+			}
+
+		} catch (final Exception ignored) {
+		}
+		return startAddress;
+	}
+
+	@ApiMethod
+	public static long parseEndAddressFromAddressInterval(
+			final String addressInterval) {
+
+		long endAddress = -1;
+		try {
+			final String middleString = " - ";
+			final int index = addressInterval.indexOf(middleString);
+			if (index > 0) {
+
+				final String endAddressString = addressInterval.substring(index + middleString.length());
+				endAddress = StrUtils.tryParsePositiveLongFromHexString(endAddressString);
+			}
+
+		} catch (final Exception ignored) {
+		}
+		return endAddress;
+	}
+
+	@ApiMethod
 	public static String createHexString(
 			final long value) {
 

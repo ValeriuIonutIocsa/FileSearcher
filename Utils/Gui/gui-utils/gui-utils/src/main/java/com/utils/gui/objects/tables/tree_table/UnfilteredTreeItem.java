@@ -13,7 +13,7 @@ public class UnfilteredTreeItem<
 	private final TableRowDataT value;
 	private boolean expanded;
 
-	private final List<UnfilteredTreeItem<TableRowDataT>> childrenList;
+	private final List<UnfilteredTreeItem<TableRowDataT>> childList;
 
 	public UnfilteredTreeItem(
 			final TableRowDataT value,
@@ -22,7 +22,7 @@ public class UnfilteredTreeItem<
 		this.value = value;
 		this.expanded = expanded;
 
-		childrenList = new ArrayList<>();
+		childList = new ArrayList<>();
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class UnfilteredTreeItem<
 	}
 
 	@ApiMethod
-	public List<UnfilteredTreeItem<TableRowDataT>> getChildrenList() {
-		return childrenList;
+	public List<UnfilteredTreeItem<TableRowDataT>> getChildList() {
+		return childList;
 	}
 }

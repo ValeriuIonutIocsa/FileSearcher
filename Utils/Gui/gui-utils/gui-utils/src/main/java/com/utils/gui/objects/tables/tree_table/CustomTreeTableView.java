@@ -562,7 +562,8 @@ public class CustomTreeTableView<
 		}
 	}
 
-	protected void clearFilters(
+	@ApiMethod
+	public void clearFilters(
 			final boolean verbose) {
 
 		filterPredicate = item -> true;
@@ -600,19 +601,19 @@ public class CustomTreeTableView<
 			final UnfilteredTreeItem<TableRowDataT> unfilteredTreeItemRoot,
 			final TreeItem<TableRowDataT> filteredTreeItem) {
 
-		final List<UnfilteredTreeItem<TableRowDataT>> childrenList =
-				unfilteredTreeItemRoot.getChildrenList();
-		for (final UnfilteredTreeItem<TableRowDataT> unfilteredTreeItemChild : childrenList) {
+		final List<UnfilteredTreeItem<TableRowDataT>> childList =
+				unfilteredTreeItemRoot.getChildList();
+		for (final UnfilteredTreeItem<TableRowDataT> childUnfilteredTreeItem : childList) {
 
-			final TableRowDataT value = unfilteredTreeItemChild.getValue();
-			final boolean expanded = unfilteredTreeItemChild.isExpanded();
-			final TreeItem<TableRowDataT> filteredTreeItemChild = createTreeItem(value, expanded);
+			final TableRowDataT value = childUnfilteredTreeItem.getValue();
+			final boolean expanded = childUnfilteredTreeItem.isExpanded();
+			final TreeItem<TableRowDataT> childFilteredTreeItem = createTreeItem(value, expanded);
 
-			setFilteredItemsRec(unfilteredTreeItemChild, filteredTreeItemChild);
+			setFilteredItemsRec(childUnfilteredTreeItem, childFilteredTreeItem);
 
-			if (!filteredTreeItemChild.getChildren().isEmpty() ||
-					filterPredicate.test(filteredTreeItemChild.getValue())) {
-				filteredTreeItem.getChildren().add(filteredTreeItemChild);
+			if (!childFilteredTreeItem.getChildren().isEmpty() ||
+					filterPredicate.test(childFilteredTreeItem.getValue())) {
+				filteredTreeItem.getChildren().add(childFilteredTreeItem);
 			}
 		}
 	}
@@ -717,7 +718,7 @@ public class CustomTreeTableView<
 
 						final UnfilteredTreeItem<TableRowDataT> unfilteredTreeItemChild =
 								new UnfilteredTreeItem<>(tableRowData, true);
-						unfilteredTreeItemParent.getChildrenList().add(unfilteredTreeItemChild);
+						unfilteredTreeItemParent.getChildList().add(unfilteredTreeItemChild);
 						unfilteredTreeItemParent.setExpanded(expanded);
 					}
 				}
@@ -742,12 +743,12 @@ public class CustomTreeTableView<
 			unfilteredTreeItemResult = unfilteredTreeItem;
 
 		} else {
-			final List<UnfilteredTreeItem<TableRowDataT>> childrenList =
-					unfilteredTreeItem.getChildrenList();
-			for (final UnfilteredTreeItem<TableRowDataT> unfilteredTreeItemChild : childrenList) {
+			final List<UnfilteredTreeItem<TableRowDataT>> childList =
+					unfilteredTreeItem.getChildList();
+			for (final UnfilteredTreeItem<TableRowDataT> child : childList) {
 
 				final UnfilteredTreeItem<TableRowDataT> unfilteredTreeItemRec =
-						computeUnfilteredTreeItemParentRec(unfilteredTreeItemChild, tableRowDataToSearch);
+						computeUnfilteredTreeItemParentRec(child, tableRowDataToSearch);
 				if (unfilteredTreeItemRec != null) {
 
 					unfilteredTreeItemResult = unfilteredTreeItemRec;
@@ -809,10 +810,10 @@ public class CustomTreeTableView<
 	private int computeTotalItemCountRec(
 			final UnfilteredTreeItem<TableRowDataT> unfilteredTreeItem) {
 
-		final List<UnfilteredTreeItem<TableRowDataT>> childrenList =
-				unfilteredTreeItem.getChildrenList();
-		int itemCount = childrenList.size();
-		for (final UnfilteredTreeItem<TableRowDataT> childUnfilteredTreeItem : childrenList) {
+		final List<UnfilteredTreeItem<TableRowDataT>> childList =
+				unfilteredTreeItem.getChildList();
+		int itemCount = childList.size();
+		for (final UnfilteredTreeItem<TableRowDataT> childUnfilteredTreeItem : childList) {
 			itemCount += computeTotalItemCountRec(childUnfilteredTreeItem);
 		}
 		return itemCount;

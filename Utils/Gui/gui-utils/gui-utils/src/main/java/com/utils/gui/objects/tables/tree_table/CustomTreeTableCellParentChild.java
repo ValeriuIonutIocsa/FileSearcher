@@ -26,7 +26,7 @@ public class CustomTreeTableCellParentChild<
 		boolean parent = false;
 		final TableRowDataT tableRowData = getRowData();
 		if (tableRowData != null) {
-			parent = tableRowData.isParent();
+			parent = tableRowData.checkParent();
 		}
 		return parent;
 	}
