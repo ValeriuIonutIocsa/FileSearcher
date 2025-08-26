@@ -186,12 +186,12 @@ public class CustomTableView<
 		}
 	}
 
-	private void deselectAllKeyCombinationPressed() {
+	protected void deselectAllKeyCombinationPressed() {
 
 		getSelectionModel().clearSelection();
 	}
 
-	private void searchKeyCombinationPressed(
+	protected void searchKeyCombinationPressed(
 			final int defaultSearchAndFilterColumnIndex) {
 
 		int columnIndex = defaultSearchAndFilterColumnIndex;
@@ -202,7 +202,7 @@ public class CustomTableView<
 		search(columnIndex);
 	}
 
-	private void filterKeyCombinationPressed(
+	protected void filterKeyCombinationPressed(
 			final int defaultSearchAndFilterColumnIndex) {
 
 		int columnIndex = defaultSearchAndFilterColumnIndex;
@@ -269,8 +269,7 @@ public class CustomTableView<
 		}
 	}
 
-	@Override
-	public void pasteKeyCombinationPressed() {
+	protected void pasteKeyCombinationPressed() {
 	}
 
 	public void createTableColumns(

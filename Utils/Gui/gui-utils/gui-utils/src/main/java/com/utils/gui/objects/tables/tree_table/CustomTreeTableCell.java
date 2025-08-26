@@ -64,9 +64,9 @@ public class CustomTreeTableCell<
 			final ContextMenu contextMenu = createContextMenu(item);
 			CustomCell.setContextMenu(this, stackPane, contextMenu);
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to render tree table cell");
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 		return stackPane;
 	}

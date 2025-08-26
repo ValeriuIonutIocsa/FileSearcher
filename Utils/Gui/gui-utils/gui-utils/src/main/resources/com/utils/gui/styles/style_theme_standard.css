@@ -1,22 +1,28 @@
+* {
+    -fx-text-fill: #2c2c2c;
+}
+
 .root {
     -fx-font-family: "Helvetica";
     -fx-font-size: 9pt;
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 0, 0, 0, 1);
+    -dark_gradient_color: #61a2b1;
+    -light_gradient_color: #2A5058;
 }
 
 .button {
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-background-color: linear-gradient(-dark_gradient_color, -light_gradient_color);
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 5, 0.0, 0, 1);
 }
 
 .button:hover {
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-background-color: linear-gradient(-light_gradient_color, -dark_gradient_color);
 }
 
 .menu-bar {
-    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
+    -fx-background-color: linear-gradient(-dark_gradient_color, -light_gradient_color);
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 5, 0.0, 0, 1);
 }
 
@@ -27,17 +33,27 @@
 }
 
 .menu-bar:hover {
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-background-color: linear-gradient(-light_gradient_color, -dark_gradient_color);
 }
 
 .jfx-check-box {
-    -jfx-checked-color: #61a2b1;
+    -jfx-checked-color: -dark_gradient_color;
+}
+
+.tooltip {
+    -fx-font-size: 8.5pt;
+    -fx-background: rgba(255, 255, 255);
+    -fx-background-color: rgba(255, 255, 255, 0.75);
+}
+
+.right-arrow-region {
+    -fx-background-color: white;
+}
+
+.brand-background {
+    -fx-background-color: #61a2b1;
 }
 
 .brand-background-second-color {
     -fx-background-color: white;
-}
-
-.region-brand-logo {
-    -fx-background-color: black;
 }

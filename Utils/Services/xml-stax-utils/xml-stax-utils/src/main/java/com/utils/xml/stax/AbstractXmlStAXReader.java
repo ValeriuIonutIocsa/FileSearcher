@@ -33,9 +33,9 @@ public abstract class AbstractXmlStAXReader implements XmlStAXReader {
 			xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
 			xmlEventReader = xmlInputFactory.createXMLEventReader(inputStream);
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to create the XML reader");
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 		this.inputStream = inputStream;
 		this.xmlEventReader = xmlEventReader;
@@ -55,9 +55,9 @@ public abstract class AbstractXmlStAXReader implements XmlStAXReader {
 			xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
 			xmlEventReader = xmlInputFactory.createXMLEventReader(inputStream);
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to create the XML reader");
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 		this.inputStream = inputStream;
 		this.xmlEventReader = xmlEventReader;
@@ -102,9 +102,9 @@ public abstract class AbstractXmlStAXReader implements XmlStAXReader {
 				success = true;
 
 			} catch (final SilentException ignored) {
-			} catch (final Exception exc) {
+			} catch (final Throwable throwable) {
 				Logger.printError("failed to read XML file");
-				Logger.printException(exc);
+				Logger.printThrowable(throwable);
 
 			} finally {
 				closeStreams();
@@ -122,7 +122,7 @@ public abstract class AbstractXmlStAXReader implements XmlStAXReader {
 		try {
 			xmlEventReader.close();
 			inputStream.close();
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 	}
 }

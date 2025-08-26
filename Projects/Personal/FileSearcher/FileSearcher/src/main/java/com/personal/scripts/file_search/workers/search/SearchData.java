@@ -14,7 +14,9 @@ public record SearchData(
 
 		String searchText,
 		boolean useRegex,
-		boolean caseSensitive) {
+		boolean caseSensitive,
+
+		boolean searchInBinary) {
 
 	@Override
 	public String toString() {

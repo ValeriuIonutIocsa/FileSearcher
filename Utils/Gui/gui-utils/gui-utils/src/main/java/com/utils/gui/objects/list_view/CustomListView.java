@@ -4,26 +4,22 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.utils.annotations.ApiMethod;
 import com.utils.gui.clipboard.ClipboardUtils;
 
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.input.KeyCode;
 
-public final class ListViewFactory {
+public class CustomListView<
+		ObjectT> extends ListView<ObjectT> {
 
-	private ListViewFactory() {
-	}
+	public CustomListView(
+			final boolean editable,
+			final boolean multipleSelection) {
 
-	@ApiMethod
-	public static <
-			ObjectT> ListView<ObjectT> createListView(
-					final boolean editable,
-					final boolean multipleSelection) {
+		super();
 
-		final ListView<ObjectT> listView = new ListView<>();
-		listView.setEditable(editable);
+		setEditable(editable);
 
 		final SelectionMode selectionMode;
 		if (multipleSelection) {
@@ -31,25 +27,31 @@ public final class ListViewFactory {
 		} else {
 			selectionMode = SelectionMode.SINGLE;
 		}
-		listView.getSelectionModel().setSelectionMode(selectionMode);
+		getSelectionModel().setSelectionMode(selectionMode);
 
-		listView.setOnKeyPressed(keyEvent -> {
+		setOnKeyPressed(keyEvent -> {
 
-			if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.C) {
-				ListViewFactory.copyListViewSelectionToClipboard(listView);
+			if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.MINUS ||
+					keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.SUBTRACT) {
+				deselectAllKeyCombinationPressed();
+
+			} else if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.C) {
+				copyKeyCombinationPressed();
+			} else if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.V) {
+				pasteKeyCombinationPressed();
 			}
 		});
-
-		return listView;
 	}
 
-	@ApiMethod
-	public static <
-			ObjectT> void copyListViewSelectionToClipboard(
-					final ListView<ObjectT> listView) {
+	protected void deselectAllKeyCombinationPressed() {
+
+		getSelectionModel().clearSelection();
+	}
+
+	protected void copyKeyCombinationPressed() {
 
 		final StringBuilder stringBuilder = new StringBuilder();
-		final List<ObjectT> selectedItems = listView.getSelectionModel().getSelectedItems();
+		final List<ObjectT> selectedItems = getSelectionModel().getSelectedItems();
 		final int selectedItemCount = selectedItems.size();
 		for (int i = 0; i < selectedItemCount; i++) {
 
@@ -66,5 +68,8 @@ public final class ListViewFactory {
 		if (StringUtils.isNotBlank(clipboardString)) {
 			ClipboardUtils.putStringInClipBoard(clipboardString);
 		}
+	}
+
+	protected void pasteKeyCombinationPressed() {
 	}
 }

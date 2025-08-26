@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.personal.scripts.file_search.workers.search.SearchResult;
-import com.utils.gui.alerts.CustomAlertException;
+import com.utils.gui.alerts.CustomAlertThrowable;
 import com.utils.gui.clipboard.ClipboardUtils;
 import com.utils.gui.objects.tables.table_view.CustomTableCell;
 import com.utils.io.IoUtils;
 import com.utils.io.file_deleters.FactoryFileDeleter;
+import com.utils.log.Logger;
 
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -77,8 +78,9 @@ class CustomTableCellSearchResultFileName extends CustomTableCell<SearchResult, 
 				FactoryFileDeleter.getInstance().deleteFile(filePathString, true, true);
 			}
 
-		} catch (final Exception exc) {
-			new CustomAlertException("error", "error occurred while deleting files", exc).showAndWait();
+		} catch (final Throwable throwable) {
+			Logger.printThrowable(throwable);
+			new CustomAlertThrowable("error", "error occurred while deleting files", throwable).showAndWait();
 		}
 	}
 
@@ -101,8 +103,9 @@ class CustomTableCellSearchResultFileName extends CustomTableCell<SearchResult, 
 			final Clipboard clipboard = Clipboard.getSystemClipboard();
 			clipboard.setContent(clipboardContent);
 
-		} catch (final Exception exc) {
-			new CustomAlertException("error", "error occurred while copying files", exc).showAndWait();
+		} catch (final Throwable throwable) {
+			Logger.printThrowable(throwable);
+			new CustomAlertThrowable("error", "error occurred while copying files", throwable).showAndWait();
 		}
 	}
 }

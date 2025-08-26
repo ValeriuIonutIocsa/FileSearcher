@@ -7,6 +7,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import javafx.geometry.Side;
 import javafx.scene.Scene;
@@ -54,7 +55,7 @@ public class AutocompleteTextField extends TextField {
 				} else {
 					for (final String entry : entries) {
 
-						if (StringUtils.containsIgnoreCase(entry, enteredText)) {
+						if (Strings.CI.contains(entry, enteredText)) {
 							filteredEntryList.add(entry);
 						}
 					}

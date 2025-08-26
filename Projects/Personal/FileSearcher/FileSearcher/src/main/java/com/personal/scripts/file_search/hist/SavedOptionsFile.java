@@ -22,6 +22,7 @@ public final class SavedOptionsFile {
 	private boolean caseSensitivePathPattern;
 	private boolean useRegex;
 	private boolean caseSensitive;
+	private boolean searchInBinary;
 
 	private SavedOptionsFile() {
 
@@ -29,6 +30,7 @@ public final class SavedOptionsFile {
 		caseSensitivePathPattern = true;
 		useRegex = false;
 		caseSensitive = true;
+		searchInBinary = true;
 	}
 
 	public void parse() {
@@ -53,11 +55,14 @@ public final class SavedOptionsFile {
 
 					final String caseSensitiveString = properties.getProperty("caseSensitive");
 					caseSensitive = Boolean.parseBoolean(caseSensitiveString);
+
+					final String searchInBinaryString = properties.getProperty("searchInBinary");
+					searchInBinary = Boolean.parseBoolean(searchInBinaryString);
 				}
 			}
 
-		} catch (final Exception exc) {
-			Logger.printException(exc);
+		} catch (final Throwable throwable) {
+			Logger.printThrowable(throwable);
 		}
 	}
 
@@ -75,11 +80,12 @@ public final class SavedOptionsFile {
 				properties.setProperty("caseSensitivePathPattern", Boolean.toString(caseSensitivePathPattern));
 				properties.setProperty("useRegex", Boolean.toString(useRegex));
 				properties.setProperty("caseSensitive", Boolean.toString(caseSensitive));
+				properties.setProperty("searchInBinary", Boolean.toString(searchInBinary));
 
 				properties.store(outputStream, "");
 
-			} catch (final Exception exc) {
-				Logger.printException(exc);
+			} catch (final Throwable throwable) {
+				Logger.printThrowable(throwable);
 			}
 		}
 	}
@@ -129,5 +135,14 @@ public final class SavedOptionsFile {
 
 	public boolean isCaseSensitive() {
 		return caseSensitive;
+	}
+
+	public void setSearchInBinary(
+			final boolean searchInBinary) {
+		this.searchInBinary = searchInBinary;
+	}
+
+	public boolean isSearchInBinary() {
+		return searchInBinary;
 	}
 }

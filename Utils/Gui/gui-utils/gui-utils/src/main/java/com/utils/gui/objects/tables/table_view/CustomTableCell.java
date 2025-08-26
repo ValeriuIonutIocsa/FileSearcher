@@ -65,9 +65,9 @@ public class CustomTableCell<
 			final ContextMenu contextMenu = createContextMenu(item);
 			CustomCell.setContextMenu(this, stackPane, contextMenu);
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to render table cell");
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 		return stackPane;
 	}

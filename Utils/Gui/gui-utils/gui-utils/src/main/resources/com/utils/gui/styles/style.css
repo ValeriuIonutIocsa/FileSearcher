@@ -71,10 +71,6 @@
     -fx-background-color: lightgrey;
 }
 
-.tree-table-view .tree-table-cell:critical {
-    -fx-background-color: red;
-}
-
 .tree-table-view .tree-table-cell:parent:selected {
     -fx-background-color: -fx-selection-bar;
 }

@@ -21,7 +21,7 @@ public final class ClipboardUtils {
 			final StringSelection stringSelection = new StringSelection(string);
 			clipboard.setContents(stringSelection, stringSelection);
 
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 	}
 
@@ -36,7 +36,7 @@ public final class ClipboardUtils {
 				string = clipboardData.toString();
 			}
 
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return string;
 	}

@@ -6,7 +6,6 @@ import com.utils.log.Logger;
 public class RunningProcesses {
 
 	private Process runningProcess;
-	private boolean processStopped;
 
 	public void stop() {
 
@@ -18,7 +17,6 @@ public class RunningProcesses {
 					"currently there are no running processes").showAndWait();
 
 		} else {
-			processStopped = true;
 			runningProcess.destroy();
 
 			if (runningProcess.isAlive()) {
@@ -30,14 +28,5 @@ public class RunningProcesses {
 	public void setRunningProcess(
 			final Process runningProcess) {
 		this.runningProcess = runningProcess;
-	}
-
-	public void setProcessStopped(
-			final boolean processStopped) {
-		this.processStopped = processStopped;
-	}
-
-	public boolean isProcessStopped() {
-		return processStopped;
 	}
 }

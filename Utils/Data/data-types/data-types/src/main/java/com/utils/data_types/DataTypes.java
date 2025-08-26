@@ -48,7 +48,7 @@ public final class DataTypes {
 				b = byteBuffer.get();
 			} while ((b & 0x80) != 0);
 
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 	}
 
@@ -71,7 +71,7 @@ public final class DataTypes {
 				shift += 7;
 			}
 
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return value;
 	}
@@ -93,7 +93,7 @@ public final class DataTypes {
 				}
 			}
 
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return value;
 	}

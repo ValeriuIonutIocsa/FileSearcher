@@ -49,7 +49,7 @@ public final class ConverterInstant {
 		try {
 			instant = Instant.ofEpochMilli(instantEpochMs);
 
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return instant;
 	}
@@ -64,7 +64,7 @@ public final class ConverterInstant {
 					.withLocale(Locale.US).withZone(ZoneId.systemDefault());
 			instant = Instant.from(dateTimeFormatter.parse(instantString));
 
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return instant;
 	}

@@ -12,7 +12,7 @@ import com.personal.scripts.file_search.text_find.TextFinder;
 import com.personal.scripts.file_search.workers.search.RunningProcesses;
 import com.personal.scripts.file_search.workers.search.SearchData;
 import com.personal.scripts.file_search.workers.search.engine.data.FirstOccurrenceData;
-import com.utils.gui.alerts.CustomAlertException;
+import com.utils.gui.alerts.CustomAlertThrowable;
 import com.utils.io.processes.InputStreamReaderThread;
 import com.utils.io.processes.ReadBytesHandlerLinesPrint;
 import com.utils.log.Logger;
@@ -90,10 +90,10 @@ public class SearchEngineRg implements SearchEngine {
 			inputStreamReaderThread.join();
 			errorInputStreamReaderThread.join();
 
-		} catch (final Exception exc) {
-			Logger.printException(exc);
-			new CustomAlertException("failed to parse file paths",
-					"error occurred while parsing file paths", exc).showAndWait();
+		} catch (final Throwable throwable) {
+			Logger.printThrowable(throwable);
+			new CustomAlertThrowable("failed to parse file paths",
+					"error occurred while parsing file paths", throwable).showAndWait();
 
 		} finally {
 			runningProcesses.setRunningProcess(null);
@@ -132,12 +132,14 @@ public class SearchEngineRg implements SearchEngine {
 				Collections.addAll(escapedCommandPartList, globOption, "\"" + globPatternString + "\"");
 			}
 
-			final String regexOption;
+			Collections.addAll(commandPartList, "--unrestricted", "--hidden");
+			Collections.addAll(escapedCommandPartList, "--unrestricted", "--hidden");
+
 			final boolean useRegex = searchData.useRegex();
-			if (useRegex) {
-				regexOption = "--regexp";
-			} else {
-				regexOption = "--fixed-strings";
+			if (!useRegex) {
+
+				commandPartList.add("--fixed-strings");
+				escapedCommandPartList.add("--fixed-strings");
 			}
 
 			final String caseSensitiveOption;
@@ -148,10 +150,15 @@ public class SearchEngineRg implements SearchEngine {
 				caseSensitiveOption = "--ignore-case";
 			}
 
-			Collections.addAll(commandPartList, "--unrestricted", "--hidden",
-					regexOption, caseSensitiveOption, "--count-matches", "--text");
-			Collections.addAll(escapedCommandPartList, "--unrestricted", "--hidden",
-					regexOption, caseSensitiveOption, "--count-matches", "--text");
+			Collections.addAll(commandPartList, caseSensitiveOption, "--count-matches");
+			Collections.addAll(escapedCommandPartList, caseSensitiveOption, "--count-matches");
+
+			final boolean searchInBinary = searchData.searchInBinary();
+			if (searchInBinary) {
+
+				Collections.addAll(commandPartList, "--text");
+				Collections.addAll(escapedCommandPartList, "--text");
+			}
 
 			String searchText = searchData.searchText();
 			searchText = searchText.replace("\"", "\"\"");
@@ -188,10 +195,10 @@ public class SearchEngineRg implements SearchEngine {
 			inputStreamReaderThread.join();
 			errorInputStreamReaderThread.join();
 
-		} catch (final Exception exc) {
-			Logger.printException(exc);
-			new CustomAlertException("failed to search text in files",
-					"error occurred while searching for text in files", exc).showAndWait();
+		} catch (final Throwable throwable) {
+			Logger.printThrowable(throwable);
+			new CustomAlertThrowable("failed to search text in files",
+					"error occurred while searching for text in files", throwable).showAndWait();
 
 		} finally {
 			runningProcesses.setRunningProcess(null);
@@ -214,12 +221,11 @@ public class SearchEngineRg implements SearchEngine {
 			commandPartList.add(rgExePathString);
 			escapedCommandPartList.add(rgExePathString);
 
-			final String regexOption;
 			final boolean useRegex = searchData.useRegex();
-			if (useRegex) {
-				regexOption = "--regexp";
-			} else {
-				regexOption = "--fixed-strings";
+			if (!useRegex) {
+
+				commandPartList.add("--fixed-strings");
+				escapedCommandPartList.add("--fixed-strings");
 			}
 
 			final String caseSensitiveOption;
@@ -230,10 +236,18 @@ public class SearchEngineRg implements SearchEngine {
 				caseSensitiveOption = "--ignore-case";
 			}
 
-			Collections.addAll(commandPartList, regexOption, caseSensitiveOption,
-					"--text", "--line-number", "--column");
-			Collections.addAll(escapedCommandPartList, regexOption, caseSensitiveOption,
-					"--text", "--line-number", "--column");
+			commandPartList.add(caseSensitiveOption);
+			escapedCommandPartList.add(caseSensitiveOption);
+
+			Collections.addAll(commandPartList, "--line-number", "--column");
+			Collections.addAll(escapedCommandPartList, "--line-number", "--column");
+
+			final boolean searchInBinary = searchData.searchInBinary();
+			if (searchInBinary) {
+
+				Collections.addAll(commandPartList, "--text");
+				Collections.addAll(escapedCommandPartList, "--text");
+			}
 
 			String searchText = searchData.searchText();
 			searchText = searchText.replace("\"", "\"\"");
@@ -274,11 +288,11 @@ public class SearchEngineRg implements SearchEngine {
 			firstOccurrenceRow = readBytesHandlerLinesRgParseFirstOccurrenceData.getFirstOccurrenceRow();
 			firstOccurrenceCol = readBytesHandlerLinesRgParseFirstOccurrenceData.getFirstOccurrenceCol();
 
-		} catch (final Exception exc) {
-			Logger.printException(exc);
-			new CustomAlertException("failed to find first occurrence in file",
+		} catch (final Throwable throwable) {
+			Logger.printThrowable(throwable);
+			new CustomAlertThrowable("failed to find first occurrence in file",
 					"error occurred while searching for first text occurrence " +
-							"in file:" + System.lineSeparator() + filePathString, exc).showAndWait();
+							"in file:" + System.lineSeparator() + filePathString, throwable).showAndWait();
 
 		} finally {
 			runningProcesses.setRunningProcess(null);

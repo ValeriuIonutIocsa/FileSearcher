@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import com.personal.scripts.file_search.workers.search.engine.type.SearchEngineType;
 import com.utils.log.Logger;
-import com.utils.string.StrUtils;
 import com.utils.test.TestInputUtils;
 
 class GuiWorkerSearchTest {
@@ -25,8 +24,9 @@ class GuiWorkerSearchTest {
 		final String searchText;
 		final boolean useRegex;
 		final boolean caseSensitive;
+		final boolean searchInBinary;
 
-		final int input = TestInputUtils.parseTestInputNumber("22");
+		final int input = TestInputUtils.parseTestInputNumber("101");
 		if (input == 1) {
 
 			searchEngineType = SearchEngineType.RG;
@@ -38,6 +38,7 @@ class GuiWorkerSearchTest {
 			searchText = "jarF";
 			useRegex = false;
 			caseSensitive = true;
+			searchInBinary = true;
 
 		} else if (input == 2) {
 
@@ -50,6 +51,7 @@ class GuiWorkerSearchTest {
 			searchText = "Utils \\{\\w+";
 			useRegex = true;
 			caseSensitive = false;
+			searchInBinary = true;
 
 		} else if (input == 11) {
 
@@ -62,6 +64,7 @@ class GuiWorkerSearchTest {
 			searchText = "s    */";
 			useRegex = false;
 			caseSensitive = false;
+			searchInBinary = true;
 
 		} else if (input == 21) {
 
@@ -74,6 +77,7 @@ class GuiWorkerSearchTest {
 			searchText = "echo > \"abc\"";
 			useRegex = false;
 			caseSensitive = false;
+			searchInBinary = true;
 
 		} else if (input == 22) {
 
@@ -86,19 +90,35 @@ class GuiWorkerSearchTest {
 			searchText = ".putInternal(\"PATH\", System.getenv(\"PATH\"))";
 			useRegex = false;
 			caseSensitive = false;
+			searchInBinary = true;
 
 		} else if (input == 101) {
 
 			searchEngineType = SearchEngineType.RG;
-			searchFolderPathString = "D:\\casdev\\gbe\\gbe_dev_repo\\" +
+			searchFolderPathString = "D:\\gbe\\_gbe_dev_repo\\" +
 					"1TGBE-BUILD_PLATFORM\\src\\projects\\VWA22_0U0_B00\\build";
 
-			filePathPatternString = "**/*.o";
+			filePathPatternString = "**/*t1*.o";
 			caseSensitivePathPattern = true;
 
 			searchText = "cro_dbg_trace";
 			useRegex = false;
 			caseSensitive = true;
+			searchInBinary = true;
+
+		} else if (input == 102) {
+
+			searchEngineType = SearchEngineType.RG;
+			searchFolderPathString = "D:\\gbe\\_gbe_dev_repo\\" +
+					"1TGBE-BUILD_PLATFORM\\src\\projects\\VWA22_0U0_B00\\build";
+
+			filePathPatternString = "**/*t1*.o";
+			caseSensitivePathPattern = true;
+
+			searchText = "cro_dbg_trace";
+			useRegex = false;
+			caseSensitive = true;
+			searchInBinary = false;
 
 		} else {
 			throw new RuntimeException();
@@ -106,20 +126,42 @@ class GuiWorkerSearchTest {
 
 		final SearchData searchData = new SearchData(searchEngineType, rgExePathString,
 				searchFolderPathString, filePathPatternString, caseSensitivePathPattern,
-				searchText, useRegex, caseSensitive);
+				searchText, useRegex, caseSensitive, searchInBinary);
 
 		final GuiWorkerSearch guiWorkerSearch = new GuiWorkerSearch(null, searchData, false,
 				new RunningProcesses(), null);
 		guiWorkerSearch.workL2();
 
-		Logger.printNewLine();
 		final List<SearchResult> searchResultList = guiWorkerSearch.getSearchResultList();
-		Logger.printLine("result count: " +
-				StrUtils.positiveIntToString(searchResultList.size(), true));
+
+		Logger.printNewLine();
+
+		final int matchingFileCount = searchResultList.size();
+		Logger.printLine("matching file count: " + matchingFileCount);
+
+		int resultFileCount = 0;
 		for (final SearchResult searchResult : searchResultList) {
 
 			final int occurrenceCount = searchResult.getOccurrenceCount();
+			if (occurrenceCount > 0) {
+				resultFileCount++;
+			}
+		}
+		Logger.printLine("result file count: " + resultFileCount);
+
+		Logger.printNewLine();
+		Logger.printLine("detailed results:");
+		for (int i = 0; i < searchResultList.size(); i++) {
+
+			final SearchResult searchResult = searchResultList.get(i);
+			final int occurrenceCount = searchResult.getOccurrenceCount();
 			Logger.printLine(searchResult.createFilePathString() + "   " + occurrenceCount);
+
+			if (i >= 100) {
+
+				Logger.printLine("...");
+				break;
+			}
 		}
 	}
 }

@@ -9,7 +9,7 @@ import java.nio.file.PathMatcher;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.tika.parser.txt.CharsetDetector;
 import org.apache.tika.parser.txt.CharsetMatch;
 
@@ -18,7 +18,7 @@ import com.personal.scripts.file_search.workers.search.RunningProcesses;
 import com.personal.scripts.file_search.workers.search.SearchData;
 import com.personal.scripts.file_search.workers.search.engine.data.FirstOccurrenceData;
 import com.utils.gui.alerts.CustomAlertError;
-import com.utils.gui.alerts.CustomAlertException;
+import com.utils.gui.alerts.CustomAlertThrowable;
 import com.utils.io.ListFileUtils;
 import com.utils.io.ReaderUtils;
 import com.utils.io.StreamUtils;
@@ -97,10 +97,10 @@ public class SearchEngineOwn implements SearchEngine {
 					occurrenceCount += lineOccurrenceCount;
 				}
 
-			} catch (final Exception exc) {
+			} catch (final Throwable throwable) {
 				Logger.printError("failed to compute occurrence count in file:" +
 						System.lineSeparator() + filePathString);
-				Logger.printException(exc);
+				Logger.printThrowable(throwable);
 			}
 			filePathStringToOccurrenceCountMap.put(filePathString, occurrenceCount);
 		}
@@ -117,15 +117,15 @@ public class SearchEngineOwn implements SearchEngine {
 			final CharsetMatch charsetMatch = charsetDetector.detect();
 			charsetName = charsetMatch.getName();
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to detect charset for file:" +
 					System.lineSeparator() + filePathString);
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 
 		final Charset charset;
-		if (StringUtils.startsWith(charsetName, "ISO-") ||
-				StringUtils.startsWith(charsetName, "windows-")) {
+		if (Strings.CS.startsWith(charsetName, "ISO-") ||
+				Strings.CS.startsWith(charsetName, "windows-")) {
 			charset = StandardCharsets.ISO_8859_1;
 		} else {
 			charset = StandardCharsets.UTF_8;
@@ -158,10 +158,11 @@ public class SearchEngineOwn implements SearchEngine {
 				fileRow++;
 			}
 
-		} catch (final Exception exc) {
-			new CustomAlertException("failed to find first occurrence in file",
+		} catch (final Throwable throwable) {
+			Logger.printThrowable(throwable);
+			new CustomAlertThrowable("failed to find first occurrence in file",
 					"error occurred while searching for first text occurrence " +
-							"in file:" + System.lineSeparator() + filePathString, exc).showAndWait();
+							"in file:" + System.lineSeparator() + filePathString, throwable).showAndWait();
 		}
 		return new FirstOccurrenceData(firstOccurrenceRow, firstOccurrenceCol);
 	}

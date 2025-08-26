@@ -69,29 +69,31 @@ public class JsonWriter {
 			printStream.print(spacingIndent);
 		}
 
-		if (objectCollection != null && !objectCollection.isEmpty()) {
-
-			printStream.print('[');
-			printStream.print(lineIndent);
-
-			int index = 0;
-			final int size = objectCollection.size();
-			for (final ObjectT object : objectCollection) {
-
-				writeObject(object, indentCount + 2, writeObjectTriConsumer);
-
-				if (index < size - 1) {
-					printStream.print(',');
-				}
-				printStream.print(lineIndent);
-				index++;
-			}
-
-			StrUtils.printRepeatedString(indent, indentCount + 1, printStream);
-			printStream.print(']');
+		if (objectCollection == null) {
+			printStream.print("null");
 
 		} else {
-			printStream.print("\"\"");
+			printStream.print('[');
+			if (!objectCollection.isEmpty()) {
+
+				printStream.print(lineIndent);
+
+				int index = 0;
+				final int size = objectCollection.size();
+				for (final ObjectT object : objectCollection) {
+
+					writeObject(object, indentCount + 2, writeObjectTriConsumer);
+
+					if (index < size - 1) {
+						printStream.print(',');
+					}
+					printStream.print(lineIndent);
+					index++;
+				}
+
+				StrUtils.printRepeatedString(indent, indentCount + 1, printStream);
+			}
+			printStream.print(']');
 		}
 
 		if (notLastAttribute) {
@@ -120,8 +122,10 @@ public class JsonWriter {
 			printStream.print(spacingIndent);
 		}
 
-		if (object != null) {
+		if (object == null) {
+			printStream.print("null");
 
+		} else {
 			printStream.print('{');
 			printStream.print(lineIndent);
 
@@ -129,9 +133,6 @@ public class JsonWriter {
 
 			StrUtils.printRepeatedString(indent, indentCount + 1, printStream);
 			printStream.print('}');
-
-		} else {
-			printStream.print("\"\"");
 		}
 
 		if (notLastAttribute) {
@@ -158,13 +159,15 @@ public class JsonWriter {
 			printStream.print(spacingIndent);
 		}
 
-		printStream.print('"');
-		if (value != null) {
+		if (value == null) {
+			printStream.print("null");
 
+		} else {
+			printStream.print('"');
 			final String escapedValue = escapeJsonString(value);
 			printStream.print(escapedValue);
+			printStream.print('"');
 		}
-		printStream.print('"');
 
 		if (notLastAttribute) {
 			printStream.print(',');
@@ -190,8 +193,10 @@ public class JsonWriter {
 			printStream.print(spacingIndent);
 		}
 
-		if (valueString != null) {
+		if (valueString == null) {
+			printStream.print("null");
 
+		} else {
 			final String escapedValue = escapeJsonString(valueString);
 			printStream.print(escapedValue);
 		}

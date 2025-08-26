@@ -1,6 +1,6 @@
 package com.utils.html.sections;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import com.utils.xml.stax.XmlStAXWriter;
 
@@ -19,7 +19,7 @@ public class HtmlSectionNoBreakText extends AbstractHtmlSection {
 			final XmlStAXWriter xmlStAXWriter) {
 
 		xmlStAXWriter.writeCharacters("");
-		final String noBreakText = StringUtils.replace(text, " ", "&nbsp;");
+		final String noBreakText = Strings.CS.replace(text, " ", "&nbsp;");
 		xmlStAXWriter.writePlainText(noBreakText);
 	}
 }

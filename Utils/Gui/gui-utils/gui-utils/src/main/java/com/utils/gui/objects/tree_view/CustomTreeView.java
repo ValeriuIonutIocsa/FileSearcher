@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.utils.annotations.ApiMethod;
 import com.utils.gui.clipboard.ClipboardUtils;
 
 import javafx.scene.control.SelectionMode;
@@ -12,20 +11,17 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 
-public final class TreeViewFactory {
+public class CustomTreeView<
+		ObjectT> extends TreeView<ObjectT> {
 
-	private TreeViewFactory() {
-	}
+	public CustomTreeView(
+			final boolean editable,
+			final boolean multipleSelection,
+			final boolean showRoot) {
 
-	@ApiMethod
-	public static <
-			ObjectT> TreeView<ObjectT> createTreeView(
-					final boolean editable,
-					final boolean multipleSelection,
-					final boolean showRoot) {
+		super();
 
-		final TreeView<ObjectT> treeView = new TreeView<>();
-		treeView.setEditable(editable);
+		setEditable(editable);
 
 		final SelectionMode selectionMode;
 		if (multipleSelection) {
@@ -33,26 +29,32 @@ public final class TreeViewFactory {
 		} else {
 			selectionMode = SelectionMode.SINGLE;
 		}
-		treeView.getSelectionModel().setSelectionMode(selectionMode);
-		treeView.setShowRoot(showRoot);
+		getSelectionModel().setSelectionMode(selectionMode);
+		setShowRoot(showRoot);
 
-		treeView.setOnKeyPressed(keyEvent -> {
+		setOnKeyPressed(keyEvent -> {
 
-			if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.C) {
-				TreeViewFactory.copyTreeViewSelectionToClipboard(treeView);
+			if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.MINUS ||
+					keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.SUBTRACT) {
+				deselectAllKeyCombinationPressed();
+
+			} else if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.C) {
+				copyKeyCombinationPressed();
+			} else if (keyEvent.isControlDown() && keyEvent.getCode() == KeyCode.V) {
+				pasteKeyCombinationPressed();
 			}
 		});
-
-		return treeView;
 	}
 
-	@ApiMethod
-	public static <
-			ObjectT> void copyTreeViewSelectionToClipboard(
-					final TreeView<ObjectT> treeView) {
+	protected void deselectAllKeyCombinationPressed() {
+
+		getSelectionModel().clearSelection();
+	}
+
+	protected void copyKeyCombinationPressed() {
 
 		final StringBuilder stringBuilder = new StringBuilder();
-		final List<TreeItem<ObjectT>> selectedItems = treeView.getSelectionModel().getSelectedItems();
+		final List<TreeItem<ObjectT>> selectedItems = getSelectionModel().getSelectedItems();
 		final int selectedItemCount = selectedItems.size();
 		for (int i = 0; i < selectedItemCount; i++) {
 
@@ -69,5 +71,8 @@ public final class TreeViewFactory {
 		if (StringUtils.isNotBlank(clipboardString)) {
 			ClipboardUtils.putStringInClipBoard(clipboardString);
 		}
+	}
+
+	protected void pasteKeyCombinationPressed() {
 	}
 }

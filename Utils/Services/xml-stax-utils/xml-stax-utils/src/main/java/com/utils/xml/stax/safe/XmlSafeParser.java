@@ -92,10 +92,10 @@ public final class XmlSafeParser {
 			}
 			processedXmlFileContents = sbRunnableMeasResultsXmlString.toString();
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to safe parse XML file:" +
 					System.lineSeparator() + xmlFilePathString);
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 		return processedXmlFileContents;
 	}

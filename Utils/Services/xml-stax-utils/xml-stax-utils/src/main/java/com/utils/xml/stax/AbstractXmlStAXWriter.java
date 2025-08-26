@@ -47,9 +47,9 @@ public abstract class AbstractXmlStAXWriter implements XmlStAXWriter {
 			xmlEventWriter = xmlOutputFactory.createXMLEventWriter(
 					bufferedOutputStream, StandardCharsets.UTF_8.name());
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to create XML writer");
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 
 		this.bufferedOutputStream = bufferedOutputStream;
@@ -81,9 +81,9 @@ public abstract class AbstractXmlStAXWriter implements XmlStAXWriter {
 			xmlEventWriter = xmlOutputFactory.createXMLEventWriter(
 					bufferedOutputStream, StandardCharsets.UTF_8.name());
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to create XML writer");
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 
 		this.bufferedOutputStream = bufferedOutputStream;
@@ -104,9 +104,9 @@ public abstract class AbstractXmlStAXWriter implements XmlStAXWriter {
 				write();
 				success = true;
 
-			} catch (final Exception exc) {
+			} catch (final Throwable throwable) {
 				Logger.printError("failed to write XML file");
-				Logger.printException(exc);
+				Logger.printThrowable(throwable);
 
 			} finally {
 				closeStreams();
@@ -125,9 +125,9 @@ public abstract class AbstractXmlStAXWriter implements XmlStAXWriter {
 				write();
 				success = true;
 
-			} catch (final Exception exc) {
+			} catch (final Throwable throwable) {
 				Logger.printError("failed to write XML file");
-				Logger.printException(exc);
+				Logger.printThrowable(throwable);
 			}
 		}
 		return success;
@@ -141,7 +141,7 @@ public abstract class AbstractXmlStAXWriter implements XmlStAXWriter {
 		try {
 			xmlEventWriter.close();
 			bufferedOutputStream.close();
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 	}
 
@@ -245,9 +245,9 @@ public abstract class AbstractXmlStAXWriter implements XmlStAXWriter {
 				xmlEventWriter.add(xmlEvent);
 				lastEventType = xmlEventType;
 
-			} catch (final Exception exc) {
+			} catch (final Throwable throwable) {
 				Logger.printError("failed to add element to the XML file");
-				Logger.printException(exc);
+				Logger.printThrowable(throwable);
 			}
 		}
 	}
@@ -265,9 +265,9 @@ public abstract class AbstractXmlStAXWriter implements XmlStAXWriter {
 			try {
 				bufferedOutputStream.write(text.getBytes(StandardCharsets.UTF_8));
 
-			} catch (final Exception exc) {
+			} catch (final Throwable throwable) {
 				Logger.printError("failed to write plain text to the XML file");
-				Logger.printException(exc);
+				Logger.printThrowable(throwable);
 			}
 		}
 	}
@@ -278,9 +278,9 @@ public abstract class AbstractXmlStAXWriter implements XmlStAXWriter {
 		try {
 			bufferedOutputStream.flush();
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to flush XML output stream");
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 	}
 }

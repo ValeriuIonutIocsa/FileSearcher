@@ -25,6 +25,7 @@ import com.utils.gui.objects.select.HBoxTextFieldWithSelectionImpl;
 import com.utils.gui.objects.tables.table_view.CustomTableView;
 import com.utils.string.StrUtils;
 
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -54,6 +55,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 	private CheckBox caseSensitivePathPatternCheckBox;
 	private CheckBox useRegexCheckBox;
 	private CheckBox caseSensitiveCheckBox;
+	private CheckBox searchInBinaryCheckBox;
 	private CheckBox saveHistoryCheckBox;
 
 	private Button stopButton;
@@ -297,10 +299,13 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		GuiUtils.addToHBox(bottomHBox, searchEngineTypeComboBox,
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
+		GuiUtils.addToHBox(bottomHBox, BasicControlsFactories.getInstance().createSeparator(Orientation.VERTICAL),
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
 		final Label caseSensitivePathPatternLabel = BasicControlsFactories.getInstance()
 				.createLabel("case sensitive path pattern:", "bold");
 		GuiUtils.addToHBox(bottomHBox, caseSensitivePathPatternLabel,
-				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 14);
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
 		caseSensitivePathPatternCheckBox =
 				BasicControlsFactories.getInstance().createCheckBox("");
@@ -310,16 +315,22 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		GuiUtils.addToHBox(bottomHBox, caseSensitivePathPatternCheckBox,
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
+		GuiUtils.addToHBox(bottomHBox, BasicControlsFactories.getInstance().createSeparator(Orientation.VERTICAL),
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
 		final Label useRegexLabel = BasicControlsFactories.getInstance()
 				.createLabel("use regex:", "bold");
 		GuiUtils.addToHBox(bottomHBox, useRegexLabel,
-				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 14);
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
 		useRegexCheckBox =
 				BasicControlsFactories.getInstance().createCheckBox("");
 		final boolean useRegex = SavedOptionsFile.INSTANCE.isUseRegex();
 		useRegexCheckBox.setSelected(useRegex);
 		GuiUtils.addToHBox(bottomHBox, useRegexCheckBox,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		GuiUtils.addToHBox(bottomHBox, BasicControlsFactories.getInstance().createSeparator(Orientation.VERTICAL),
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
 		final Label caseSensitiveLabel = BasicControlsFactories.getInstance()
@@ -334,15 +345,36 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		GuiUtils.addToHBox(bottomHBox, caseSensitiveCheckBox,
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
+		GuiUtils.addToHBox(bottomHBox, BasicControlsFactories.getInstance().createSeparator(Orientation.VERTICAL),
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		final Label searchInBinaryLabel = BasicControlsFactories.getInstance()
+				.createLabel("search in binary:", "bold");
+		GuiUtils.addToHBox(bottomHBox, searchInBinaryLabel,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		searchInBinaryCheckBox =
+				BasicControlsFactories.getInstance().createCheckBox("");
+		final boolean searchInBinary = SavedOptionsFile.INSTANCE.isSearchInBinary();
+		searchInBinaryCheckBox.setSelected(searchInBinary);
+		GuiUtils.addToHBox(bottomHBox, searchInBinaryCheckBox,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		GuiUtils.addToHBox(bottomHBox, BasicControlsFactories.getInstance().createSeparator(Orientation.VERTICAL),
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
 		final Label saveHistoryLabel = BasicControlsFactories.getInstance()
 				.createLabel("save history:", "bold");
 		GuiUtils.addToHBox(bottomHBox, saveHistoryLabel,
-				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 14);
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
 		saveHistoryCheckBox =
 				BasicControlsFactories.getInstance().createCheckBox("");
 		saveHistoryCheckBox.setSelected(true);
 		GuiUtils.addToHBox(bottomHBox, saveHistoryCheckBox,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		GuiUtils.addToHBox(bottomHBox, BasicControlsFactories.getInstance().createSeparator(Orientation.VERTICAL),
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
 		GuiUtils.addToHBox(bottomHBox, new Region(),
@@ -390,9 +422,11 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		final boolean useRegex = useRegexCheckBox.isSelected();
 		final boolean caseSensitive = caseSensitiveCheckBox.isSelected();
 
+		final boolean searchInBinary = searchInBinaryCheckBox.isSelected();
+
 		return new SearchData(searchEngineType, rgExePathString,
 				searchFolderPathString, filePathPatternString, caseSensitivePathPattern,
-				searchText, useRegex, caseSensitive);
+				searchText, useRegex, caseSensitive, searchInBinary);
 	}
 
 	private void makeCountsControlsInvisible() {

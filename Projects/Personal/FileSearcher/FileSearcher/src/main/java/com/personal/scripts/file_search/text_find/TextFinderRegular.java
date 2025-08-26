@@ -3,6 +3,7 @@ package com.personal.scripts.file_search.text_find;
 import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 public class TextFinderRegular implements TextFinder {
 
@@ -37,9 +38,9 @@ public class TextFinderRegular implements TextFinder {
 
 		final int index;
 		if (caseSensitive) {
-			index = StringUtils.indexOfIgnoreCase(string, searchString);
+			index = Strings.CI.indexOf(string, searchString);
 		} else {
-			index = StringUtils.indexOf(string, searchString);
+			index = Strings.CS.indexOf(string, searchString);
 		}
 		return index;
 	}

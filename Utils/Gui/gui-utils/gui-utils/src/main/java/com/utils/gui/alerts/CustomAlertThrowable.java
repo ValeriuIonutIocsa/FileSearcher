@@ -12,20 +12,20 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-public class CustomAlertException extends AbstractCustomAlert {
+public class CustomAlertThrowable extends AbstractCustomAlert {
 
 	private final String headerText;
 	private final String contentText;
-	private final Exception exc;
+	private final Throwable throwable;
 
-	public CustomAlertException(
+	public CustomAlertThrowable(
 			final String headerText,
 			final String contentText,
-			final Exception exc) {
+			final Throwable throwable) {
 
 		this.headerText = headerText;
 		this.contentText = contentText;
-		this.exc = exc;
+		this.throwable = throwable;
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class CustomAlertException extends AbstractCustomAlert {
 
 	@Override
 	protected String getTitle() {
-		return "Exception";
+		return "Throwable";
 	}
 
 	@Override
@@ -60,11 +60,12 @@ public class CustomAlertException extends AbstractCustomAlert {
 		GuiUtils.addToVBox(vBoxExpandableContent, labelDetails,
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 5, 3);
 
-		final String exceptionString = Logger.exceptionToString(exc);
-		final TextArea textAreaExceptionString = BasicControlsFactories.getInstance().createTextArea(exceptionString);
-		textAreaExceptionString.setEditable(false);
-		textAreaExceptionString.setWrapText(true);
-		GuiUtils.addToVBox(vBoxExpandableContent, textAreaExceptionString,
+		final String throwableString = Logger.throwableToString(throwable);
+		final TextArea textAreaThrowableString =
+				BasicControlsFactories.getInstance().createTextArea(throwableString);
+		textAreaThrowableString.setEditable(false);
+		textAreaThrowableString.setWrapText(true);
+		GuiUtils.addToVBox(vBoxExpandableContent, textAreaThrowableString,
 				Pos.CENTER_LEFT, Priority.ALWAYS, 0, 0, 0, 0);
 
 		dialog.getDialogPane().setExpandableContent(vBoxExpandableContent);

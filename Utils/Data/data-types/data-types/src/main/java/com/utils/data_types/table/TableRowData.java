@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import com.utils.data_types.data_items.DataItem;
 import com.utils.json.JsonWriter;
@@ -71,7 +72,7 @@ public interface TableRowData extends Serializable {
 					String csvStringPart = csvString.substring(j,
 							Math.min(j + TableRowData.XLSX_CELL_CHARACTER_LIMIT, csvString.length()));
 					csvStringPart = StringUtils.replaceChars(csvStringPart, ',', ';');
-					csvStringPart = StringUtils.replace(csvStringPart, "\"", "\"\"");
+					csvStringPart = Strings.CS.replace(csvStringPart, "\"", "\"\"");
 					csvCellDataList.add(csvStringPart);
 				}
 			}

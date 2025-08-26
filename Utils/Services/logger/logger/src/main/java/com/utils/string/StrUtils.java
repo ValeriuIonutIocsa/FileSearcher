@@ -12,6 +12,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import com.utils.annotations.ApiMethod;
 import com.utils.string.characters.SpecialCharacterUtils;
@@ -209,7 +210,7 @@ public final class StrUtils {
 				startAddress = StrUtils.tryParsePositiveLongFromHexString(startAddressString);
 			}
 
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return startAddress;
 	}
@@ -228,7 +229,7 @@ public final class StrUtils {
 				endAddress = StrUtils.tryParsePositiveLongFromHexString(endAddressString);
 			}
 
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return endAddress;
 	}
@@ -894,7 +895,7 @@ public final class StrUtils {
 		final String resultStr;
 		if (str != null) {
 
-			if (StringUtils.startsWithIgnoreCase(str, prefix)) {
+			if (Strings.CI.startsWith(str, prefix)) {
 				resultStr = str.substring(prefix.length());
 			} else {
 				resultStr = str;
@@ -934,7 +935,7 @@ public final class StrUtils {
 		final String resultStr;
 		if (str != null) {
 
-			if (StringUtils.endsWithIgnoreCase(str, suffix)) {
+			if (Strings.CI.endsWith(str, suffix)) {
 				resultStr = str.substring(0, str.length() - suffix.length());
 			} else {
 				resultStr = str;
@@ -998,7 +999,7 @@ public final class StrUtils {
 		Byte value = null;
 		try {
 			value = (byte) Integer.parseInt(byteString);
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return value;
 	}
@@ -1010,7 +1011,7 @@ public final class StrUtils {
 		Byte value = null;
 		try {
 			value = (byte) Integer.parseInt(byteString, 16);
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return value;
 	}
@@ -1022,7 +1023,7 @@ public final class StrUtils {
 		Byte value = null;
 		try {
 			value = (byte) Integer.parseInt(byteString, 2);
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return value;
 	}
@@ -1034,7 +1035,7 @@ public final class StrUtils {
 		byte value = -1;
 		try {
 			value = Byte.parseByte(byteString);
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return value;
 	}
@@ -1046,7 +1047,7 @@ public final class StrUtils {
 		Short value = null;
 		try {
 			value = Short.parseShort(shortString);
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return value;
 	}
@@ -1058,7 +1059,7 @@ public final class StrUtils {
 		Integer value = null;
 		try {
 			value = Integer.parseInt(intString);
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return value;
 	}
@@ -1070,7 +1071,7 @@ public final class StrUtils {
 		int value = -1;
 		try {
 			value = Integer.parseInt(intString);
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return value;
 	}
@@ -1084,7 +1085,7 @@ public final class StrUtils {
 			String hexString = hexStringParam;
 			hexString = hexString.substring(2);
 			value = Integer.parseInt(hexString, 16);
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return value;
 	}
@@ -1094,7 +1095,7 @@ public final class StrUtils {
 			final String string) {
 
 		final int value;
-		if (StringUtils.startsWithIgnoreCase(string, "0x")) {
+		if (Strings.CI.startsWith(string, "0x")) {
 			value = StrUtils.tryParsePositiveIntFromHexString(string);
 		} else {
 			value = StrUtils.tryParsePositiveInt(string);
@@ -1109,7 +1110,7 @@ public final class StrUtils {
 		Long value = null;
 		try {
 			value = Long.parseLong(longString);
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return value;
 	}
@@ -1121,7 +1122,7 @@ public final class StrUtils {
 		long value = -1;
 		try {
 			value = Long.parseLong(longString);
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return value;
 	}
@@ -1135,7 +1136,7 @@ public final class StrUtils {
 			String hexString = hexStringParam;
 			hexString = hexString.substring(2);
 			value = Long.parseLong(hexString, 16);
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return value;
 	}
@@ -1147,7 +1148,7 @@ public final class StrUtils {
 		long value = -1;
 		try {
 			value = Long.parseLong(hexString, 16);
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return value;
 	}
@@ -1157,7 +1158,7 @@ public final class StrUtils {
 			final String string) {
 
 		final long value;
-		if (StringUtils.startsWithIgnoreCase(string, "0x")) {
+		if (Strings.CI.startsWith(string, "0x")) {
 			value = StrUtils.tryParsePositiveLongFromHexString(string);
 		} else {
 			value = StrUtils.tryParsePositiveLong(string);
@@ -1173,7 +1174,7 @@ public final class StrUtils {
 		double result = defaultValue;
 		try {
 			result = Double.parseDouble(doubleString);
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		return result;
 	}
@@ -1207,7 +1208,7 @@ public final class StrUtils {
 			}
 			byteArray = data;
 
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 			byteArray = new byte[] {};
 		}
 		return byteArray;
@@ -1229,7 +1230,7 @@ public final class StrUtils {
 			}
 			byteArray = data;
 
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 			byteArray = new byte[] {};
 		}
 		return byteArray;

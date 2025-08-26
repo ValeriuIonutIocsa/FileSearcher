@@ -82,6 +82,9 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 		final boolean caseSensitive = searchData.caseSensitive();
 		SavedOptionsFile.INSTANCE.setCaseSensitive(caseSensitive);
 
+		final boolean searchInBinary = searchData.searchInBinary();
+		SavedOptionsFile.INSTANCE.setSearchInBinary(searchInBinary);
+
 		SavedOptionsFile.INSTANCE.save();
 
 		if (saveHistory) {
@@ -102,19 +105,6 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 			}
 		}
 
-		workL2();
-	}
-
-	private static void saveHistory(
-			final SavedHistoryFile savedHistoryFile,
-			final String savedHistoryEntry) {
-
-		savedHistoryFile.addEntry(savedHistoryEntry);
-		savedHistoryFile.save();
-	}
-
-	void workL2() {
-
 		final String searchFolderPathString = searchData.searchFolderPathString();
 		if (StringUtils.isBlank(searchFolderPathString)) {
 			new CustomAlertError("search path is blank",
@@ -132,13 +122,21 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 							"file path pattern is blank").showAndWait();
 
 				} else {
-					workL3();
+					workL2();
 				}
 			}
 		}
 	}
 
-	private void workL3() {
+	private static void saveHistory(
+			final SavedHistoryFile savedHistoryFile,
+			final String savedHistoryEntry) {
+
+		savedHistoryFile.addEntry(savedHistoryEntry);
+		savedHistoryFile.save();
+	}
+
+	void workL2() {
 
 		final List<String> dirPathStringList = new ArrayList<>();
 		final List<String> filePathStringList = new ArrayList<>();

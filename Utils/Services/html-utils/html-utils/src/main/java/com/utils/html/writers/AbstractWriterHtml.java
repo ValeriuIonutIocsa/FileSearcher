@@ -29,10 +29,10 @@ public abstract class AbstractWriterHtml implements WriterHtml {
 		try (OutputStream outputStream = StreamUtils.openBufferedOutputStream(outputPathString)) {
 			write(outputStream);
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to write HTML to file:" +
 					System.lineSeparator() + outputPathString);
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 	}
 
@@ -45,9 +45,9 @@ public abstract class AbstractWriterHtml implements WriterHtml {
 			write(byteArrayOutputStream);
 			str = byteArrayOutputStream.toString(StandardCharsets.UTF_8);
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to write HTML to string");
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 			str = "";
 		}
 		return str;

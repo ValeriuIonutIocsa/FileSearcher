@@ -176,12 +176,12 @@ public class CustomTreeTableView<
 		}
 	}
 
-	private void deselectAllKeyCombinationPressed() {
+	protected void deselectAllKeyCombinationPressed() {
 
 		getSelectionModel().clearSelection();
 	}
 
-	private void searchKeyCombinationPressed(
+	protected void searchKeyCombinationPressed(
 			final int defaultSearchAndFilterColumnIndex) {
 
 		int columnIndex = defaultSearchAndFilterColumnIndex;
@@ -192,7 +192,7 @@ public class CustomTreeTableView<
 		search(columnIndex);
 	}
 
-	private void filterKeyCombinationPressed(
+	protected void filterKeyCombinationPressed(
 			final int defaultSearchAndFilterColumnIndex) {
 
 		int columnIndex = defaultSearchAndFilterColumnIndex;
@@ -268,8 +268,7 @@ public class CustomTreeTableView<
 		}
 	}
 
-	@Override
-	public void pasteKeyCombinationPressed() {
+	protected void pasteKeyCombinationPressed() {
 	}
 
 	public void createTreeTableColumns(
@@ -724,9 +723,9 @@ public class CustomTreeTableView<
 				}
 			}
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to add cells to tree view");
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 
 		} finally {
 			expandedListenerActive = true;

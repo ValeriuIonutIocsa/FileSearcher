@@ -84,7 +84,7 @@ public final class FactoryAppInfo {
 				}
 			}
 
-		} catch (final Exception ignored) {
+		} catch (final Throwable ignored) {
 		}
 		if (!defaultBuildTime) {
 			buildTime = StrUtils.createDisplayDateTimeString();

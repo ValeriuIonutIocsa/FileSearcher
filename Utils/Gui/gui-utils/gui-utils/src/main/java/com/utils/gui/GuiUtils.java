@@ -69,6 +69,8 @@ public final class GuiUtils {
 			final Image image) {
 
 		if (image != null) {
+
+			stage.getIcons().clear();
 			stage.getIcons().add(image);
 		}
 	}
@@ -86,9 +88,9 @@ public final class GuiUtils {
 				image = new Image(inputStream);
 			}
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to create image from resource file " + imageName);
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 		return image;
 	}
@@ -326,12 +328,13 @@ public final class GuiUtils {
 			if (!Platform.isFxApplicationThread()) {
 				try {
 					Platform.runLater(runnable);
-				} catch (final Exception exc) {
-					final Throwable cause = exc.getCause();
-					if (cause instanceof Exception) {
-						throw (Exception) cause;
+
+				} catch (final Throwable throwable) {
+					final Throwable cause = throwable.getCause();
+					if (cause instanceof final Exception causeException) {
+						throw causeException;
 					} else {
-						throw exc;
+						throw throwable;
 					}
 				}
 
@@ -339,9 +342,9 @@ public final class GuiUtils {
 				runnable.run();
 			}
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to execute task in GUI thread");
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 	}
 
@@ -360,19 +363,19 @@ public final class GuiUtils {
 					Platform.runLater(futureTask);
 					futureTask.get();
 
-				} catch (final Exception exc) {
-					final Throwable cause = exc.getCause();
-					if (cause instanceof Exception) {
-						throw (Exception) cause;
+				} catch (final Throwable throwable) {
+					final Throwable cause = throwable.getCause();
+					if (cause instanceof final Exception causeException) {
+						throw causeException;
 					} else {
-						throw exc;
+						throw throwable;
 					}
 				}
 			}
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to execute task in GUI thread");
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 	}
 
