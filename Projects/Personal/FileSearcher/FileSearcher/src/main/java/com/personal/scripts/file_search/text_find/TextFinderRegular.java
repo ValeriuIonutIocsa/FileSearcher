@@ -44,9 +44,4 @@ public class TextFinderRegular implements TextFinder {
 		}
 		return index;
 	}
-
-	@Override
-	public String createStringToPutInClipboard() {
-		return searchString;
-	}
 }

@@ -21,9 +21,9 @@ public class TableRowDataMessage implements TableRowData {
 	public static final String MESSAGES_COLUMN_NAME = "Messages";
 
 	private static final TableColumnData[] COLUMNS_DATA = {
-			new TableColumnData("Category", "Category", 0.1),
-			new TableColumnData("Type", "Type", 0.2),
-			new TableColumnData("Text", "Text", 0.7)
+			new TableColumnData("Category", "Category", 0.1, Double.NaN, Double.NaN),
+			new TableColumnData("Type", "Type", 0.2, Double.NaN, Double.NaN),
+			new TableColumnData("Text", "Text", 0.7, Double.NaN, Double.NaN)
 	};
 
 	@Override
@@ -36,7 +36,7 @@ public class TableRowDataMessage implements TableRowData {
 	}
 
 	private static final TableColumnData[] COLUMNS_TABLE = {
-			new TableColumnData(MESSAGES_COLUMN_NAME, "Messages", 1.0)
+			new TableColumnData(MESSAGES_COLUMN_NAME, "Messages", 1.0, Double.NaN, Double.NaN)
 	};
 
 	@Override

@@ -12,8 +12,8 @@ public class TextFieldWithSelectionItemForTesting implements TextFieldWithSelect
 	private static final long serialVersionUID = 7706800536600688010L;
 
 	public static final TableColumnData[] COLUMNS = {
-			new TableColumnData("Name", "Name", 0.1),
-			new TableColumnData("Description", "Description", 0.1)
+			new TableColumnData("Name", "Name", 0.1, Double.NaN, Double.NaN),
+			new TableColumnData("Description", "Description", 0.1, Double.NaN, Double.NaN)
 	};
 
 	@Override

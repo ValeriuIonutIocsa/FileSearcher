@@ -18,28 +18,11 @@ package com.utils.gui.charts.sunburst.events;
 
 import com.utils.gui.charts.sunburst.ChartData;
 
-public class ChartDataEvent {
+public record ChartDataEvent(
+		EventType type,
+		ChartData data) {
 
 	public enum EventType {
 		UPDATE, FINISHED
-	}
-
-	private final ChartData data;
-	private final EventType type;
-
-	public ChartDataEvent(
-			final EventType eventType,
-			final ChartData chartData) {
-
-		type = eventType;
-		data = chartData;
-	}
-
-	public EventType getType() {
-		return type;
-	}
-
-	public ChartData getData() {
-		return data;
 	}
 }

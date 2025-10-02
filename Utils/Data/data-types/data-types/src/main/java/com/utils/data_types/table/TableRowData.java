@@ -36,7 +36,7 @@ public interface TableRowData extends Serializable {
 		for (int i = 0; i < columnsData.length; i++) {
 
 			final TableColumnData tableColumnData = columnsData[i];
-			final String columnName = tableColumnData.getSerializeName();
+			final String columnName = tableColumnData.serializeName();
 			if (StringUtils.isNotBlank(columnName)) {
 
 				final DataItem<?> dataItem = dataItemArray[i];
@@ -114,7 +114,7 @@ public interface TableRowData extends Serializable {
 			final TableColumnData tableColumnData = columnsData[i];
 			final DataItem<?> dataItem = dataItemArray[i];
 
-			final String columnName = tableColumnData.getSerializeName();
+			final String columnName = tableColumnData.serializeName();
 			if (StringUtils.isNotBlank(columnName)) {
 				notBlankColumnDataMap.put(tableColumnData, dataItem);
 			}
@@ -126,7 +126,7 @@ public interface TableRowData extends Serializable {
 			final TableColumnData tableColumnData = mapEntry.getKey();
 			final DataItem<?> dataItem = mapEntry.getValue();
 
-			final String columnName = tableColumnData.getSerializeName();
+			final String columnName = tableColumnData.serializeName();
 			final boolean notLastAttribute = i < notBlankColumnDataMap.size() - 1;
 			if (dataItem != null) {
 				dataItem.writeToJson(columnName, notLastAttribute, indentCount, jsonWriter);

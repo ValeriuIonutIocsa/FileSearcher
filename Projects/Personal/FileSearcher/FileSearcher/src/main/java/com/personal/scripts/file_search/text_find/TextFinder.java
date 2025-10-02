@@ -7,6 +7,4 @@ public interface TextFinder {
 
 	int findIndexInString(
 			String string);
-
-	String createStringToPutInClipboard();
 }

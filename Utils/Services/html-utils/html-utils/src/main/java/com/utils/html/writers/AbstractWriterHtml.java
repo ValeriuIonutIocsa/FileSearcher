@@ -3,8 +3,8 @@ package com.utils.html.writers;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.utils.html.sections.HtmlSection;
 import com.utils.io.StreamUtils;
@@ -12,9 +12,8 @@ import com.utils.io.folder_creators.FactoryFolderCreator;
 import com.utils.io.ro_flag_clearers.FactoryReadOnlyFlagClearer;
 import com.utils.log.Logger;
 import com.utils.string.StrUtils;
-import com.utils.xml.stax.XmlStAXWriter;
 
-public abstract class AbstractWriterHtml implements WriterHtml {
+public abstract class AbstractWriterHtml implements WriterHtml, WriterHtmlAbstr {
 
 	protected AbstractWriterHtml() {
 	}
@@ -56,40 +55,7 @@ public abstract class AbstractWriterHtml implements WriterHtml {
 	private void write(
 			final OutputStream outputStream) {
 
-		new AbstractXmlStAXWriterHtml(outputStream, "") {
-
-			@Override
-			public String createCssString() {
-
-				return AbstractWriterHtml.this.createCssString();
-			}
-
-			@Override
-			public String createTitle() {
-
-				return AbstractWriterHtml.this.createTitle();
-			}
-
-			@Override
-			public void writeBodyAttributes(
-					final XmlStAXWriter xmlStAXWriter) {
-
-				AbstractWriterHtml.this.writeBodyAttributes(xmlStAXWriter);
-			}
-
-			@Override
-			protected void writeBody(
-					final XmlStAXWriter xmlStAXWriter) {
-
-				AbstractWriterHtml.this.writeBody(xmlStAXWriter);
-			}
-
-		}.writeXml();
-	}
-
-	@Override
-	public String createCssString() {
-		return null;
+		new XmlStAXWriterHtml(outputStream, "", this).writeXml();
 	}
 
 	@Override
@@ -98,21 +64,18 @@ public abstract class AbstractWriterHtml implements WriterHtml {
 	}
 
 	@Override
-	public void writeBodyAttributes(
-			final XmlStAXWriter xmlStAXWriter) {
+	public void fillSpecificHeadHtmlSectionList(
+			final List<HtmlSection> htmlSectionList) {
 	}
 
-	private void writeBody(
-			final XmlStAXWriter xmlStAXWriter) {
+	@Override
+	public String createCssString() {
+		return null;
+	}
 
-		final List<HtmlSection> htmlSectionList = new ArrayList<>();
-		fillBodyHtmlSectionList(htmlSectionList);
-
-		for (final HtmlSection htmlSectionBody : htmlSectionList) {
-			htmlSectionBody.write(xmlStAXWriter);
-		}
-
-		xmlStAXWriter.writePlainText(System.lineSeparator());
+	@Override
+	public void fillBodyAttributesMap(
+			final Map<String, String> bodyAttributesMap) {
 	}
 
 	protected abstract void fillBodyHtmlSectionList(

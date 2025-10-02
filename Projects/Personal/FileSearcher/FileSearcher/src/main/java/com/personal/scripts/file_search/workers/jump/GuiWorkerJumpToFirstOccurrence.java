@@ -13,7 +13,6 @@ import com.personal.scripts.file_search.workers.search.RunningProcesses;
 import com.personal.scripts.file_search.workers.search.engine.SearchEngine;
 import com.personal.scripts.file_search.workers.search.engine.data.FirstOccurrenceData;
 import com.utils.gui.alerts.CustomAlertError;
-import com.utils.gui.clipboard.ClipboardUtils;
 import com.utils.gui.workers.AbstractGuiWorker;
 import com.utils.log.Logger;
 
@@ -53,14 +52,6 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 		Logger.printNewLine();
 		Logger.printProgress("jumping to first occurrence in file:");
 		Logger.printLine(filePathString);
-
-		if (textFinder != null) {
-
-			final String stringToPutInClipboard = textFinder.createStringToPutInClipboard();
-			if (StringUtils.isNotBlank(stringToPutInClipboard)) {
-				ClipboardUtils.putStringInClipBoard(stringToPutInClipboard);
-			}
-		}
 
 		final FirstOccurrenceData firstOccurrenceData;
 		if (textFinder != null) {

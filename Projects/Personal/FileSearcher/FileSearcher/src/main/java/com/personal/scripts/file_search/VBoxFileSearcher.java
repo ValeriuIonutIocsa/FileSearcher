@@ -232,7 +232,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		}
 		searchPathHBoxTextFieldWithSelection = new HBoxTextFieldWithSelectionImpl<>("search path",
 				new Dimensions(600, 600, 1920, 1280, 1200, 700), new TableColumnData[] {
-						new TableColumnData("Search Path", "SearchPath", 1.0)
+						new TableColumnData("Search Path", "SearchPath", 1.0, Double.NaN, Double.NaN)
 				}, new ArrayList<>(), searchPathInitialValue);
 		GuiUtils.addToHBox(topHBox, searchPathHBoxTextFieldWithSelection.getRoot(),
 				Pos.CENTER_LEFT, Priority.ALWAYS, 0, 7, 0, 7);
@@ -257,7 +257,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		}
 		filePathPatternHBoxTextFieldWithSelection = new HBoxTextFieldWithSelectionImpl<>("file path pattern",
 				new Dimensions(600, 600, 1920, 1280, 1200, 700), new TableColumnData[] {
-						new TableColumnData("File Path Pattern", "FilePathPattern", 1.0)
+						new TableColumnData("File Path Pattern", "FilePathPattern", 1.0, Double.NaN, Double.NaN)
 				}, new ArrayList<>(), filePathPatternInitialValue);
 		GuiUtils.addToHBox(middleHBox, filePathPatternHBoxTextFieldWithSelection.getRoot(),
 				Pos.CENTER_LEFT, Priority.ALWAYS, 0, 7, 0, 7);
@@ -275,7 +275,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		}
 		searchTextHBoxTextFieldWithSelection = new HBoxTextFieldWithSelectionImpl<>("search text",
 				new Dimensions(600, 600, 1920, 1280, 1200, 700), new TableColumnData[] {
-						new TableColumnData("Search Text", "SearchText", 1.0)
+						new TableColumnData("Search Text", "SearchText", 1.0, Double.NaN, Double.NaN)
 				}, new ArrayList<>(), searchTextInitialValue);
 		GuiUtils.addToHBox(middleHBox, searchTextHBoxTextFieldWithSelection.getRoot(),
 				Pos.CENTER_LEFT, Priority.ALWAYS, 0, 7, 0, 7);

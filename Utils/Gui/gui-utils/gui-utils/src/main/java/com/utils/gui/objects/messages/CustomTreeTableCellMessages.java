@@ -12,6 +12,7 @@ import com.utils.log.messages.MessageType;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -98,8 +99,13 @@ class CustomTreeTableCellMessages extends CustomTreeTableCell<TableRowDataMessag
 
 		} else {
 			final Label label = new Label(text);
+
+			final Tooltip tooltip = BasicControlsFactories.getInstance().createTooltip(text);
+			setTooltip(tooltip);
+
 			final Rectangle statusRectangle = createStatusRectangle(tableRowDataMessage);
 			label.setGraphic(statusRectangle);
+
 			final Pos textAlignment = getTextAlignmentValue();
 			GuiUtils.addToStackPane(stackPane, label, textAlignment, 1, 1, 1, 1);
 		}
@@ -116,6 +122,10 @@ class CustomTreeTableCellMessages extends CustomTreeTableCell<TableRowDataMessag
 		final String messageCategory = item.toString();
 		final Label label = BasicControlsFactories.getInstance()
 				.createLabel(messageCategory, "boldFontSize9");
+
+		final Tooltip tooltip = BasicControlsFactories.getInstance().createTooltip(messageCategory);
+		setTooltip(tooltip);
+
 		final Rectangle statusRectangle = createStatusRectangle(tableRowDataMessage);
 		label.setGraphic(statusRectangle);
 		GuiUtils.addToHBox(hBoxUserActionRequired, label,

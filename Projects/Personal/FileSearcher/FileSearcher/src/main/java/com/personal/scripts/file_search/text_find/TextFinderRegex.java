@@ -36,9 +36,4 @@ public class TextFinderRegex implements TextFinder {
 		}
 		return index;
 	}
-
-	@Override
-	public String createStringToPutInClipboard() {
-		return "";
-	}
 }

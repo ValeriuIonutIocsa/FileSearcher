@@ -1,0 +1,43 @@
+.dynamicContentContainer {
+    display: grid;
+    grid-template-columns: @@SIDEBAR_WIDTH@@px 1fr;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.dynamicContentSidebar {
+    background-color: #f4f4f4;
+    padding: 5px;
+    border-right: 1px solid #ddd;
+}
+
+.dynamicContentSidebar button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: none;
+    background-color: #004457;
+    color: white;
+    cursor: pointer;
+    text-align: left;
+    font-size: 9pt;
+}
+
+.dynamicContentSidebar button:hover {
+    background-color: #59839b;
+}
+
+.dynamicContentSidebar button.active {
+    background-color: #59839b;
+}
+
+.dynamicContentPane section {
+    display: none;
+    margin-left: 15px;
+}
+
+.dynamicContentPane section.active {
+    display: block;
+}

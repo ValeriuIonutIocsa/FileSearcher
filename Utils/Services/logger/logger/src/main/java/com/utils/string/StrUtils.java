@@ -6,6 +6,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.Strings;
 
 import com.utils.annotations.ApiMethod;
 import com.utils.string.characters.SpecialCharacterUtils;
+import com.utils.string.converters.ConverterDate;
 import com.utils.string.converters.ConverterInstant;
 
 public final class StrUtils {
@@ -980,9 +982,18 @@ public final class StrUtils {
 			final Instant instant) {
 
 		final DateTimeFormatter dateTimeFormatter =
-				DateTimeFormatter.ofPattern(ConverterInstant.FULL_DATE_FORMAT)
+				DateTimeFormatter.ofPattern(ConverterInstant.FULL_INSTANT_FORMAT)
 						.withLocale(Locale.US).withZone(ZoneId.systemDefault());
 		return dateTimeFormatter.format(instant);
+	}
+
+	@ApiMethod
+	public static String createDisplayDateString(
+			final LocalDate date) {
+
+		final DateTimeFormatter dateTimeFormatter =
+				DateTimeFormatter.ofPattern(ConverterDate.DATE_FORMAT).withLocale(Locale.US);
+		return dateTimeFormatter.format(date);
 	}
 
 	@ApiMethod

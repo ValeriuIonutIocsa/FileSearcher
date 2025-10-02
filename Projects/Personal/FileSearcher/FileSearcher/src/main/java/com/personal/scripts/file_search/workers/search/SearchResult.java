@@ -22,12 +22,12 @@ public class SearchResult implements TableRowData {
 	public static final String FOLDER_PATH_COLUMN_NAME = "Folder Path";
 
 	public static final TableColumnData[] TABLE_COLUMN_DATA_ARRAY = {
-			new TableColumnData(FILE_NAME_COLUMN_NAME, "File Name", 0.2),
-			new TableColumnData(FOLDER_PATH_COLUMN_NAME, "FolderPath", 0.5),
-			new TableColumnData("Ext", "Ext", 0.06),
-			new TableColumnData("Last Modified", "LastModified", 0.15),
-			new TableColumnData("Size", "Size", 0.06),
-			new TableColumnData("Count", "Count", 0.06)
+			new TableColumnData(FILE_NAME_COLUMN_NAME, "File Name", 0.2, Double.NaN, Double.NaN),
+			new TableColumnData(FOLDER_PATH_COLUMN_NAME, "FolderPath", 0.5, Double.NaN, Double.NaN),
+			new TableColumnData("Ext", "Ext", 0.06, Double.NaN, Double.NaN),
+			new TableColumnData("Last Modified", "LastModified", 0.15, Double.NaN, Double.NaN),
+			new TableColumnData("Size", "Size", 0.06, Double.NaN, Double.NaN),
+			new TableColumnData("Count", "Count", 0.06, Double.NaN, Double.NaN)
 	};
 
 	@Override

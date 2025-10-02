@@ -15,7 +15,7 @@ record Text(
 	private static final long serialVersionUID = -1441603316586307547L;
 
 	static final TableColumnData[] COLUMNS = {
-			new TableColumnData("Text", "Text", 1)
+			new TableColumnData("Text", "Text", 1, Double.NaN, Double.NaN)
 	};
 
 	@Override

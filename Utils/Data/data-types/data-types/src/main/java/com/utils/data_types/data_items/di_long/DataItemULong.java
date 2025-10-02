@@ -57,6 +57,7 @@ public class DataItemULong extends AbstractDataItem<Long> implements Comparable<
 
 	@Override
 	public String toString() {
+
 		return StrUtils.positiveLongToString(value, true);
 	}
 

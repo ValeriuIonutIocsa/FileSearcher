@@ -9,6 +9,7 @@ import java.nio.file.PathMatcher;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.tika.parser.txt.CharsetDetector;
 import org.apache.tika.parser.txt.CharsetMatch;
@@ -71,7 +72,10 @@ public class SearchEngineOwn implements SearchEngine {
 
 		PathMatcher pathMatcher = null;
 		try {
-			pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + filePathPatternString);
+			String pathMatcherString = "glob:" + filePathPatternString;
+			pathMatcherString = StringUtils.replaceChars(pathMatcherString, '\\', '/');
+			pathMatcher = FileSystems.getDefault().getPathMatcher(pathMatcherString);
+
 		} catch (final Exception ignored) {
 		}
 		return pathMatcher;

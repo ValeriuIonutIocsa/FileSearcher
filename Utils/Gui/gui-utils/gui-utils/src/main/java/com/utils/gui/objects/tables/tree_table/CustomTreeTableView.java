@@ -282,7 +282,7 @@ public class CustomTreeTableView<
 		double widthWeightSum = 0;
 		for (final TableColumnData tableColumn : tableColumnDataArray) {
 
-			final double widthWeight = tableColumn.getWidthWeight();
+			final double widthWeight = tableColumn.widthWeight();
 			widthWeightSum += widthWeight;
 		}
 

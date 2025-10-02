@@ -25,19 +25,19 @@ public final class TableUtils {
 			final double widthWeightSum,
 			final TableColumnData tableColumnData) {
 
-		final String columnName = tableColumnData.getName();
+		final String columnName = tableColumnData.name();
 		tableColumnBase.setText(columnName);
 
 		final double widthRatio = tableColumnData.computeWidthRatio(widthWeightSum);
 		final DoubleBinding widthBinding = widthProperty.subtract(15).multiply(widthRatio);
 		tableColumnBase.prefWidthProperty().bind(widthBinding);
 
-		final double minWidth = tableColumnData.getMinWidth();
+		final double minWidth = tableColumnData.minWidth();
 		if (!Double.isNaN(minWidth)) {
 			tableColumnBase.setMinWidth(minWidth);
 		}
 
-		final double maxWidth = tableColumnData.getMaxWidth();
+		final double maxWidth = tableColumnData.maxWidth();
 		if (!Double.isNaN(maxWidth)) {
 			tableColumnBase.setMaxWidth(maxWidth);
 		}

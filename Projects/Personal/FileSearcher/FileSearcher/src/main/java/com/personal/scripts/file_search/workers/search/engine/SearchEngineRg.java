@@ -161,7 +161,7 @@ public class SearchEngineRg implements SearchEngine {
 			}
 
 			String searchText = searchData.searchText();
-			searchText = searchText.replace("\"", "\"\"");
+			searchText = searchText.replace("\"", "\\\"");
 			commandPartList.add(searchText);
 			final String escapedSearchText = "\"" + searchText + "\"";
 			escapedCommandPartList.add(escapedSearchText);
@@ -250,7 +250,7 @@ public class SearchEngineRg implements SearchEngine {
 			}
 
 			String searchText = searchData.searchText();
-			searchText = searchText.replace("\"", "\"\"");
+			searchText = searchText.replace("\"", "\\\"");
 			commandPartList.add(searchText);
 			final String escapedSearchText = "\"" + searchText + "\"";
 			escapedCommandPartList.add(escapedSearchText);

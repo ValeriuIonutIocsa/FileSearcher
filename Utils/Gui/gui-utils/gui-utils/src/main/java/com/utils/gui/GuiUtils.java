@@ -151,7 +151,7 @@ public final class GuiUtils {
 		String path = pathParam;
 		if (StringUtils.isNotBlank(path)) {
 
-			if (path.startsWith("\"") && path.endsWith("\"")) {
+			if (path.length() >= 2 && path.startsWith("\"") && path.endsWith("\"")) {
 				path = path.substring(1, path.length() - 1);
 			}
 			if (path.startsWith("\\") && !path.startsWith("\\\\")) {

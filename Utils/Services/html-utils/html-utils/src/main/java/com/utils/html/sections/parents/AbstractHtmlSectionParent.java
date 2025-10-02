@@ -1,7 +1,7 @@
 package com.utils.html.sections.parents;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +21,7 @@ public abstract class AbstractHtmlSectionParent extends AbstractHtmlSection {
 
 		this.tagName = tagName;
 
-		attributeMap = new HashMap<>();
+		attributeMap = new LinkedHashMap<>();
 		htmlSectionList = new ArrayList<>();
 	}
 

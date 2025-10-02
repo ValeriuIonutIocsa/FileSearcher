@@ -1,5 +1,7 @@
 package com.utils.data_types.data_items.di_int;
 
+import com.utils.string.StrUtils;
+
 public class DataItemUIntHex extends DataItemUInt {
 
 	DataItemUIntHex(
@@ -17,12 +19,6 @@ public class DataItemUIntHex extends DataItemUInt {
 	@Override
 	public String toString() {
 
-		final String str;
-		if (value != -1) {
-			str = "0x" + Integer.toUnsignedString(value, 16);
-		} else {
-			str = "";
-		}
-		return str;
+		return StrUtils.positiveIntToHexString(value);
 	}
 }

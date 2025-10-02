@@ -1,9 +1,12 @@
 package com.utils.data_types.data_items.di_long;
 
+import com.utils.string.StrUtils;
+
 public class DataItemULongHex extends DataItemULong {
 
 	DataItemULongHex(
 			final long value) {
+
 		super(value);
 	}
 
@@ -15,12 +18,6 @@ public class DataItemULongHex extends DataItemULong {
 	@Override
 	public String toString() {
 
-		final String str;
-		if (value != -1) {
-			str = "0x" + Long.toUnsignedString(value, 16);
-		} else {
-			str = "";
-		}
-		return str;
+		return StrUtils.positiveLongToHexString(value);
 	}
 }

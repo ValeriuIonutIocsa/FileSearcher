@@ -4,20 +4,20 @@ import javafx.stage.Stage;
 
 public class Dimensions {
 
-	private final int minWidth;
-	private final int minHeight;
-	private final int maxWidth;
-	private final int maxHeight;
-	private final int prefWidth;
-	private final int prefHeight;
+	private final double minWidth;
+	private final double minHeight;
+	private final double maxWidth;
+	private final double maxHeight;
+	private final double prefWidth;
+	private final double prefHeight;
 
 	public Dimensions(
-			final int minWidth,
-			final int minHeight,
-			final int maxWidth,
-			final int maxHeight,
-			final int prefWidth,
-			final int prefHeight) {
+			final double minWidth,
+			final double minHeight,
+			final double maxWidth,
+			final double maxHeight,
+			final double prefWidth,
+			final double prefHeight) {
 
 		this.minWidth = minWidth;
 		this.minHeight = minHeight;

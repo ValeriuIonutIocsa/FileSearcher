@@ -16,8 +16,8 @@ record TextWithLength(
 	private static final long serialVersionUID = -1441603316586307547L;
 
 	static final TableColumnData[] COLUMNS = {
-			new TableColumnData("Text", "Text", 1),
-			new TableColumnData("Length", "Length", 0.5)
+			new TableColumnData("Text", "Text", 1, Double.NaN, Double.NaN),
+			new TableColumnData("Length", "Length", 0.5, Double.NaN, Double.NaN)
 	};
 
 	@Override
