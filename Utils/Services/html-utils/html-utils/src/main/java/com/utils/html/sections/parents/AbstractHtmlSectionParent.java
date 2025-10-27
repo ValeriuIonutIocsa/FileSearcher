@@ -52,11 +52,13 @@ public abstract class AbstractHtmlSectionParent extends AbstractHtmlSection {
 
 	public AbstractHtmlSectionParent addAttributeId(
 			final String attributeId) {
+
 		return addAttribute("id", attributeId);
 	}
 
 	public AbstractHtmlSectionParent addAttributeClass(
 			final String attributeClass) {
+
 		return addAttribute("class", attributeClass);
 	}
 
@@ -66,6 +68,12 @@ public abstract class AbstractHtmlSectionParent extends AbstractHtmlSection {
 
 		attributeMap.put(name, value);
 		return this;
+	}
+
+	public String computeAttribute(
+			final String name) {
+
+		return attributeMap.get(name);
 	}
 
 	public AbstractHtmlSectionParent addHtmlSection(

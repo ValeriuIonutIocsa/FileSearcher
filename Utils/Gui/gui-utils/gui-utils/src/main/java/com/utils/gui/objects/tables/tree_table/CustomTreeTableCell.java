@@ -1,5 +1,7 @@
 package com.utils.gui.objects.tables.tree_table;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.utils.annotations.ApiMethod;
 import com.utils.data_types.data_items.DataItem;
 import com.utils.gui.GuiUtils;
@@ -49,6 +51,7 @@ public class CustomTreeTableCell<
 	public StackPane updateEmptyCell(
 			final StackPane stackPane) {
 
+		setTooltip(null);
 		setContextMenu(null);
 		return stackPane;
 	}
@@ -79,7 +82,10 @@ public class CustomTreeTableCell<
 		final String text = item.toString();
 		final Label label = new Label(text);
 
-		final Tooltip tooltip = BasicControlsFactories.getInstance().createTooltip(text);
+		Tooltip tooltip = null;
+		if (StringUtils.isNotBlank(text)) {
+			tooltip = BasicControlsFactories.getInstance().createTooltip(text);
+		}
 		setTooltip(tooltip);
 
 		final String[] labelStyleClassElements = getLabelStyleClassElements();

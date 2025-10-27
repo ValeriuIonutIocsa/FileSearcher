@@ -33,16 +33,18 @@ public final class XmlSafeParser {
 						appendLine = true;
 
 					} else {
-						line = line.trim();
-						if (line.startsWith("<") && line.endsWith(">")) {
+						final String trimmedLine = line.trim();
+						if (trimmedLine.startsWith("<") && trimmedLine.endsWith(">")) {
 
-							if (line.contains("<?") && line.contains("?>")) {
+							if ((trimmedLine.contains("<?") && trimmedLine.contains("?>")) ||
+									(trimmedLine.contains("<!--") && trimmedLine.contains("-->"))) {
 								appendLine = true;
 
 							} else {
-								if (line.startsWith("</")) {
+								if (trimmedLine.startsWith("</")) {
 
-									final String currentElementTagName = line.substring(2, line.length() - 1);
+									final String currentElementTagName =
+											trimmedLine.substring(2, trimmedLine.length() - 1);
 									while (!openElementTagNameStack.isEmpty()) {
 
 										final String elementTagName = openElementTagNameStack.pop();
@@ -59,19 +61,19 @@ public final class XmlSafeParser {
 
 								} else {
 									int indexOf = -1;
-									final int spaceIndexOf = line.indexOf(' ');
+									final int spaceIndexOf = trimmedLine.indexOf(' ');
 									if (spaceIndexOf > 1) {
 										indexOf = spaceIndexOf;
 
 									} else {
-										final int closingIndexOf = line.indexOf('>');
+										final int closingIndexOf = trimmedLine.indexOf('>');
 										if (closingIndexOf > 1) {
 											indexOf = closingIndexOf;
 										}
 									}
 									if (indexOf > 1) {
 
-										final String elementTagName = line.substring(1, indexOf);
+										final String elementTagName = trimmedLine.substring(1, indexOf);
 										openElementTagNameStack.add(elementTagName);
 										appendLine = true;
 									}

@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" factoryName="JUnit" folderName="data-types" name="DataTypesTest.parseUnsignedLittleEndianBase128" nameIsGenerated="true" type="JUnit">
+    <configuration default="false" name="DataTypesTest.parseUnsignedLittleEndianBase128" type="JUnit" factoryName="JUnit" folderName="data-types"
+                   nameIsGenerated="true">
         <module name="FileSearcherAllModules.data-types.test"/>
         <extension name="coverage">
             <pattern>
@@ -12,7 +13,7 @@
         <option name="METHOD_NAME" value="parseUnsignedLittleEndianBase128"/>
         <option name="TEST_OBJECT" value="method"/>
         <method v="2">
-            <option enabled="true" name="Make"/>
+            <option name="MakeProject" enabled="true"/>
         </method>
     </configuration>
 </component>

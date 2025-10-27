@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" factoryName="JUnit" folderName="FileSearcher" name="SearchEngineOwnTest.testDetectCharset" nameIsGenerated="true" type="JUnit">
+    <configuration default="false" name="SearchEngineOwnTest.testDetectCharset" type="JUnit" factoryName="JUnit" folderName="FileSearcher"
+                   nameIsGenerated="true">
         <module name="FileSearcherAllModules.FileSearcher.test"/>
         <extension name="coverage">
             <pattern>
@@ -12,7 +13,7 @@
         <option name="METHOD_NAME" value="testDetectCharset"/>
         <option name="TEST_OBJECT" value="method"/>
         <method v="2">
-            <option enabled="true" name="Make"/>
+            <option name="MakeProject" enabled="true"/>
         </method>
     </configuration>
 </component>
