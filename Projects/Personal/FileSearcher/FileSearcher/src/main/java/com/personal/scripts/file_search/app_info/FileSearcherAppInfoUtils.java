@@ -11,7 +11,7 @@ public final class FileSearcherAppInfoUtils {
 	public static AppInfo createAppInfo() {
 
 		final String appTitleDefault = "File Searcher";
-		final String appVersionDefault = "1.0.1";
+		final String appVersionDefault = "1.0.2";
 		return FactoryAppInfo.computeInstance(appTitleDefault, appVersionDefault);
 	}
 }
