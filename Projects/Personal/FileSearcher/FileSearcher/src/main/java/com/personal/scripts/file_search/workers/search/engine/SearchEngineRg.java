@@ -16,6 +16,7 @@ import com.utils.gui.alerts.CustomAlertThrowable;
 import com.utils.io.processes.InputStreamReaderThread;
 import com.utils.io.processes.ReadBytesHandlerLinesPrint;
 import com.utils.log.Logger;
+import com.utils.string.regex.RegexUtils;
 
 public class SearchEngineRg implements SearchEngine {
 
@@ -50,7 +51,7 @@ public class SearchEngineRg implements SearchEngine {
 			}
 
 			final String filePathPatternString = searchData.filePathPatternString();
-			final String[] globPatternStringArray = StringUtils.split(filePathPatternString.trim(), ' ');
+			final String[] globPatternStringArray = RegexUtils.NEW_LINE_PATTERN.split(filePathPatternString);
 
 			for (final String globPatternString : globPatternStringArray) {
 
@@ -124,7 +125,7 @@ public class SearchEngineRg implements SearchEngine {
 			}
 
 			final String filePathPatternString = searchData.filePathPatternString();
-			final String[] globPatternStringArray = StringUtils.split(filePathPatternString.trim(), ' ');
+			final String[] globPatternStringArray = RegexUtils.NEW_LINE_PATTERN.split(filePathPatternString);
 
 			for (final String globPatternString : globPatternStringArray) {
 
@@ -149,19 +150,35 @@ public class SearchEngineRg implements SearchEngine {
 			} else {
 				caseSensitiveOption = "--ignore-case";
 			}
+			commandPartList.add(caseSensitiveOption);
+			escapedCommandPartList.add(caseSensitiveOption);
 
-			Collections.addAll(commandPartList, caseSensitiveOption, "--count-matches");
-			Collections.addAll(escapedCommandPartList, caseSensitiveOption, "--count-matches");
+			final boolean multiline = searchData.multiline();
+			if (multiline) {
+
+				commandPartList.add("--multiline");
+				escapedCommandPartList.add("--multiline");
+			}
+
+			commandPartList.add("--count-matches");
+			escapedCommandPartList.add("--count-matches");
 
 			final boolean searchInBinary = searchData.searchInBinary();
 			if (searchInBinary) {
 
-				Collections.addAll(commandPartList, "--text");
-				Collections.addAll(escapedCommandPartList, "--text");
+				commandPartList.add("--text");
+				escapedCommandPartList.add("--text");
 			}
 
 			String searchText = searchData.searchText();
 			searchText = searchText.replace("\"", "\\\"");
+			if (!useRegex) {
+
+				final boolean winStyleLineEndings = searchData.winStyleLineEndings();
+				if (winStyleLineEndings) {
+					searchText = searchText.replace("\n", System.lineSeparator());
+				}
+			}
 			commandPartList.add(searchText);
 			final String escapedSearchText = "\"" + searchText + "\"";
 			escapedCommandPartList.add(escapedSearchText);
@@ -235,9 +252,15 @@ public class SearchEngineRg implements SearchEngine {
 			} else {
 				caseSensitiveOption = "--ignore-case";
 			}
-
 			commandPartList.add(caseSensitiveOption);
 			escapedCommandPartList.add(caseSensitiveOption);
+
+			final boolean multiline = searchData.multiline();
+			if (multiline) {
+
+				commandPartList.add("--multiline");
+				escapedCommandPartList.add("--multiline");
+			}
 
 			Collections.addAll(commandPartList, "--line-number", "--column");
 			Collections.addAll(escapedCommandPartList, "--line-number", "--column");
@@ -245,12 +268,19 @@ public class SearchEngineRg implements SearchEngine {
 			final boolean searchInBinary = searchData.searchInBinary();
 			if (searchInBinary) {
 
-				Collections.addAll(commandPartList, "--text");
-				Collections.addAll(escapedCommandPartList, "--text");
+				commandPartList.add("--text");
+				escapedCommandPartList.add("--text");
 			}
 
 			String searchText = searchData.searchText();
 			searchText = searchText.replace("\"", "\\\"");
+			if (!useRegex) {
+
+				final boolean winStyleLineEndings = searchData.winStyleLineEndings();
+				if (winStyleLineEndings) {
+					searchText = searchText.replace("\n", System.lineSeparator());
+				}
+			}
 			commandPartList.add(searchText);
 			final String escapedSearchText = "\"" + searchText + "\"";
 			escapedCommandPartList.add(escapedSearchText);

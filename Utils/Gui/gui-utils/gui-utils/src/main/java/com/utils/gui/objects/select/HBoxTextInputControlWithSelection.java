@@ -4,7 +4,7 @@ import com.utils.gui.CustomControl;
 
 import javafx.scene.layout.HBox;
 
-public interface HBoxTextFieldWithSelection extends CustomControl<HBox> {
+public interface HBoxTextInputControlWithSelection extends CustomControl<HBox> {
 
 	void configureValue(
 			String value);

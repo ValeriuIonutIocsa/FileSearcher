@@ -98,12 +98,12 @@ public class HtmlSectionDynamicContentPane extends AbstractHtmlSectionContainer 
 		final HtmlSectionButton htmlSectionButton = new HtmlSectionButton();
 
 		final String buttonClass = createButtonClass();
-		String buttonClassWithActive = buttonClass;
+		String buttonClassAttribute = "dynamicContentPaneButton " + buttonClass;
 		final boolean active = dynamicContentPaneSection.isActive();
 		if (active) {
-			buttonClassWithActive += " active";
+			buttonClassAttribute += " active";
 		}
-		htmlSectionButton.addAttributeClass(buttonClassWithActive);
+		htmlSectionButton.addAttributeClass(buttonClassAttribute);
 
 		final String buttonId = createButtonId(sectionIndex);
 		htmlSectionButton.addAttributeId(buttonId);
@@ -143,12 +143,12 @@ public class HtmlSectionDynamicContentPane extends AbstractHtmlSectionContainer 
 
 		final HtmlSectionSection htmlSectionSection = new HtmlSectionSection();
 
-		String sectionClassWithActive = createSectionClass();
+		String sectionClassAttribute = "dynamicContentPaneSection " + createSectionClass();
 		final boolean active = dynamicContentPaneSection.isActive();
 		if (active) {
-			sectionClassWithActive += " active";
+			sectionClassAttribute += " active";
 		}
-		htmlSectionSection.addAttributeClass(sectionClassWithActive);
+		htmlSectionSection.addAttributeClass(sectionClassAttribute);
 
 		final String sectionId = createSectionId(sectionIndex);
 		htmlSectionSection.addAttributeId(sectionId);

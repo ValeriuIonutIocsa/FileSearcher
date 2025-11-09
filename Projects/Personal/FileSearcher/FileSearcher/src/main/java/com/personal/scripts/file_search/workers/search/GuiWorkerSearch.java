@@ -82,6 +82,12 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 		final boolean caseSensitive = searchData.caseSensitive();
 		SavedOptionsFile.INSTANCE.setCaseSensitive(caseSensitive);
 
+		final boolean multiline = searchData.multiline();
+		SavedOptionsFile.INSTANCE.setMultiline(multiline);
+
+		final boolean winStyleLineEndings = searchData.winStyleLineEndings();
+		SavedOptionsFile.INSTANCE.setWinStyleLineEndings(winStyleLineEndings);
+
 		final boolean searchInBinary = searchData.searchInBinary();
 		SavedOptionsFile.INSTANCE.setSearchInBinary(searchInBinary);
 

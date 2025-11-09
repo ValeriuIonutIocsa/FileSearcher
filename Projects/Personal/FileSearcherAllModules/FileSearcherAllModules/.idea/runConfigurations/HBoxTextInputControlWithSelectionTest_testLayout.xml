@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="HBoxTextFieldWithSelectionTest.testLayout" type="JUnit" factoryName="JUnit" folderName="gui-utils"
+    <configuration default="false" name="HBoxTextInputControlWithSelectionTest.testLayout" type="JUnit" factoryName="JUnit" folderName="gui-utils"
                    nameIsGenerated="true">
         <module name="FileSearcherAllModules.gui-utils.test"/>
         <extension name="coverage">
@@ -9,7 +9,7 @@
             </pattern>
         </extension>
         <option name="PACKAGE_NAME" value="com.utils.gui.objects.select"/>
-        <option name="MAIN_CLASS_NAME" value="com.utils.gui.objects.select.HBoxTextFieldWithSelectionTest"/>
+        <option name="MAIN_CLASS_NAME" value="com.utils.gui.objects.select.HBoxTextInputControlWithSelectionTest"/>
         <option name="METHOD_NAME" value="testLayout"/>
         <option name="TEST_OBJECT" value="method"/>
         <method v="2">

@@ -30,6 +30,9 @@ public class PopupWindow extends Stage {
 		}
 
 		initModality(modality);
+		if (modality == Modality.NONE) {
+			setAlwaysOnTop(true);
+		}
 
 		final Scene scene = new Scene(parent);
 		scene.getStylesheets().addAll(parentScene.getStylesheets());

@@ -4,10 +4,10 @@ import java.io.Serial;
 
 import com.utils.data_types.data_items.DataItem;
 import com.utils.data_types.data_items.objects.FactoryDataItemObjectComparable;
-import com.utils.gui.objects.select.data.TextFieldWithSelectionItem;
+import com.utils.gui.objects.select.data.TextInputControlWithSelectionItem;
 import com.utils.string.StrUtils;
 
-class SelectionItem implements TextFieldWithSelectionItem {
+class SelectionItem implements TextInputControlWithSelectionItem {
 
 	@Serial
 	private static final long serialVersionUID = -9026151149096389293L;
@@ -34,14 +34,14 @@ class SelectionItem implements TextFieldWithSelectionItem {
 	}
 
 	@Override
-	public String createTextFieldValue() {
+	public String createTextInputControlValue() {
 		return text;
 	}
 
 	@Override
-	public boolean checkMatchesTextFieldValue(
-			final String currentTextFieldValue) {
+	public boolean checkMatchesTextInputControlValue(
+			final String currentTextInputControlValue) {
 
-		return text.equals(currentTextFieldValue);
+		return text.equals(currentTextInputControlValue);
 	}
 }

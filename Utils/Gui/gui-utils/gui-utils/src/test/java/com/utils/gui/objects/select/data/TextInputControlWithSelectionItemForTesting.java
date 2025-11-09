@@ -6,7 +6,7 @@ import com.utils.data_types.data_items.DataItem;
 import com.utils.data_types.data_items.objects.FactoryDataItemObjectComparable;
 import com.utils.data_types.table.TableColumnData;
 
-public class TextFieldWithSelectionItemForTesting implements TextFieldWithSelectionItem {
+public class TextInputControlWithSelectionItemForTesting implements TextInputControlWithSelectionItem {
 
 	@Serial
 	private static final long serialVersionUID = 7706800536600688010L;
@@ -28,7 +28,7 @@ public class TextFieldWithSelectionItemForTesting implements TextFieldWithSelect
 	private final String name;
 	private final String description;
 
-	public TextFieldWithSelectionItemForTesting(
+	public TextInputControlWithSelectionItemForTesting(
 			final String name,
 			final String description) {
 
@@ -37,15 +37,15 @@ public class TextFieldWithSelectionItemForTesting implements TextFieldWithSelect
 	}
 
 	@Override
-	public String createTextFieldValue() {
+	public String createTextInputControlValue() {
 
 		return name;
 	}
 
 	@Override
-	public boolean checkMatchesTextFieldValue(
-			final String currentTextFieldValue) {
+	public boolean checkMatchesTextInputControlValue(
+			final String currentTextInputControlValue) {
 
-		return currentTextFieldValue != null && currentTextFieldValue.equals(name);
+		return currentTextInputControlValue != null && currentTextInputControlValue.equals(name);
 	}
 }

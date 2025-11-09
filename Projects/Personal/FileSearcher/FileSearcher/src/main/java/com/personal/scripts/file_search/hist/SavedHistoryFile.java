@@ -4,12 +4,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.Strings;
+
 import com.personal.scripts.file_search.FileSearcherUtils;
 import com.utils.io.IoUtils;
 import com.utils.io.PathUtils;
 import com.utils.io.ReaderUtils;
 import com.utils.io.WriterUtils;
 import com.utils.string.StrUtils;
+import com.utils.string.regex.RegexUtils;
 
 public final class SavedHistoryFile {
 
@@ -42,15 +45,24 @@ public final class SavedHistoryFile {
 
 			final List<String> lineList =
 					ReaderUtils.tryFileToLineList(filePathString, StandardCharsets.UTF_8);
-			savedHistoryEntryList.addAll(lineList);
+			for (final String line : lineList) {
+
+				final String savedHistoryEntry = Strings.CS.replace(line, "\\R", System.lineSeparator());
+				savedHistoryEntryList.add(savedHistoryEntry);
+			}
 		}
 	}
 
 	public void save() {
 
 		final String filePathString = createFilePathString();
-		WriterUtils.tryLineListToFile(savedHistoryEntryList,
-				StandardCharsets.UTF_8, filePathString);
+		final List<String> lineList = new ArrayList<>();
+		for (final String savedHistoryEntry : savedHistoryEntryList) {
+
+			final String line = RegexUtils.NEW_LINE_PATTERN.matcher(savedHistoryEntry).replaceAll("\\\\R");
+			lineList.add(line);
+		}
+		WriterUtils.tryLineListToFile(lineList, StandardCharsets.UTF_8, filePathString);
 	}
 
 	private String createFilePathString() {

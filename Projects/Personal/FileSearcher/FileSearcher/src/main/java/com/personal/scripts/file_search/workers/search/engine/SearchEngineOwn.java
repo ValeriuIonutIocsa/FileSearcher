@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.PathMatcher;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import com.utils.io.ListFileUtils;
 import com.utils.io.ReaderUtils;
 import com.utils.io.StreamUtils;
 import com.utils.log.Logger;
+import com.utils.string.regex.RegexUtils;
 
 public class SearchEngineOwn implements SearchEngine {
 
@@ -41,9 +43,9 @@ public class SearchEngineOwn implements SearchEngine {
 			final List<String> filePathStringList,
 			final RunningProcesses runningProcesses) {
 
-		final String filePathPatternString = searchData.filePathPatternString();
-		final PathMatcher pathMatcher = tryCreatePathMatcher(filePathPatternString);
-		if (pathMatcher == null) {
+		final List<PathMatcher> pathMatcherList = new ArrayList<>();
+		fillPathMatcherList(pathMatcherList);
+		if (pathMatcherList.isEmpty()) {
 			new CustomAlertError("invalid file path pattern",
 					"the file path pattern is not a valid pattern").showAndWait();
 
@@ -51,19 +53,41 @@ public class SearchEngineOwn implements SearchEngine {
 			final String searchFolderPathString = searchData.searchFolderPathString();
 			ListFileUtils.visitFilesRecursively(searchFolderPathString,
 					dirPath -> {
-						if (pathMatcher.matches(dirPath)) {
+						for (final PathMatcher pathMatcher : pathMatcherList) {
 
-							final String dirPathString = dirPath.toString();
-							dirPathStringList.add(dirPathString);
+							if (pathMatcher.matches(dirPath)) {
+
+								final String dirPathString = dirPath.toString();
+								dirPathStringList.add(dirPathString);
+								break;
+							}
 						}
 					},
 					filePath -> {
-						if (pathMatcher.matches(filePath)) {
+						for (final PathMatcher pathMatcher : pathMatcherList) {
 
-							final String filePathString = filePath.toString();
-							filePathStringList.add(filePathString);
+							if (pathMatcher.matches(filePath)) {
+
+								final String filePathString = filePath.toString();
+								filePathStringList.add(filePathString);
+								break;
+							}
 						}
 					});
+		}
+	}
+
+	private void fillPathMatcherList(
+			final List<PathMatcher> pathMatcherList) {
+
+		final String filePathPatternString = searchData.filePathPatternString();
+		final String[] globPatternStringArray = RegexUtils.NEW_LINE_PATTERN.split(filePathPatternString);
+		for (final String globPatternString : globPatternStringArray) {
+
+			final PathMatcher pathMatcher = tryCreatePathMatcher(globPatternString);
+			if (pathMatcher != null) {
+				pathMatcherList.add(pathMatcher);
+			}
 		}
 	}
 

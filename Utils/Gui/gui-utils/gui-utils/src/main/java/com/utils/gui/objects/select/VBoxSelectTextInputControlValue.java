@@ -9,7 +9,7 @@ import com.utils.gui.alerts.CustomAlertWarning;
 import com.utils.gui.factories.BasicControlsFactories;
 import com.utils.gui.factories.LayoutControlsFactories;
 import com.utils.gui.objects.HBoxWindowButtons;
-import com.utils.gui.objects.select.data.TextFieldWithSelectionItem;
+import com.utils.gui.objects.select.data.TextInputControlWithSelectionItem;
 import com.utils.gui.objects.tables.table_view.CustomTableView;
 
 import javafx.geometry.Pos;
@@ -18,28 +18,28 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-class VBoxSelectTextFieldValue<
-		TextFieldWithSelectionItemT extends TextFieldWithSelectionItem>
+class VBoxSelectTextInputControlValue<
+		TextInputControlWithSelectionItemT extends TextInputControlWithSelectionItem>
 		extends AbstractCustomControl<VBox> {
 
 	private final String displayName;
 	private final TableColumnData[] tableColumnDataArray;
-	private final List<TextFieldWithSelectionItemT> itemList;
-	private final String currentTextFieldValue;
+	private final List<TextInputControlWithSelectionItemT> itemList;
+	private final String currentTextInputControlValue;
 
-	private CustomTableView<TextFieldWithSelectionItemT> customTableView;
-	private String newTextFieldValue;
+	private CustomTableView<TextInputControlWithSelectionItemT> customTableView;
+	private String newTextInputControlValue;
 
-	VBoxSelectTextFieldValue(
+	VBoxSelectTextInputControlValue(
 			final String displayName,
 			final TableColumnData[] tableColumnDataArray,
-			final List<TextFieldWithSelectionItemT> itemList,
-			final String currentTextFieldValue) {
+			final List<TextInputControlWithSelectionItemT> itemList,
+			final String currentTextInputControlValue) {
 
 		this.displayName = displayName;
 		this.tableColumnDataArray = tableColumnDataArray;
 		this.itemList = itemList;
-		this.currentTextFieldValue = currentTextFieldValue;
+		this.currentTextInputControlValue = currentTextInputControlValue;
 	}
 
 	@Override
@@ -70,19 +70,19 @@ class VBoxSelectTextFieldValue<
 		return rootVBox;
 	}
 
-	private CustomTableView<TextFieldWithSelectionItemT> createCustomTableView() {
+	private CustomTableView<TextInputControlWithSelectionItemT> createCustomTableView() {
 
-		final CustomTableView<TextFieldWithSelectionItemT> customTableView =
+		final CustomTableView<TextInputControlWithSelectionItemT> customTableView =
 				new CustomTableView<>(tableColumnDataArray, false, true, true, true, true, 0);
 
 		customTableView.setItems(itemList);
 
-		TextFieldWithSelectionItemT selectedItem = null;
-		for (final TextFieldWithSelectionItemT item : itemList) {
+		TextInputControlWithSelectionItemT selectedItem = null;
+		for (final TextInputControlWithSelectionItemT item : itemList) {
 
-			final boolean matchesTextFieldValue =
-					item.checkMatchesTextFieldValue(currentTextFieldValue);
-			if (matchesTextFieldValue) {
+			final boolean matchesTextInputControlValue =
+					item.checkMatchesTextInputControlValue(currentTextInputControlValue);
+			if (matchesTextInputControlValue) {
 
 				selectedItem = item;
 				break;
@@ -104,19 +104,19 @@ class VBoxSelectTextFieldValue<
 
 	private void okButtonClicked() {
 
-		final TextFieldWithSelectionItemT selectedItem =
+		final TextInputControlWithSelectionItemT selectedItem =
 				customTableView.getSelectionModel().getSelectedItem();
 		if (selectedItem == null) {
 			new CustomAlertWarning("no item selected",
 					"please select an item in the table first").showAndWait();
 
 		} else {
-			newTextFieldValue = selectedItem.createTextFieldValue();
+			newTextInputControlValue = selectedItem.createTextInputControlValue();
 			getRoot().getScene().getWindow().hide();
 		}
 	}
 
-	String getNewTextFieldValue() {
-		return newTextFieldValue;
+	String getNewTextInputControlValue() {
+		return newTextInputControlValue;
 	}
 }

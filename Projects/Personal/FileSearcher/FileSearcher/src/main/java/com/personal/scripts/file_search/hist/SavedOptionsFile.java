@@ -22,6 +22,8 @@ public final class SavedOptionsFile {
 	private boolean caseSensitivePathPattern;
 	private boolean useRegex;
 	private boolean caseSensitive;
+	private boolean multiline;
+	private boolean winStyleLineEndings;
 	private boolean searchInBinary;
 
 	private SavedOptionsFile() {
@@ -30,6 +32,8 @@ public final class SavedOptionsFile {
 		caseSensitivePathPattern = true;
 		useRegex = false;
 		caseSensitive = true;
+		multiline = true;
+		winStyleLineEndings = true;
 		searchInBinary = true;
 	}
 
@@ -56,6 +60,12 @@ public final class SavedOptionsFile {
 					final String caseSensitiveString = properties.getProperty("caseSensitive");
 					caseSensitive = Boolean.parseBoolean(caseSensitiveString);
 
+					final String multilineString = properties.getProperty("multiline");
+					multiline = Boolean.parseBoolean(multilineString);
+
+					final String winStyleLineEndingsString = properties.getProperty("winStyleLineEndings");
+					winStyleLineEndings = Boolean.parseBoolean(winStyleLineEndingsString);
+
 					final String searchInBinaryString = properties.getProperty("searchInBinary");
 					searchInBinary = Boolean.parseBoolean(searchInBinaryString);
 				}
@@ -80,6 +90,8 @@ public final class SavedOptionsFile {
 				properties.setProperty("caseSensitivePathPattern", Boolean.toString(caseSensitivePathPattern));
 				properties.setProperty("useRegex", Boolean.toString(useRegex));
 				properties.setProperty("caseSensitive", Boolean.toString(caseSensitive));
+				properties.setProperty("multiline", Boolean.toString(multiline));
+				properties.setProperty("winStyleLineEndings", Boolean.toString(winStyleLineEndings));
 				properties.setProperty("searchInBinary", Boolean.toString(searchInBinary));
 
 				properties.store(outputStream, "");
@@ -135,6 +147,24 @@ public final class SavedOptionsFile {
 
 	public boolean isCaseSensitive() {
 		return caseSensitive;
+	}
+
+	public void setMultiline(
+			final boolean multiline) {
+		this.multiline = multiline;
+	}
+
+	public boolean isMultiline() {
+		return multiline;
+	}
+
+	public void setWinStyleLineEndings(
+			final boolean winStyleLineEndings) {
+		this.winStyleLineEndings = winStyleLineEndings;
+	}
+
+	public boolean isWinStyleLineEndings() {
+		return winStyleLineEndings;
 	}
 
 	public void setSearchInBinary(

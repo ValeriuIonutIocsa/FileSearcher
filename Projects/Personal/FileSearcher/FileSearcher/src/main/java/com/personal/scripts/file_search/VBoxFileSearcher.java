@@ -21,7 +21,7 @@ import com.utils.gui.GuiUtils;
 import com.utils.gui.data.Dimensions;
 import com.utils.gui.factories.BasicControlsFactories;
 import com.utils.gui.factories.LayoutControlsFactories;
-import com.utils.gui.objects.select.HBoxTextFieldWithSelectionImpl;
+import com.utils.gui.objects.select.HBoxTextInputControlWithSelectionImpl;
 import com.utils.gui.objects.tables.table_view.CustomTableView;
 import com.utils.string.StrUtils;
 
@@ -35,7 +35,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -47,14 +46,16 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 	private final String rgExePathString;
 	private final String nppExePathString;
 
-	private HBoxTextFieldWithSelectionImpl<SelectionItem> searchPathHBoxTextFieldWithSelection;
-	private HBoxTextFieldWithSelectionImpl<SelectionItem> filePathPatternHBoxTextFieldWithSelection;
-	private HBoxTextFieldWithSelectionImpl<SelectionItem> searchTextHBoxTextFieldWithSelection;
+	private HBoxTextInputControlWithSelectionImpl<SelectionItem> searchPathHBoxTextFieldWithSelection;
+	private HBoxTextInputControlWithSelectionImpl<SelectionItem> filePathPatternHBoxTextFieldWithSelection;
+	private HBoxTextInputControlWithSelectionImpl<SelectionItem> searchTextHBoxTextFieldWithSelection;
 
 	private ComboBox<SearchEngineType> searchEngineTypeComboBox;
 	private CheckBox caseSensitivePathPatternCheckBox;
 	private CheckBox useRegexCheckBox;
 	private CheckBox caseSensitiveCheckBox;
+	private CheckBox multiLineCheckBox;
+	private CheckBox winStyleLineEndingsCheckBox;
 	private CheckBox searchInBinaryCheckBox;
 	private CheckBox saveHistoryCheckBox;
 
@@ -124,13 +125,6 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 				final String detailsString = newValue.createDetailsString();
 				detailsTextArea.setText(detailsString);
-			}
-		});
-
-		rootVBox.setOnKeyPressed(keyEvent -> {
-
-			if (keyEvent.getCode() == KeyCode.ENTER) {
-				search();
 			}
 		});
 
@@ -230,10 +224,10 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 				searchPathInitialValue = searchPathSavedHistoryEntryList.getFirst();
 			}
 		}
-		searchPathHBoxTextFieldWithSelection = new HBoxTextFieldWithSelectionImpl<>("search path",
+		searchPathHBoxTextFieldWithSelection = new HBoxTextInputControlWithSelectionImpl<>("search path",
 				new Dimensions(600, 600, 1920, 1280, 1200, 700), new TableColumnData[] {
 						new TableColumnData("Search Path", "SearchPath", 1.0, Double.NaN, Double.NaN)
-				}, new ArrayList<>(), searchPathInitialValue);
+				}, new ArrayList<>(), searchPathInitialValue, false, this::search);
 		GuiUtils.addToHBox(topHBox, searchPathHBoxTextFieldWithSelection.getRoot(),
 				Pos.CENTER_LEFT, Priority.ALWAYS, 0, 7, 0, 7);
 
@@ -255,10 +249,10 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		if (!filePathPatternSavedHistoryEntryList.isEmpty()) {
 			filePathPatternInitialValue = filePathPatternSavedHistoryEntryList.getFirst();
 		}
-		filePathPatternHBoxTextFieldWithSelection = new HBoxTextFieldWithSelectionImpl<>("file path pattern",
+		filePathPatternHBoxTextFieldWithSelection = new HBoxTextInputControlWithSelectionImpl<>("file path pattern",
 				new Dimensions(600, 600, 1920, 1280, 1200, 700), new TableColumnData[] {
 						new TableColumnData("File Path Pattern", "FilePathPattern", 1.0, Double.NaN, Double.NaN)
-				}, new ArrayList<>(), filePathPatternInitialValue);
+				}, new ArrayList<>(), filePathPatternInitialValue, true, this::search);
 		GuiUtils.addToHBox(middleHBox, filePathPatternHBoxTextFieldWithSelection.getRoot(),
 				Pos.CENTER_LEFT, Priority.ALWAYS, 0, 7, 0, 7);
 
@@ -273,10 +267,10 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		if (!searchTextSavedHistoryEntryList.isEmpty()) {
 			searchTextInitialValue = searchTextSavedHistoryEntryList.getFirst();
 		}
-		searchTextHBoxTextFieldWithSelection = new HBoxTextFieldWithSelectionImpl<>("search text",
+		searchTextHBoxTextFieldWithSelection = new HBoxTextInputControlWithSelectionImpl<>("search text",
 				new Dimensions(600, 600, 1920, 1280, 1200, 700), new TableColumnData[] {
 						new TableColumnData("Search Text", "SearchText", 1.0, Double.NaN, Double.NaN)
-				}, new ArrayList<>(), searchTextInitialValue);
+				}, new ArrayList<>(), searchTextInitialValue, true, this::search);
 		GuiUtils.addToHBox(middleHBox, searchTextHBoxTextFieldWithSelection.getRoot(),
 				Pos.CENTER_LEFT, Priority.ALWAYS, 0, 7, 0, 7);
 
@@ -343,6 +337,36 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		final boolean caseSensitive = SavedOptionsFile.INSTANCE.isCaseSensitive();
 		caseSensitiveCheckBox.setSelected(caseSensitive);
 		GuiUtils.addToHBox(bottomHBox, caseSensitiveCheckBox,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		GuiUtils.addToHBox(bottomHBox, BasicControlsFactories.getInstance().createSeparator(Orientation.VERTICAL),
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		final Label multiLineLabel = BasicControlsFactories.getInstance()
+				.createLabel("multiline:", "bold");
+		GuiUtils.addToHBox(bottomHBox, multiLineLabel,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		multiLineCheckBox =
+				BasicControlsFactories.getInstance().createCheckBox("");
+		final boolean multiLine = SavedOptionsFile.INSTANCE.isMultiline();
+		multiLineCheckBox.setSelected(multiLine);
+		GuiUtils.addToHBox(bottomHBox, multiLineCheckBox,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		GuiUtils.addToHBox(bottomHBox, BasicControlsFactories.getInstance().createSeparator(Orientation.VERTICAL),
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		final Label winStyleLineEndingsLabel = BasicControlsFactories.getInstance()
+				.createLabel("use \\r\\n:", "bold");
+		GuiUtils.addToHBox(bottomHBox, winStyleLineEndingsLabel,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		winStyleLineEndingsCheckBox =
+				BasicControlsFactories.getInstance().createCheckBox("");
+		final boolean winStyleLineEndings = SavedOptionsFile.INSTANCE.isWinStyleLineEndings();
+		winStyleLineEndingsCheckBox.setSelected(winStyleLineEndings);
+		GuiUtils.addToHBox(bottomHBox, winStyleLineEndingsCheckBox,
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
 		GuiUtils.addToHBox(bottomHBox, BasicControlsFactories.getInstance().createSeparator(Orientation.VERTICAL),
@@ -421,12 +445,13 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 		final boolean useRegex = useRegexCheckBox.isSelected();
 		final boolean caseSensitive = caseSensitiveCheckBox.isSelected();
-
+		final boolean multiline = multiLineCheckBox.isSelected();
+		final boolean winStyleLineEndings = winStyleLineEndingsCheckBox.isSelected();
 		final boolean searchInBinary = searchInBinaryCheckBox.isSelected();
 
 		return new SearchData(searchEngineType, rgExePathString,
 				searchFolderPathString, filePathPatternString, caseSensitivePathPattern,
-				searchText, useRegex, caseSensitive, searchInBinary);
+				searchText, useRegex, caseSensitive, multiline, winStyleLineEndings, searchInBinary);
 	}
 
 	private void makeCountsControlsInvisible() {
@@ -497,7 +522,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 	private static void fillSelectionItemList(
 			final SavedHistoryFile savedHistoryFile,
-			final HBoxTextFieldWithSelectionImpl<SelectionItem> hBoxTextFieldWithSelection) {
+			final HBoxTextInputControlWithSelectionImpl<SelectionItem> hBoxTextFieldWithSelection) {
 
 		final List<SelectionItem> selectionItemList = new ArrayList<>();
 		final List<String> savedHistoryEntryList = savedHistoryFile.getSavedHistoryEntryList();

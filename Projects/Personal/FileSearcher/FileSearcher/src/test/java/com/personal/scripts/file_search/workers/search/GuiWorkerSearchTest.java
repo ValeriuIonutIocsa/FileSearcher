@@ -2,6 +2,7 @@ package com.personal.scripts.file_search.workers.search;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.personal.scripts.file_search.workers.search.engine.type.SearchEngineType;
@@ -10,10 +11,27 @@ import com.utils.test.TestInputUtils;
 
 class GuiWorkerSearchTest {
 
-	@Test
-	void testWorkL2() {
+	private static SearchData searchData;
+
+	@BeforeAll
+	static void beforeAll() {
 
 		final SearchEngineType searchEngineType;
+		final int inputSearchEngineType = TestInputUtils.parseTestInputNumber("1");
+		if (inputSearchEngineType == 1) {
+			searchEngineType = SearchEngineType.RG;
+		} else if (inputSearchEngineType == 2) {
+			searchEngineType = SearchEngineType.OWN;
+		} else {
+			throw new RuntimeException();
+		}
+
+		searchData = configureSearchData(searchEngineType);
+	}
+
+	private static SearchData configureSearchData(
+			final SearchEngineType searchEngineType) {
+
 		final String rgExePathString = "C:\\IVI\\Apps\\RipGrep\\rg.exe";
 
 		final String searchFolderPathString;
@@ -24,12 +42,13 @@ class GuiWorkerSearchTest {
 		final String searchText;
 		final boolean useRegex;
 		final boolean caseSensitive;
+		final boolean multiline;
+		final boolean winStyleLineEndings;
 		final boolean searchInBinary;
 
-		final int input = TestInputUtils.parseTestInputNumber("101");
+		final int input = TestInputUtils.parseTestInputNumber("3");
 		if (input == 1) {
 
-			searchEngineType = SearchEngineType.RG;
 			searchFolderPathString = "C:\\IVI";
 
 			filePathPatternString = "**/*.gradle";
@@ -38,11 +57,12 @@ class GuiWorkerSearchTest {
 			searchText = "jarF";
 			useRegex = false;
 			caseSensitive = true;
+			multiline = false;
+			winStyleLineEndings = false;
 			searchInBinary = true;
 
 		} else if (input == 2) {
 
-			searchEngineType = SearchEngineType.RG;
 			searchFolderPathString = "C:\\IVI\\Prog";
 
 			filePathPatternString = "**/*.java";
@@ -51,12 +71,27 @@ class GuiWorkerSearchTest {
 			searchText = "Utils \\{\\w+";
 			useRegex = true;
 			caseSensitive = false;
+			multiline = false;
+			winStyleLineEndings = false;
 			searchInBinary = true;
+
+		} else if (input == 3) {
+
+			searchFolderPathString = "D:\\gbe\\damda_t14000_spa310\\DAMDA_000U0_000";
+
+			filePathPatternString = "**\\t1*.c" + System.lineSeparator() + "**\\t1*.h";
+			caseSensitivePathPattern = false;
+
+			searchText = "cro_dbg_trace";
+			useRegex = false;
+			caseSensitive = false;
+			multiline = false;
+			winStyleLineEndings = false;
+			searchInBinary = false;
 
 		} else if (input == 11) {
 
-			searchEngineType = SearchEngineType.RG;
-			searchFolderPathString = "D:\\IVI_MISC\\Tmp\\FileSearcher\\folder with spaces";
+			searchFolderPathString = "D:\\IVI\\Tmp\\FileSearcher\\folder with spaces";
 
 			filePathPatternString = "**/*.h";
 			caseSensitivePathPattern = false;
@@ -64,12 +99,13 @@ class GuiWorkerSearchTest {
 			searchText = "s    */";
 			useRegex = false;
 			caseSensitive = false;
+			multiline = false;
+			winStyleLineEndings = false;
 			searchInBinary = true;
 
-		} else if (input == 21) {
+		} else if (input == 12) {
 
-			searchEngineType = SearchEngineType.RG;
-			searchFolderPathString = "D:\\IVI_MISC\\Tmp\\FileSearcher\\folder with spaces";
+			searchFolderPathString = "D:\\IVI\\Tmp\\FileSearcher\\folder with spaces";
 
 			filePathPatternString = "**/*.h";
 			caseSensitivePathPattern = false;
@@ -77,11 +113,26 @@ class GuiWorkerSearchTest {
 			searchText = "echo > \"abc\"";
 			useRegex = false;
 			caseSensitive = false;
+			multiline = false;
+			winStyleLineEndings = false;
 			searchInBinary = true;
+
+		} else if (input == 13) {
+
+			searchFolderPathString = "D:\\IVI\\Tmp\\FileSearcher\\files_with_spaces";
+
+			filePathPatternString = "**\\*8 in*" + System.lineSeparator() + "**\\*bc bc*";
+			caseSensitivePathPattern = false;
+
+			searchText = "";
+			useRegex = false;
+			caseSensitive = false;
+			multiline = false;
+			winStyleLineEndings = false;
+			searchInBinary = false;
 
 		} else if (input == 22) {
 
-			searchEngineType = SearchEngineType.RG;
 			searchFolderPathString = "D:\\gbe\\DAMDA_000U0_000\\work";
 
 			filePathPatternString = "**/*.kts";
@@ -90,11 +141,26 @@ class GuiWorkerSearchTest {
 			searchText = ".putInternal(\"PATH\", System.getenv(\"PATH\"))";
 			useRegex = false;
 			caseSensitive = false;
+			multiline = false;
+			winStyleLineEndings = false;
+			searchInBinary = true;
+
+		} else if (input == 31) {
+
+			searchFolderPathString = "D:\\gbe\\damda_t14000_spa310\\DAMDA_000U0_000";
+
+			filePathPatternString = "**/*as*.src";
+			caseSensitivePathPattern = false;
+
+			searchText = "mov\td2,d10\r\n\tret";
+			useRegex = false;
+			caseSensitive = false;
+			multiline = true;
+			winStyleLineEndings = true;
 			searchInBinary = true;
 
 		} else if (input == 101) {
 
-			searchEngineType = SearchEngineType.RG;
 			searchFolderPathString = "D:\\gbe\\_gbe_dev_repo\\" +
 					"1TGBE-BUILD_PLATFORM\\src\\projects\\VWA22_0U0_B00\\build";
 
@@ -104,11 +170,12 @@ class GuiWorkerSearchTest {
 			searchText = "cro_dbg_trace";
 			useRegex = false;
 			caseSensitive = true;
+			multiline = false;
+			winStyleLineEndings = false;
 			searchInBinary = true;
 
 		} else if (input == 102) {
 
-			searchEngineType = SearchEngineType.RG;
 			searchFolderPathString = "D:\\gbe\\_gbe_dev_repo\\" +
 					"1TGBE-BUILD_PLATFORM\\src\\projects\\VWA22_0U0_B00\\build";
 
@@ -118,15 +185,21 @@ class GuiWorkerSearchTest {
 			searchText = "cro_dbg_trace";
 			useRegex = false;
 			caseSensitive = true;
+			multiline = false;
+			winStyleLineEndings = false;
 			searchInBinary = false;
 
 		} else {
 			throw new RuntimeException();
 		}
 
-		final SearchData searchData = new SearchData(searchEngineType, rgExePathString,
+		return new SearchData(searchEngineType, rgExePathString,
 				searchFolderPathString, filePathPatternString, caseSensitivePathPattern,
-				searchText, useRegex, caseSensitive, searchInBinary);
+				searchText, useRegex, caseSensitive, multiline, winStyleLineEndings, searchInBinary);
+	}
+
+	@Test
+	void testWorkL2() {
 
 		final GuiWorkerSearch guiWorkerSearch = new GuiWorkerSearch(null, searchData, false,
 				new RunningProcesses(), null);
