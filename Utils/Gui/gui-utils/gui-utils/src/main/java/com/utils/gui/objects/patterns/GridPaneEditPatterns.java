@@ -71,7 +71,7 @@ public class GridPaneEditPatterns extends AbstractCustomControl<GridPane> {
 		final Label exclusionPatternCaseSensitiveLabel = BasicControlsFactories.getInstance()
 				.createLabel("case sensitive:", "bold");
 		GuiUtils.addToGridPane(rootGridPane, exclusionPatternCaseSensitiveLabel, 2, row, 1, 1,
-				Pos.CENTER_LEFT, Priority.NEVER, Priority.NEVER, 7, 0, 0, 7);
+				Pos.CENTER_LEFT, Priority.NEVER, Priority.NEVER, 7, 0, 7, 7);
 
 		GuiUtils.addToGridPane(rootGridPane, exclusionPatternCaseSensitiveCheckBox, 3, row, 1, 1,
 				Pos.CENTER_LEFT, Priority.NEVER, Priority.NEVER, 7, 7, 7, 7);
