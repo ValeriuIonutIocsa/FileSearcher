@@ -53,10 +53,8 @@ public class PopupWindow extends Stage {
 
 			if (dimensions == null) {
 
-				final double height = getHeight();
-				setMinHeight(height);
-				final double width = getWidth();
-				setMinWidth(width);
+				setMinHeight(100);
+				setMinWidth(200);
 			}
 			scene.getRoot().requestFocus();
 		});

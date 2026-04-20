@@ -467,6 +467,7 @@ public class CustomTableView<
 			final FilterType filterType,
 			final int filterColumnIndex,
 			final CustomPatterns filterCustomPatterns) {
+
 		addColumnFilter(filterColumnIndex, filterCustomPatterns, filterType, true);
 	}
 

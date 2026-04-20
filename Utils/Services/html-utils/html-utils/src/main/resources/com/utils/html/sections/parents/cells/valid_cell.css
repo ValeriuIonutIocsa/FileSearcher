@@ -1,0 +1,11 @@
+.td_green_check {
+    color: green;
+    font-size: 16px;
+    text-align: center;
+}
+
+.td_red_cross {
+    color: red;
+    font-size: 16px;
+    text-align: center;
+}

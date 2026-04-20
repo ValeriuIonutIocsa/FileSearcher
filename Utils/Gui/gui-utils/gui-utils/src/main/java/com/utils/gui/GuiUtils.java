@@ -9,10 +9,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.sun.javafx.application.PlatformImpl;
 import com.utils.annotations.ApiMethod;
+import com.utils.gui.alerts.CustomAlertConfirm;
 import com.utils.gui.factories.LayoutControlsFactories;
 import com.utils.gui.version.VersionDependentMethods;
+import com.utils.io.FileSizeUtils;
+import com.utils.io.IoUtils;
 import com.utils.io.ResourceFileUtils;
 import com.utils.log.Logger;
+import com.utils.string.size.SizeUtils;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -20,6 +24,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.IndexedCell;
@@ -400,6 +405,37 @@ public final class GuiUtils {
 			if (node instanceof final Parent childParent) {
 				addAllDescendants(childParent, nodes);
 			}
+		}
+	}
+
+	@ApiMethod
+	public static void openFileWithDefaultAppWithSizeCheck(
+			final String filePathString) {
+
+		boolean keepGoing = false;
+		if (IoUtils.regularFileExists(filePathString)) {
+
+			final long fileSize = FileSizeUtils.fileSize(filePathString);
+			if (fileSize >= 100 * 1024 * 1024) {
+
+				final String readableFileSize = SizeUtils.humanReadableByteCountBin(fileSize);
+				final CustomAlertConfirm customAlertConfirm = new CustomAlertConfirm("Open large file?",
+						"The file you are trying to open is large (" + readableFileSize +
+								"). Do you still want to open it with the default app?",
+						ButtonType.YES, ButtonType.NO);
+				customAlertConfirm.showAndWait();
+
+				final ButtonType resultButtonType = customAlertConfirm.getResult();
+				if (resultButtonType == ButtonType.YES) {
+					keepGoing = true;
+				}
+
+			} else {
+				keepGoing = true;
+			}
+		}
+		if (keepGoing) {
+			IoUtils.openFileWithDefaultApp(filePathString);
 		}
 	}
 }

@@ -9,6 +9,7 @@ final class AppStartJavaFxHelloWorld {
 
 	public static void main(
 			final String[] args) {
+
 		Application.launch(ApplicationJavaFxHelloWorld.class, args);
 	}
 }

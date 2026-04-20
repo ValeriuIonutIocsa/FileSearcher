@@ -41,8 +41,10 @@ public abstract class AbstractCustomApplicationTest
 		scene.getStylesheets().addAll(stylesheetList);
 
 		stage.setScene(scene);
+
 		stage.setOnShown(event -> scene.getRoot().requestFocus());
-		stage.setOnCloseRequest(event -> System.exit(0));
+		stage.setOnHidden(event -> Runtime.getRuntime().halt(0));
+
 		stage.show();
 	}
 

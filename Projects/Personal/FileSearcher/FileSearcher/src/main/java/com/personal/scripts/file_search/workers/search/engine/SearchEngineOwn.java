@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
 import java.nio.file.PathMatcher;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,7 @@ public class SearchEngineOwn implements SearchEngine {
 								break;
 							}
 						}
+						return FileVisitResult.CONTINUE;
 					},
 					filePath -> {
 						for (final PathMatcher pathMatcher : pathMatcherList) {
@@ -73,6 +75,7 @@ public class SearchEngineOwn implements SearchEngine {
 								break;
 							}
 						}
+						return FileVisitResult.CONTINUE;
 					});
 		}
 	}
@@ -155,6 +158,8 @@ public class SearchEngineOwn implements SearchEngine {
 		if (Strings.CS.startsWith(charsetName, "ISO-") ||
 				Strings.CS.startsWith(charsetName, "windows-")) {
 			charset = StandardCharsets.ISO_8859_1;
+		} else if (Strings.CS.startsWith(charsetName, "UTF-16")) {
+			charset = StandardCharsets.UTF_16;
 		} else {
 			charset = StandardCharsets.UTF_8;
 		}
