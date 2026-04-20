@@ -20,7 +20,12 @@ import javafx.scene.input.ClipboardContent;
 
 class CustomTableCellSearchResultFileName extends CustomTableCell<SearchResult, Object> {
 
-	CustomTableCellSearchResultFileName() {
+	private final VBoxFileSearcher vBoxFileSearcher;
+
+	CustomTableCellSearchResultFileName(
+			final VBoxFileSearcher vBoxFileSearcher) {
+
+		this.vBoxFileSearcher = vBoxFileSearcher;
 	}
 
 	@Override
@@ -34,12 +39,16 @@ class CustomTableCellSearchResultFileName extends CustomTableCell<SearchResult, 
 			contextMenu = new ContextMenu();
 
 			final MenuItem copyFullPathMenuItem = new MenuItem("copy full path");
-			copyFullPathMenuItem.setOnAction(event -> copyFullPath(searchResult));
+			copyFullPathMenuItem.setOnAction(event -> copyFullPath());
 			contextMenu.getItems().add(copyFullPathMenuItem);
 
 			final MenuItem selectInExplorerMenuItem = new MenuItem("select in explorer");
 			selectInExplorerMenuItem.setOnAction(event -> selectInExplorer(searchResult));
 			contextMenu.getItems().add(selectInExplorerMenuItem);
+
+			final MenuItem openMenuItem = new MenuItem("open");
+			openMenuItem.setOnAction(event -> open());
+			contextMenu.getItems().add(openMenuItem);
 
 			final MenuItem deleteMenuItem = new MenuItem("delete");
 			deleteMenuItem.setOnAction(event -> delete());
@@ -52,11 +61,22 @@ class CustomTableCellSearchResultFileName extends CustomTableCell<SearchResult, 
 		return contextMenu;
 	}
 
-	private static void copyFullPath(
-			final SearchResult searchResult) {
+	private void copyFullPath() {
 
-		final String filePathString = searchResult.createFilePathString();
-		ClipboardUtils.putStringInClipBoard(filePathString);
+		final List<String> filePathStringList = new ArrayList<>();
+		fillFilePathStringList(filePathStringList);
+
+		final StringBuilder sbToPutInClipboard = new StringBuilder();
+		for (final String filePathString : filePathStringList) {
+
+			if (!sbToPutInClipboard.isEmpty()) {
+				sbToPutInClipboard.append(System.lineSeparator());
+			}
+			sbToPutInClipboard.append(filePathString);
+		}
+		final String toPutInClipboard = sbToPutInClipboard.toString();
+
+		ClipboardUtils.putStringInClipBoard(toPutInClipboard);
 	}
 
 	private static void selectInExplorer(
@@ -67,14 +87,23 @@ class CustomTableCellSearchResultFileName extends CustomTableCell<SearchResult, 
 		IoUtils.selectFileInExplorer(filePathString, appFolderPathString);
 	}
 
+	private void open() {
+
+		final List<String> filePathStringList = new ArrayList<>();
+		fillFilePathStringList(filePathStringList);
+
+		for (final String filePathString : filePathStringList) {
+			vBoxFileSearcher.jumpToFirstOccurrenceL2(filePathString);
+		}
+	}
+
 	private void delete() {
 
 		try {
-			final TableView<SearchResult> tableView = getTableView();
-			final List<SearchResult> selectedItemList = tableView.getSelectionModel().getSelectedItems();
-			for (final SearchResult selectedItem : selectedItemList) {
+			final List<String> filePathStringList = new ArrayList<>();
+			fillFilePathStringList(filePathStringList);
 
-				final String filePathString = selectedItem.createFilePathString();
+			for (final String filePathString : filePathStringList) {
 				FactoryFileDeleter.getInstance().deleteFile(filePathString, true, true);
 			}
 
@@ -87,12 +116,12 @@ class CustomTableCellSearchResultFileName extends CustomTableCell<SearchResult, 
 	private void copy() {
 
 		try {
-			final List<File> fileList = new ArrayList<>();
-			final TableView<SearchResult> tableView = getTableView();
-			final List<SearchResult> selectedItemList = tableView.getSelectionModel().getSelectedItems();
-			for (final SearchResult selectedItem : selectedItemList) {
+			final List<String> filePathStringList = new ArrayList<>();
+			fillFilePathStringList(filePathStringList);
 
-				final String filePathString = selectedItem.createFilePathString();
+			final List<File> fileList = new ArrayList<>();
+			for (final String filePathString : filePathStringList) {
+
 				final File file = new File(filePathString);
 				fileList.add(file);
 			}
@@ -106,6 +135,18 @@ class CustomTableCellSearchResultFileName extends CustomTableCell<SearchResult, 
 		} catch (final Throwable throwable) {
 			Logger.printThrowable(throwable);
 			new CustomAlertThrowable("error", "error occurred while copying files", throwable).showAndWait();
+		}
+	}
+
+	private void fillFilePathStringList(
+			final List<String> filePathStringList) {
+
+		final TableView<SearchResult> tableView = getTableView();
+		final List<SearchResult> selectedItemList = tableView.getSelectionModel().getSelectedItems();
+		for (final SearchResult selectedItem : selectedItemList) {
+
+			final String filePathString = selectedItem.createFilePathString();
+			filePathStringList.add(filePathString);
 		}
 	}
 }

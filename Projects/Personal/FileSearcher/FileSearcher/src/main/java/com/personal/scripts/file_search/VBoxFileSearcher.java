@@ -178,7 +178,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 						false, true, true, true, true, 0);
 
 		customTableView.getColumnByName(SearchResult.FILE_NAME_COLUMN_NAME)
-				.setCellFactory(param -> new CustomTableCellSearchResultFileName());
+				.setCellFactory(param -> new CustomTableCellSearchResultFileName(this));
 		customTableView.getColumnByName(SearchResult.FOLDER_PATH_COLUMN_NAME)
 				.setCellFactory(param -> new CustomTableCellSearchResultFolderName());
 
@@ -199,9 +199,15 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		if (searchResult != null) {
 
 			final String filePathString = searchResult.createFilePathString();
-			new GuiWorkerJumpToFirstOccurrence(getRoot().getScene(),
-					nppExePathString, filePathString, searchEngine, textFinder, runningProcesses, this).start();
+			jumpToFirstOccurrenceL2(filePathString);
 		}
+	}
+
+	void jumpToFirstOccurrenceL2(
+			final String filePathString) {
+
+		new GuiWorkerJumpToFirstOccurrence(getRoot().getScene(),
+				nppExePathString, filePathString, searchEngine, textFinder, runningProcesses, this).start();
 	}
 
 	private HBox createTopHBox() {

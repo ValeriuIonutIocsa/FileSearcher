@@ -74,7 +74,7 @@ public class ApplicationFileSearcher extends Application {
 
 		StyleUtils.configureStyle(primaryScene, "com/personal/scripts/file_search/style.css", "");
 
-		primaryStage.setOnHidden(event -> System.exit(0));
+		primaryStage.setOnHidden(event -> Runtime.getRuntime().halt(0));
 
 		primaryStage.show();
 		primaryStage.getScene().getRoot().requestFocus();
