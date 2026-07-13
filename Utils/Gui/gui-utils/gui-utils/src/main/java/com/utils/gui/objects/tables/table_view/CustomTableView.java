@@ -375,7 +375,7 @@ public class CustomTableView<
 			final int columnIndex) {
 
 		final VBoxSearchTable vBoxSearchTable = new VBoxSearchTable(this, columnIndex);
-		new PopupWindow(getScene(), null, Modality.APPLICATION_MODAL, "Search Table",
+		new PopupWindow(getScene(), null, Modality.NONE, "Search Table",
 				null, vBoxSearchTable.getRoot()).show();
 	}
 
@@ -458,7 +458,7 @@ public class CustomTableView<
 			final int columnIndex) {
 
 		final VBoxFilterTable vBoxFilterTable = new VBoxFilterTable(this, columnIndex);
-		new PopupWindow(getScene(), null, Modality.APPLICATION_MODAL, "Filter Table",
+		new PopupWindow(getScene(), null, Modality.NONE, "Filter Table",
 				null, vBoxFilterTable.getRoot()).show();
 	}
 
@@ -731,7 +731,7 @@ public class CustomTableView<
 		return itemsRemoved;
 	}
 
-	private static ButtonType checkConfirmRemoveSelectedItems(
+	private ButtonType checkConfirmRemoveSelectedItems(
 			final String itemDisplayName,
 			final String itemDisplayNamePlural,
 			final int itemCount) {
@@ -742,9 +742,10 @@ public class CustomTableView<
 		} else {
 			itemCountString = itemCount + " " + itemDisplayNamePlural;
 		}
-		final CustomAlertConfirm customAlertConfirm = new CustomAlertConfirm("Removing " + itemDisplayName,
-				"Are you sure you wish to remove the selected " + itemCountString + " from the list?",
-				ButtonType.NO, ButtonType.YES);
+		final CustomAlertConfirm customAlertConfirm =
+				new CustomAlertConfirm(getScene(), "Removing " + itemDisplayName,
+						"Are you sure you wish to remove the selected " + itemCountString + " from the list?",
+						ButtonType.NO, ButtonType.YES);
 		customAlertConfirm.showAndWait();
 
 		return customAlertConfirm.getResult();
@@ -797,12 +798,13 @@ public class CustomTableView<
 		return itemRemoved;
 	}
 
-	private static ButtonType checkConfirmRemoveSelectedItem(
+	private ButtonType checkConfirmRemoveSelectedItem(
 			final String itemDisplayName) {
 
-		final CustomAlertConfirm customAlertConfirm = new CustomAlertConfirm("Removing " + itemDisplayName,
-				"Are you sure you wish to remove the selected " + itemDisplayName + " from the list?",
-				ButtonType.NO, ButtonType.YES);
+		final CustomAlertConfirm customAlertConfirm =
+				new CustomAlertConfirm(getScene(), "Removing " + itemDisplayName,
+						"Are you sure you wish to remove the selected " + itemDisplayName + " from the list?",
+						ButtonType.NO, ButtonType.YES);
 		customAlertConfirm.showAndWait();
 
 		return customAlertConfirm.getResult();

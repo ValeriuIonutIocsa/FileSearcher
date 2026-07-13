@@ -9,20 +9,24 @@ import com.personal.scripts.file_search.hist.SavedHistoryFile;
 import com.personal.scripts.file_search.hist.SavedOptionsFile;
 import com.utils.app_info.AppInfo;
 import com.utils.cli.CliUtils;
+import com.utils.gui.CustomApplication;
 import com.utils.gui.GuiUtils;
 import com.utils.gui.stages.StageUtils;
 import com.utils.gui.styles.StyleUtils;
+import com.utils.gui.workers.AbstractGuiWorker;
 import com.utils.log.Logger;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class ApplicationFileSearcher extends Application {
+public class ApplicationFileSearcher extends Application implements CustomApplication {
 
 	private String searchFolderPathString;
 	private String rgExePathString;
 	private String nppExePathString;
+
+	private Stage primaryStage;
 
 	@Override
 	public void init() {
@@ -54,6 +58,10 @@ public class ApplicationFileSearcher extends Application {
 	public void start(
 			final Stage primaryStage) {
 
+		this.primaryStage = primaryStage;
+
+		AbstractGuiWorker.setCustomApplication(this);
+
 		GuiUtils.setupCustomTooltipBehavior();
 
 		final AppInfo appInfo = FileSearcherAppInfoUtils.createAppInfo();
@@ -78,5 +86,16 @@ public class ApplicationFileSearcher extends Application {
 
 		primaryStage.show();
 		primaryStage.getScene().getRoot().requestFocus();
+	}
+
+	@Override
+	public void setControlsDisabled(
+			final boolean b) {
+	}
+
+	@Override
+	public Scene computeScene() {
+
+		return primaryStage.getScene();
 	}
 }

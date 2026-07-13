@@ -201,7 +201,7 @@ class GuiWorkerSearchTest {
 	@Test
 	void testWorkL2() {
 
-		final GuiWorkerSearch guiWorkerSearch = new GuiWorkerSearch(null, searchData, false,
+		final GuiWorkerSearch guiWorkerSearch = new GuiWorkerSearch(searchData, false,
 				new RunningProcesses(), null);
 		guiWorkerSearch.workL2();
 

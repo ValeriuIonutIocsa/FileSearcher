@@ -410,6 +410,7 @@ public final class GuiUtils {
 
 	@ApiMethod
 	public static void openFileWithDefaultAppWithSizeCheck(
+			final Scene scene,
 			final String filePathString) {
 
 		boolean keepGoing = false;
@@ -419,7 +420,7 @@ public final class GuiUtils {
 			if (fileSize >= 100 * 1024 * 1024) {
 
 				final String readableFileSize = SizeUtils.humanReadableByteCountBin(fileSize);
-				final CustomAlertConfirm customAlertConfirm = new CustomAlertConfirm("Open large file?",
+				final CustomAlertConfirm customAlertConfirm = new CustomAlertConfirm(scene, "Open large file?",
 						"The file you are trying to open is large (" + readableFileSize +
 								"). Do you still want to open it with the default app?",
 						ButtonType.YES, ButtonType.NO);

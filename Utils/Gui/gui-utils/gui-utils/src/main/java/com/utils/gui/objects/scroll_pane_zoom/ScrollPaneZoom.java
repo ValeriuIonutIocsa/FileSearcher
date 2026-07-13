@@ -121,13 +121,13 @@ public class ScrollPaneZoom extends AbstractCustomControl<ScrollPane> {
 				scrollPane.getViewportBounds().getWidth();
 		final double deltaH = deltaX * (scrollPane.getHmax() - scrollPane.getHmin()) / extraWidth;
 		final double desiredH = scrollPane.getHvalue() - deltaH;
-		scrollPane.setHvalue(Math.max(0, Math.min(scrollPane.getHmax(), desiredH)));
+		scrollPane.setHvalue(Math.clamp(desiredH, 0, scrollPane.getHmax()));
 
 		final double extraHeight = scrollPaneContent.getLayoutBounds().getHeight() -
 				scrollPane.getViewportBounds().getHeight();
 		final double deltaV = deltaY * (scrollPane.getHmax() - scrollPane.getHmin()) / extraHeight;
 		final double desiredV = scrollPane.getVvalue() - deltaV;
-		scrollPane.setVvalue(Math.max(0, Math.min(scrollPane.getVmax(), desiredV)));
+		scrollPane.setVvalue(Math.clamp(desiredV, 0, scrollPane.getVmax()));
 	}
 
 	private void zoom(

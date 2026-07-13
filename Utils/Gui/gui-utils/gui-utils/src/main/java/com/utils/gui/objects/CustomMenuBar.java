@@ -32,11 +32,14 @@ public class CustomMenuBar extends MenuBar {
 
 		final ButtonType buttonType;
 		if (Cursor.WAIT.equals(scene.getCursor())) {
-			final CustomAlertConfirm customAlertConfirm = new CustomAlertConfirm("Are you sure you wish to quit?",
-					"The application is working. The process cannot complete successfully if you quit.",
-					ButtonType.NO, ButtonType.YES);
+
+			final CustomAlertConfirm customAlertConfirm =
+					new CustomAlertConfirm(scene, "Are you sure you wish to quit?",
+							"The application is working. The process cannot complete successfully if you quit.",
+							ButtonType.NO, ButtonType.YES);
 			customAlertConfirm.showAndWait();
 			buttonType = customAlertConfirm.getResult();
+
 		} else {
 			buttonType = null;
 		}

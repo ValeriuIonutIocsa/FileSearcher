@@ -127,7 +127,7 @@ public class VBoxPatterns extends AbstractCustomControl<VBox> {
 		CustomPatterns customPatterns = null;
 		final int patternTypeIndex = hBoxRegexType.getPatternType();
 		if (patternTypeIndex < 0) {
-			new CustomAlertWarning("No pattern type!",
+			new CustomAlertWarning(getRoot().getScene(), "No pattern type!",
 					"In order to use patterns, you have to choose a pattern type" +
 							" from the three pattern types above!").showAndWait();
 

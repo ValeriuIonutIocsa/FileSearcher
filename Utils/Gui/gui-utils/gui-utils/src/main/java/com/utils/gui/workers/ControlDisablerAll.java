@@ -6,18 +6,11 @@ import javafx.scene.Scene;
 
 public class ControlDisablerAll implements ControlDisabler {
 
-	private final Scene scene;
-
-	public ControlDisablerAll(
-			final Scene scene) {
-
-		this.scene = scene;
-	}
-
 	@Override
 	public void setControlsDisabled(
 			final boolean b) {
 
+		final Scene scene = AbstractGuiWorker.computeScene();
 		if (scene != null) {
 
 			final Parent root = scene.getRoot();

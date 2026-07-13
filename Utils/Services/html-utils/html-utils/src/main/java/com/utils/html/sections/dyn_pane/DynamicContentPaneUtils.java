@@ -15,10 +15,11 @@ public final class DynamicContentPaneUtils {
 	public static String createDynamicContentPaneCss(
 			final double sidebarWidth) {
 
-		String dynamicContentPaneCss = ResourceFileUtils.resourceFileToString(
-				"com/utils/html/sections/dyn_pane/dynamic_content_pane.css");
-		dynamicContentPaneCss = Strings.CS.replace(dynamicContentPaneCss, "@@SIDEBAR_WIDTH@@",
-				StrUtils.doubleToString(sidebarWidth, 0, 2, false));
+		String dynamicContentPaneCss = ResourceFileUtils
+				.resourceFileToString("com/utils/html/sections/dyn_pane/dynamic_content_pane.css");
+		dynamicContentPaneCss = Strings.CS.replace(dynamicContentPaneCss,
+				"/*grid-template-columns: @@SIDEBAR_WIDTH@@px 1fr ;*/",
+				"/*grid-template-columns: " + StrUtils.doubleToString(sidebarWidth, 0, 2, false) + "px 1fr */");
 		return dynamicContentPaneCss;
 	}
 }

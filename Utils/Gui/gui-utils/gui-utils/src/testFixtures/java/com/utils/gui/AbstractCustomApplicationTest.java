@@ -6,6 +6,7 @@ import java.util.List;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import com.utils.gui.factories.LayoutControlsFactories;
+import com.utils.gui.workers.AbstractGuiWorker;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,11 +17,15 @@ import javafx.stage.Stage;
 public abstract class AbstractCustomApplicationTest
 		extends ApplicationTest implements CustomApplicationTest {
 
+	private Stage stage;
+
 	private StackPane stackPaneContainer;
 
 	@Override
 	public void start(
 			final Stage primaryStage) {
+
+		AbstractGuiWorker.setCustomApplication(this);
 
 		primaryStage.setOnShown(event -> showSecondaryStage());
 		primaryStage.show();
@@ -29,6 +34,8 @@ public abstract class AbstractCustomApplicationTest
 	private void showSecondaryStage() {
 
 		final Stage stage = new Stage();
+		this.stage = stage;
+
 		stage.setTitle("Test Application");
 		final Image imageApp = createImageApp();
 		GuiUtils.setAppIcon(stage, imageApp);
@@ -56,6 +63,19 @@ public abstract class AbstractCustomApplicationTest
 	@Override
 	public void fillStylesheetList(
 			final List<String> stylesheetList) {
+	}
+
+	@Override
+	public void setControlsDisabled(
+			final boolean b) {
+
+		stackPaneContainer.setDisable(b);
+	}
+
+	@Override
+	public Scene computeScene() {
+
+		return stage.getScene();
 	}
 
 	protected StackPane getStackPaneContainer() {

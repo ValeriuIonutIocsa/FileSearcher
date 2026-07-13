@@ -29,6 +29,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -206,8 +207,8 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 	void jumpToFirstOccurrenceL2(
 			final String filePathString) {
 
-		new GuiWorkerJumpToFirstOccurrence(getRoot().getScene(),
-				nppExePathString, filePathString, searchEngine, textFinder, runningProcesses, this).start();
+		new GuiWorkerJumpToFirstOccurrence(nppExePathString, filePathString,
+				searchEngine, textFinder, runningProcesses, this).start();
 	}
 
 	private HBox createTopHBox() {
@@ -432,7 +433,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 		makeCountsControlsInvisible();
 
-		new GuiWorkerSearch(getRoot().getScene(), searchData, saveHistory, runningProcesses, this).start();
+		new GuiWorkerSearch(searchData, saveHistory, runningProcesses, this).start();
 	}
 
 	private SearchData createSearchData() {
@@ -486,7 +487,8 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 	private void stop() {
 
-		runningProcesses.stop();
+		final Scene scene = getRoot().getScene();
+		runningProcesses.stop(scene);
 	}
 
 	public void updateSearchResults(

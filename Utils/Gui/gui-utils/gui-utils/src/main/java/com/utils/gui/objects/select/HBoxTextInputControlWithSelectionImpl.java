@@ -111,7 +111,7 @@ public class HBoxTextInputControlWithSelectionImpl<
 		final VBoxSelectTextInputControlValue<TextInputControlWithSelectionItemT> vBoxSelectTextInputControlValue =
 				new VBoxSelectTextInputControlValue<>(
 						displayName, tableColumnDataArray, itemList, currentTextInputControlValue);
-		new PopupWindow(getRoot().getScene(), null, Modality.APPLICATION_MODAL, "select " + displayName,
+		new PopupWindow(getRoot().getScene(), null, Modality.NONE, "select " + displayName,
 				popupWindowDimensions, vBoxSelectTextInputControlValue.getRoot()).showAndWait();
 
 		final String newTextInputControlValue = vBoxSelectTextInputControlValue.getNewTextInputControlValue();

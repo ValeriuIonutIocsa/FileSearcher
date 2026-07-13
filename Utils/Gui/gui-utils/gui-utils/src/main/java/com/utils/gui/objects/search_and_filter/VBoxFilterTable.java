@@ -109,7 +109,7 @@ public class VBoxFilterTable extends AbstractCustomControl<VBox> {
 		if (customPatterns != null) {
 
 			if (customPatterns.checkEmptyPatterns()) {
-				new CustomAlertWarning("empty filter patterns",
+				new CustomAlertWarning(getRoot().getScene(), "empty filter patterns",
 						"All the search patterns above are empty." +
 								" It is redundant to perform a search.").showAndWait();
 

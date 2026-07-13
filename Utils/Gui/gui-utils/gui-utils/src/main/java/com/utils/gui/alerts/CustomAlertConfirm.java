@@ -1,5 +1,6 @@
 package com.utils.gui.alerts;
 
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -10,9 +11,12 @@ public class CustomAlertConfirm extends AbstractCustomAlert {
 	private final ButtonType[] buttonTypes;
 
 	public CustomAlertConfirm(
+			final Scene scene,
 			final String headerText,
 			final String contentText,
 			final ButtonType... buttonTypes) {
+
+		super(scene);
 
 		this.headerText = headerText;
 		this.contentText = contentText;

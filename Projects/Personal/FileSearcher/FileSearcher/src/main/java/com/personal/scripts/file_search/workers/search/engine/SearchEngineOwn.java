@@ -28,6 +28,8 @@ import com.utils.io.StreamUtils;
 import com.utils.log.Logger;
 import com.utils.string.regex.RegexUtils;
 
+import javafx.scene.Scene;
+
 public class SearchEngineOwn implements SearchEngine {
 
 	private final SearchData searchData;
@@ -40,6 +42,7 @@ public class SearchEngineOwn implements SearchEngine {
 
 	@Override
 	public void parseFilePaths(
+			final Scene scene,
 			final List<String> dirPathStringList,
 			final List<String> filePathStringList,
 			final RunningProcesses runningProcesses) {
@@ -47,7 +50,7 @@ public class SearchEngineOwn implements SearchEngine {
 		final List<PathMatcher> pathMatcherList = new ArrayList<>();
 		fillPathMatcherList(pathMatcherList);
 		if (pathMatcherList.isEmpty()) {
-			new CustomAlertError("invalid file path pattern",
+			new CustomAlertError(scene, "invalid file path pattern",
 					"the file path pattern is not a valid pattern").showAndWait();
 
 		} else {
@@ -110,6 +113,7 @@ public class SearchEngineOwn implements SearchEngine {
 
 	@Override
 	public void searchText(
+			final Scene scene,
 			final List<String> filePathStringList,
 			final TextFinder textFinder,
 			final Map<String, Integer> filePathStringToOccurrenceCountMap,
@@ -168,6 +172,7 @@ public class SearchEngineOwn implements SearchEngine {
 
 	@Override
 	public FirstOccurrenceData parseFirstOccurrenceData(
+			final Scene scene,
 			final String filePathString,
 			final TextFinder textFinder,
 			final RunningProcesses runningProcesses) {
@@ -193,7 +198,7 @@ public class SearchEngineOwn implements SearchEngine {
 
 		} catch (final Throwable throwable) {
 			Logger.printThrowable(throwable);
-			new CustomAlertThrowable("failed to find first occurrence in file",
+			new CustomAlertThrowable(scene, "failed to find first occurrence in file",
 					"error occurred while searching for first text occurrence " +
 							"in file:" + System.lineSeparator() + filePathString, throwable).showAndWait();
 		}

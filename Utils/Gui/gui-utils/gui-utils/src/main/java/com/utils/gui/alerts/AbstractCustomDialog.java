@@ -5,17 +5,25 @@ import java.util.Optional;
 import com.utils.gui.AbstractCustomControl;
 import com.utils.gui.GuiUtils;
 
+import javafx.scene.Scene;
 import javafx.scene.control.Dialog;
+import javafx.stage.Modality;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 
 public abstract class AbstractCustomDialog<
 		ObjectT,
 		DialogT extends Dialog<ObjectT>>
 		extends AbstractCustomControl<DialogT> implements CustomDialog<ObjectT, DialogT> {
 
+	private final Scene scene;
+
 	private ObjectT result;
 
-	AbstractCustomDialog() {
+	AbstractCustomDialog(
+			final Scene scene) {
+
+		this.scene = scene;
 	}
 
 	@Override
@@ -23,7 +31,15 @@ public abstract class AbstractCustomDialog<
 
 		final DialogT dialog = createDialog();
 
+		if (scene != null) {
+
+			final Window window = scene.getWindow();
+			if (window != null) {
+				dialog.initOwner(window);
+			}
+		}
 		dialog.initStyle(StageStyle.UTILITY);
+		dialog.initModality(Modality.APPLICATION_MODAL);
 		dialog.setResizable(true);
 		final int prefWidth = getPrefWidth();
 		final int prefHeight = getPrefHeight();

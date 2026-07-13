@@ -6,6 +6,7 @@ import com.utils.gui.factories.LayoutControlsFactories;
 import com.utils.log.Logger;
 
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -19,9 +20,12 @@ public class CustomAlertThrowable extends AbstractCustomAlert {
 	private final Throwable throwable;
 
 	public CustomAlertThrowable(
+			final Scene scene,
 			final String headerText,
 			final String contentText,
 			final Throwable throwable) {
+
+		super(scene);
 
 		this.headerText = headerText;
 		this.contentText = contentText;

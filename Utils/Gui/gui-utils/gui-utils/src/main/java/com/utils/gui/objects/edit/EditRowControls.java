@@ -97,7 +97,7 @@ public class EditRowControls {
 		final String tmpValue = textField.getText();
 		if (StringUtils.isBlank(tmpValue)) {
 
-			new CustomAlertWarning("Blank " + displayName + "!",
+			new CustomAlertWarning(textField.getScene(), "Blank " + displayName + "!",
 					"Please choose a valid value for the " + displayName + "!").showAndWait();
 			value = null;
 
@@ -114,14 +114,14 @@ public class EditRowControls {
 		final String valueString = textField.getText();
 		if (StringUtils.isBlank(valueString)) {
 
-			new CustomAlertWarning("Blank " + displayName + "!",
+			new CustomAlertWarning(textField.getScene(), "Blank " + displayName + "!",
 					"Please choose a valid value for the " + displayName + "!").showAndWait();
 			value = -1;
 
 		} else {
 			final int tmpValue = StrUtils.tryParsePositiveInt(valueString);
 			if (tmpValue < 0) {
-				new CustomAlertWarning("Invalid " + displayName + "!",
+				new CustomAlertWarning(textField.getScene(), "Invalid " + displayName + "!",
 						"Please choose a valid value for the " + displayName + "!").showAndWait();
 				value = -1;
 

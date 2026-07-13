@@ -49,13 +49,12 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 	private TextFinder textFinder;
 
 	public GuiWorkerSearch(
-			final Scene scene,
 			final SearchData searchData,
 			final boolean saveHistory,
 			final RunningProcesses runningProcesses,
 			final VBoxFileSearcher vBoxFileSearcher) {
 
-		super(scene, new ControlDisablerFileSearcher(scene, vBoxFileSearcher));
+		super(new ControlDisablerFileSearcher(vBoxFileSearcher));
 
 		this.searchData = searchData;
 		this.runningProcesses = runningProcesses;
@@ -113,18 +112,21 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 
 		final String searchFolderPathString = searchData.searchFolderPathString();
 		if (StringUtils.isBlank(searchFolderPathString)) {
-			new CustomAlertError("search path is blank",
+			final Scene scene = computeScene();
+			new CustomAlertError(scene, "search path is blank",
 					"search path is blank").showAndWait();
 
 		} else {
 			if (!IoUtils.directoryExists(searchFolderPathString)) {
-				new CustomAlertError("search folder does not exist",
+				final Scene scene = computeScene();
+				new CustomAlertError(scene, "search folder does not exist",
 						"search folder does not exist").showAndWait();
 
 			} else {
 				final String filePathPatternString = searchData.filePathPatternString();
 				if (StringUtils.isBlank(filePathPatternString)) {
-					new CustomAlertError("file path pattern is blank",
+					final Scene scene = computeScene();
+					new CustomAlertError(scene, "file path pattern is blank",
 							"file path pattern is blank").showAndWait();
 
 				} else {
@@ -153,13 +155,15 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 		} else {
 			searchEngine = new SearchEngineOwn(searchData);
 		}
-		searchEngine.parseFilePaths(dirPathStringList, filePathStringList, runningProcesses);
+
+		final Scene scene = computeScene();
+		searchEngine.parseFilePaths(scene, dirPathStringList, filePathStringList, runningProcesses);
 
 		final Map<String, Integer> filePathStringToOccurrenceCountMap = new HashMap<>();
 		textFinder = createTextFinder();
 		if (textFinder != null) {
 
-			searchEngine.searchText(filePathStringList, textFinder,
+			searchEngine.searchText(scene, filePathStringList, textFinder,
 					filePathStringToOccurrenceCountMap, runningProcesses);
 		}
 
@@ -206,7 +210,8 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 				final boolean caseSensitive = searchData.caseSensitive();
 				final Pattern searchPattern = RegexUtils.tryCompile(searchText, caseSensitive);
 				if (searchPattern == null) {
-					new CustomAlertError("invalid search text pattern",
+					final Scene scene = computeScene();
+					new CustomAlertError(scene, "invalid search text pattern",
 							"the pattern for searching text is not a valid regex pattern").showAndWait();
 
 				} else {
@@ -262,7 +267,8 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 	@Override
 	protected void error() {
 
-		new CustomAlertError("error", "error occurred while searching").showAndWait();
+		final Scene scene = computeScene();
+		new CustomAlertError(scene, "error", "error occurred while searching").showAndWait();
 	}
 
 	@Override

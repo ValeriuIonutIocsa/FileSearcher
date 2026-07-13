@@ -357,7 +357,7 @@ public class CustomTreeTableView<
 			final int columnIndex) {
 
 		final VBoxSearchTable vBoxSearchTable = new VBoxSearchTable(this, columnIndex);
-		new PopupWindow(getScene(), null, Modality.APPLICATION_MODAL, "Search Tree Table",
+		new PopupWindow(getScene(), null, Modality.NONE, "Search Tree Table",
 				null, vBoxSearchTable.getRoot()).show();
 	}
 
@@ -499,7 +499,7 @@ public class CustomTreeTableView<
 			final int columnIndex) {
 
 		final VBoxFilterTable vBoxFilterTable = new VBoxFilterTable(this, columnIndex);
-		new PopupWindow(getScene(), null, Modality.APPLICATION_MODAL, "Filter Tree Table",
+		new PopupWindow(getScene(), null, Modality.NONE, "Filter Tree Table",
 				null, vBoxFilterTable.getRoot()).show();
 	}
 

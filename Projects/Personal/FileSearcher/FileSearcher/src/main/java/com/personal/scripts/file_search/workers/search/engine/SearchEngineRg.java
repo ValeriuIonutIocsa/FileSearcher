@@ -18,6 +18,8 @@ import com.utils.io.processes.ReadBytesHandlerLinesPrint;
 import com.utils.log.Logger;
 import com.utils.string.regex.RegexUtils;
 
+import javafx.scene.Scene;
+
 public class SearchEngineRg implements SearchEngine {
 
 	private final SearchData searchData;
@@ -30,6 +32,7 @@ public class SearchEngineRg implements SearchEngine {
 
 	@Override
 	public void parseFilePaths(
+			final Scene scene,
 			final List<String> dirPathStringList,
 			final List<String> filePathStringList,
 			final RunningProcesses runningProcesses) {
@@ -93,7 +96,7 @@ public class SearchEngineRg implements SearchEngine {
 
 		} catch (final Throwable throwable) {
 			Logger.printThrowable(throwable);
-			new CustomAlertThrowable("failed to parse file paths",
+			new CustomAlertThrowable(scene, "failed to parse file paths",
 					"error occurred while parsing file paths", throwable).showAndWait();
 
 		} finally {
@@ -103,6 +106,7 @@ public class SearchEngineRg implements SearchEngine {
 
 	@Override
 	public void searchText(
+			final Scene scene,
 			final List<String> filePathStringList,
 			final TextFinder textFinder,
 			final Map<String, Integer> filePathStringToOccurrenceCountMap,
@@ -214,7 +218,7 @@ public class SearchEngineRg implements SearchEngine {
 
 		} catch (final Throwable throwable) {
 			Logger.printThrowable(throwable);
-			new CustomAlertThrowable("failed to search text in files",
+			new CustomAlertThrowable(scene, "failed to search text in files",
 					"error occurred while searching for text in files", throwable).showAndWait();
 
 		} finally {
@@ -224,6 +228,7 @@ public class SearchEngineRg implements SearchEngine {
 
 	@Override
 	public FirstOccurrenceData parseFirstOccurrenceData(
+			final Scene scene,
 			final String filePathString,
 			final TextFinder textFinder,
 			final RunningProcesses runningProcesses) {
@@ -320,7 +325,7 @@ public class SearchEngineRg implements SearchEngine {
 
 		} catch (final Throwable throwable) {
 			Logger.printThrowable(throwable);
-			new CustomAlertThrowable("failed to find first occurrence in file",
+			new CustomAlertThrowable(scene, "failed to find first occurrence in file",
 					"error occurred while searching for first text occurrence " +
 							"in file:" + System.lineSeparator() + filePathString, throwable).showAndWait();
 

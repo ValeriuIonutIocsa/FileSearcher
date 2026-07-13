@@ -107,7 +107,7 @@ class VBoxSelectTextInputControlValue<
 		final TextInputControlWithSelectionItemT selectedItem =
 				customTableView.getSelectionModel().getSelectedItem();
 		if (selectedItem == null) {
-			new CustomAlertWarning("no item selected",
+			new CustomAlertWarning(getRoot().getScene(), "no item selected",
 					"please select an item in the table first").showAndWait();
 
 		} else {

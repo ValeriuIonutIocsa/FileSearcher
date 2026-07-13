@@ -1,5 +1,6 @@
 package com.utils.gui.alerts;
 
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 
 public class CustomAlertError extends AbstractCustomAlert {
@@ -8,8 +9,11 @@ public class CustomAlertError extends AbstractCustomAlert {
 	private final String contentText;
 
 	public CustomAlertError(
+			final Scene scene,
 			final String headerText,
 			final String contentText) {
+
+		super(scene);
 
 		this.headerText = headerText;
 		this.contentText = contentText;

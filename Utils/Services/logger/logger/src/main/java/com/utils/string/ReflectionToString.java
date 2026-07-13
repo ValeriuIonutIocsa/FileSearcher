@@ -63,14 +63,12 @@ final class ReflectionToString {
 
 					final String fieldName = field.getName();
 					Object fieldValue = null;
-					if (obj instanceof Enum<?>) {
+					if (obj instanceof final Enum<?> objEnum) {
 
 						if ("name".equals(fieldName)) {
-							final Enum<?> objEnum = (Enum<?>) obj;
 							fieldValue = objEnum.name();
 
 						} else if ("ordinal".equals(fieldName)) {
-							final Enum<?> objEnum = (Enum<?>) obj;
 							fieldValue = objEnum.ordinal();
 						}
 					}

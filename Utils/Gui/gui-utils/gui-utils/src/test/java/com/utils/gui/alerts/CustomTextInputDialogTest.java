@@ -5,13 +5,16 @@ import org.junit.jupiter.api.Test;
 import com.utils.gui.AbstractCustomApplicationTest;
 import com.utils.log.Logger;
 
+import javafx.scene.Scene;
+
 class CustomTextInputDialogTest extends AbstractCustomApplicationTest {
 
 	@Test
 	void testShow() {
 
+		final Scene scene = computeScene();
 		final CustomTextInputDialog customTextInputDialog =
-				new CustomTextInputDialog("Title", "message", "default value");
+				new CustomTextInputDialog(scene, "Title", "message", "default value");
 		customTextInputDialog.showAndWait();
 
 		final String result = customTextInputDialog.getResult();

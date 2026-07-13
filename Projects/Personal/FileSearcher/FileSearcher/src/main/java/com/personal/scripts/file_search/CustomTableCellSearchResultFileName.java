@@ -12,6 +12,7 @@ import com.utils.io.IoUtils;
 import com.utils.io.file_deleters.FactoryFileDeleter;
 import com.utils.log.Logger;
 
+import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
@@ -109,7 +110,9 @@ class CustomTableCellSearchResultFileName extends CustomTableCell<SearchResult, 
 
 		} catch (final Throwable throwable) {
 			Logger.printThrowable(throwable);
-			new CustomAlertThrowable("error", "error occurred while deleting files", throwable).showAndWait();
+			final Scene scene = getTableView().getScene();
+			new CustomAlertThrowable(scene, "error",
+					"error occurred while deleting files", throwable).showAndWait();
 		}
 	}
 
@@ -134,7 +137,9 @@ class CustomTableCellSearchResultFileName extends CustomTableCell<SearchResult, 
 
 		} catch (final Throwable throwable) {
 			Logger.printThrowable(throwable);
-			new CustomAlertThrowable("error", "error occurred while copying files", throwable).showAndWait();
+			final Scene scene = getTableView().getScene();
+			new CustomAlertThrowable(scene, "error",
+					"error occurred while copying files", throwable).showAndWait();
 		}
 	}
 

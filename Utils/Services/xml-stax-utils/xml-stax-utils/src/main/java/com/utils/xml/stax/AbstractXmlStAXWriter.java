@@ -9,6 +9,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.events.StartDocument;
 import javax.xml.stream.events.XMLEvent;
 
@@ -231,13 +232,13 @@ public abstract class AbstractXmlStAXWriter implements XmlStAXWriter {
 
 			try {
 				final int xmlEventType = xmlEvent.getEventType();
-				if (xmlEventType == XMLEvent.START_ELEMENT) {
+				if (xmlEventType == XMLStreamConstants.START_ELEMENT) {
 					writeIndent();
 					indentLevel++;
 
-				} else if (xmlEventType == XMLEvent.END_ELEMENT) {
+				} else if (xmlEventType == XMLStreamConstants.END_ELEMENT) {
 					indentLevel--;
-					if (lastEventType == XMLEvent.END_ELEMENT) {
+					if (lastEventType == XMLStreamConstants.END_ELEMENT) {
 						writeIndent();
 					}
 				}

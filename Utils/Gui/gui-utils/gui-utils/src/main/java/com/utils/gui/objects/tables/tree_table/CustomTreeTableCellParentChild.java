@@ -8,7 +8,7 @@ public class CustomTreeTableCellParentChild<
 		TableRowDataT extends TableRowDataParentChild>
 		extends CustomTreeTableCell<TableRowDataT, Object> {
 
-	private final static PseudoClass PSEUDO_CLASS_PARENT = PseudoClass.getPseudoClass("parent");
+	private static final PseudoClass PSEUDO_CLASS_PARENT = PseudoClass.getPseudoClass("parent");
 
 	@Override
 	protected void updateItem(

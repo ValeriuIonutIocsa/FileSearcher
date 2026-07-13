@@ -1,5 +1,6 @@
 package com.utils.gui.alerts;
 
+import javafx.scene.Scene;
 import javafx.scene.control.TextInputDialog;
 
 public class CustomTextInputDialog extends AbstractCustomDialog<String, TextInputDialog> {
@@ -9,9 +10,12 @@ public class CustomTextInputDialog extends AbstractCustomDialog<String, TextInpu
 	private final String initialValue;
 
 	public CustomTextInputDialog(
+			final Scene scene,
 			final String headerText,
 			final String contentText,
 			final String initialValue) {
+
+		super(scene);
 
 		this.headerText = headerText;
 		this.contentText = contentText;

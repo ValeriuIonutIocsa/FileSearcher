@@ -1,9 +1,12 @@
 package com.utils.gui.screens;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import com.utils.annotations.ApiMethod;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Window;
@@ -32,15 +35,26 @@ public final class ScreenUtils {
 			final double width,
 			final double height) {
 
-		final Screen screen;
-		final List<Screen> screenList = Screen.getScreensForRectangle(
-				x + width / 2, y + height / 2, 1, 1);
-		if (!screenList.isEmpty()) {
-			screen = screenList.getFirst();
-		} else {
-			screen = computeWidestScreen();
+		final Rectangle2D bounds = new Rectangle2D(x, y, width, height);
+		final List<Screen> screenList = new ArrayList<>(Screen.getScreens());
+		screenList.sort(Comparator.comparing(
+				aScreen -> computeIntersectionArea(aScreen.getBounds(), bounds), Comparator.reverseOrder()));
+		return screenList.getFirst();
+	}
+
+	private static double computeIntersectionArea(
+			final Rectangle2D a,
+			final Rectangle2D b) {
+
+		double intersectionArea = 0;
+		final double x = Math.max(a.getMinX(), b.getMinX());
+		final double y = Math.max(a.getMinY(), b.getMinY());
+		final double w = Math.min(a.getMaxX(), b.getMaxX()) - x;
+		final double h = Math.min(a.getMaxY(), b.getMaxY()) - y;
+		if (w > 0 && h > 0) {
+			intersectionArea = w * h;
 		}
-		return screen;
+		return intersectionArea;
 	}
 
 	@ApiMethod

@@ -2,6 +2,8 @@ package com.utils.gui.workers;
 
 import java.time.Instant;
 
+import com.utils.annotations.ApiMethod;
+import com.utils.gui.CustomApplication;
 import com.utils.gui.GuiUtils;
 import com.utils.log.Logger;
 import com.utils.string.StrUtils;
@@ -9,17 +11,17 @@ import com.utils.string.exc.SilentException;
 
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.stage.Window;
 
 public abstract class AbstractGuiWorker extends Thread implements GuiWorker {
 
-	private final Scene scene;
+	private static CustomApplication customApplication;
+
 	private final ControlDisabler controlDisabler;
 
 	public AbstractGuiWorker(
-			final Scene scene,
 			final ControlDisabler controlDisabler) {
 
-		this.scene = scene;
 		this.controlDisabler = controlDisabler;
 	}
 
@@ -58,6 +60,7 @@ public abstract class AbstractGuiWorker extends Thread implements GuiWorker {
 	private void setControlsDisabled(
 			final boolean b) {
 
+		final Scene scene = computeScene();
 		if (scene != null) {
 
 			final Cursor cursor;
@@ -79,13 +82,42 @@ public abstract class AbstractGuiWorker extends Thread implements GuiWorker {
 
 	protected abstract void finish();
 
+	public static Window computeWindow() {
+
+		Window window = null;
+		final Scene scene = computeScene();
+		if (scene != null) {
+			window = scene.getWindow();
+		}
+		return window;
+	}
+
 	@Override
 	public String toString() {
 		return StrUtils.reflectionToString(this);
 	}
 
-	@Override
-	public Scene getScene() {
+	@ApiMethod
+	public static Scene computeScene() {
+
+		Scene scene = null;
+		final CustomApplication customApplication = getCustomApplication();
+		if (customApplication == null) {
+			Logger.printError("current application is not set in GUI worker");
+		} else {
+			scene = customApplication.computeScene();
+		}
 		return scene;
+	}
+
+	@ApiMethod
+	public static void setCustomApplication(
+			final CustomApplication customApplication) {
+		AbstractGuiWorker.customApplication = customApplication;
+	}
+
+	@ApiMethod
+	public static CustomApplication getCustomApplication() {
+		return customApplication;
 	}
 }

@@ -1,11 +1,15 @@
 package com.utils.gui.alerts;
 
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 abstract class AbstractCustomAlert extends AbstractCustomDialog<ButtonType, Alert> {
 
-	AbstractCustomAlert() {
+	AbstractCustomAlert(
+			final Scene scene) {
+
+		super(scene);
 	}
 
 	@Override

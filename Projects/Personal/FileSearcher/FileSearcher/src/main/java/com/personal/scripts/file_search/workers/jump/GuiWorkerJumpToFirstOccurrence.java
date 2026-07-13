@@ -28,7 +28,6 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 	private final RunningProcesses runningProcesses;
 
 	public GuiWorkerJumpToFirstOccurrence(
-			final Scene scene,
 			final String nppExePathString,
 			final String filePathString,
 			final SearchEngine searchEngine,
@@ -36,7 +35,7 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 			final RunningProcesses runningProcesses,
 			final VBoxFileSearcher vBoxFileSearcher) {
 
-		super(scene, new ControlDisablerFileSearcher(scene, vBoxFileSearcher));
+		super(new ControlDisablerFileSearcher(vBoxFileSearcher));
 
 		this.nppExePathString = nppExePathString;
 
@@ -55,8 +54,11 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 
 		final FirstOccurrenceData firstOccurrenceData;
 		if (textFinder != null) {
-			firstOccurrenceData = searchEngine
-					.parseFirstOccurrenceData(filePathString, textFinder, runningProcesses);
+
+			final Scene scene = computeScene();
+			firstOccurrenceData = searchEngine.parseFirstOccurrenceData(scene,
+					filePathString, textFinder, runningProcesses);
+
 		} else {
 			firstOccurrenceData = new FirstOccurrenceData(0, 0);
 		}
@@ -80,7 +82,8 @@ public class GuiWorkerJumpToFirstOccurrence extends AbstractGuiWorker {
 	@Override
 	protected void error() {
 
-		new CustomAlertError("failed to jump to first occurrence", "an error occurred " +
+		final Scene scene = computeScene();
+		new CustomAlertError(scene, "failed to jump to first occurrence", "an error occurred " +
 				"when trying to open Notepad++ to the first occurrence of the text " +
 				"in file:" + System.lineSeparator() + filePathString).showAndWait();
 	}

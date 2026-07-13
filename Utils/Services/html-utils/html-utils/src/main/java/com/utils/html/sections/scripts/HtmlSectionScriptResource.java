@@ -14,6 +14,9 @@ public class HtmlSectionScriptResource extends AbstractHtmlSectionScript {
 
 	@Override
 	protected String createJsScriptContent() {
-		return ResourceFileUtils.resourceFileToString(resourceFilePathString);
+
+		final String jsScriptFileContent =
+				ResourceFileUtils.resourceFileToString(resourceFilePathString);
+		return System.lineSeparator() + jsScriptFileContent;
 	}
 }
