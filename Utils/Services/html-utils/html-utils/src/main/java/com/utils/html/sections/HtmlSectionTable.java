@@ -5,26 +5,22 @@ import java.util.List;
 
 import com.utils.xml.stax.XmlStAXWriter;
 
-public class HtmlSectionTable extends AbstractHtmlSection {
+public class HtmlSectionTable extends AbstractHtmlSectionWithAttributes<HtmlSectionTable> {
 
-	private String attributeClass;
-	private String attributeId;
 	private final List<HtmlSection> htmlSectionHeadList;
 	private final List<HtmlSection> htmlSectionBodyList;
 
 	public HtmlSectionTable() {
+
+		super("table");
 
 		htmlSectionHeadList = new ArrayList<>();
 		htmlSectionBodyList = new ArrayList<>();
 	}
 
 	@Override
-	public void write(
+	protected void writeL2(
 			final XmlStAXWriter xmlStAXWriter) {
-
-		final String tableTagName = "table";
-		xmlStAXWriter.writeStartElement(tableTagName);
-		writeAttributes(xmlStAXWriter);
 
 		final String theadTagName = "thead";
 		xmlStAXWriter.writeStartElement(theadTagName);
@@ -39,33 +35,6 @@ public class HtmlSectionTable extends AbstractHtmlSection {
 			htmlSectionBody.write(xmlStAXWriter);
 		}
 		xmlStAXWriter.writeEndElement(tbodyTagName);
-
-		xmlStAXWriter.writeEndElement(tableTagName);
-	}
-
-	private void writeAttributes(
-			final XmlStAXWriter xmlStAXWriter) {
-
-		if (attributeId != null) {
-			xmlStAXWriter.writeAttribute("id", attributeId);
-		}
-		if (attributeClass != null) {
-			xmlStAXWriter.writeAttribute("class", attributeClass);
-		}
-	}
-
-	public HtmlSectionTable addAttributeId(
-			final String attributeId) {
-
-		this.attributeId = attributeId;
-		return this;
-	}
-
-	public HtmlSectionTable addAttributeClass(
-			final String attributeClass) {
-
-		this.attributeClass = attributeClass;
-		return this;
 	}
 
 	public HtmlSectionTable addHtmlSectionHead(

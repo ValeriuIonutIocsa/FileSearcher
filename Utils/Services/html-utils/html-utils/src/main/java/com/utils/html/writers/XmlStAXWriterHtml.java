@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.utils.html.sections.HtmlSection;
 import com.utils.html.sections.HtmlSectionPlainText;
+import com.utils.html.sections.parents.HtmlSectionDiv;
+import com.utils.html.sections.scripts.HtmlSectionScriptResource;
 import com.utils.xml.stax.AbstractXmlStAXWriter;
 import com.utils.xml.stax.XmlStAXWriter;
 
@@ -20,7 +22,7 @@ class XmlStAXWriterHtml extends AbstractXmlStAXWriter {
 	XmlStAXWriterHtml(
 			final OutputStream outputStream,
 			final String indentString,
-			AbstractWriterHtml abstractWriterHtml) {
+			final AbstractWriterHtml abstractWriterHtml) {
 
 		super(outputStream, indentString);
 
@@ -99,7 +101,7 @@ class XmlStAXWriterHtml extends AbstractXmlStAXWriter {
 	}
 
 	private void writeBody(
-			XmlStAXWriter xmlStAXWriter) {
+			final XmlStAXWriter xmlStAXWriter) {
 
 		final Map<String, String> bodyAttributesMap = new LinkedHashMap<>();
 		abstractWriterHtml.fillBodyAttributesMap(bodyAttributesMap);
@@ -113,6 +115,11 @@ class XmlStAXWriterHtml extends AbstractXmlStAXWriter {
 
 		final List<HtmlSection> htmlSectionList = new ArrayList<>();
 		abstractWriterHtml.fillBodyHtmlSectionList(htmlSectionList);
+
+		htmlSectionList.addFirst(new HtmlSectionDiv()
+				.addAttributeId("spinner").addAttributeClass("spinner"));
+		htmlSectionList.addFirst(
+				new HtmlSectionScriptResource("com/utils/html/sections/spinner/spinner.js"));
 
 		for (final HtmlSection htmlSectionBody : htmlSectionList) {
 			htmlSectionBody.write(xmlStAXWriter);

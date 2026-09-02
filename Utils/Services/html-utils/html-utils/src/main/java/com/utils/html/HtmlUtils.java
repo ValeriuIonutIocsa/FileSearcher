@@ -5,7 +5,6 @@ import org.w3c.dom.Element;
 
 import com.utils.annotations.ApiMethod;
 import com.utils.string.converters.ConverterByteArray;
-import com.utils.xml.stax.XmlStAXWriter;
 
 public final class HtmlUtils {
 
@@ -25,19 +24,6 @@ public final class HtmlUtils {
 
 		element.appendChild(imgElement);
 		return imgElement;
-	}
-
-	@ApiMethod
-	public static void embedImage(
-			final XmlStAXWriter xmlStAXWriter,
-			final byte[] imageFileBytes) {
-
-		final String imgTagName = "img";
-		xmlStAXWriter.writeStartElement(imgTagName);
-		final String src = createImgSrc(imageFileBytes);
-		xmlStAXWriter.writeAttribute("src", src);
-
-		xmlStAXWriter.writeEndElement(imgTagName);
 	}
 
 	@ApiMethod

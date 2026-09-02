@@ -18,8 +18,8 @@ public final class DynamicContentPaneUtils {
 		String dynamicContentPaneCss = ResourceFileUtils
 				.resourceFileToString("com/utils/html/sections/dyn_pane/dynamic_content_pane.css");
 		dynamicContentPaneCss = Strings.CS.replace(dynamicContentPaneCss,
-				"/*grid-template-columns: @@SIDEBAR_WIDTH@@px 1fr ;*/",
-				"/*grid-template-columns: " + StrUtils.doubleToString(sidebarWidth, 0, 2, false) + "px 1fr */");
+				"/*grid-template-columns: @@SIDEBAR_WIDTH@@px 1fr;*/",
+				"grid-template-columns: " + StrUtils.doubleToString(sidebarWidth, 0, 2, false) + "px 1fr;");
 		return dynamicContentPaneCss;
 	}
 }

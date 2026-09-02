@@ -22,6 +22,9 @@ class WriterHtmlDynamicContentPaneTest extends AbstractWriterHtml {
 	protected void fillBodyHtmlSectionList(
 			final List<HtmlSection> htmlSectionList) {
 
+		htmlSectionList.add(new HtmlSectionScriptResource(
+				"com/utils/html/sections/dyn_pane/dynamic_content_pane.js"));
+
 		final HtmlSectionDynamicContentPane htmlSectionDynamicContentPane =
 				new HtmlSectionDynamicContentPane("1");
 
@@ -33,8 +36,5 @@ class WriterHtmlDynamicContentPaneTest extends AbstractWriterHtml {
 				false, "Section 3", new HtmlSectionText("This is the content of Section 3."));
 
 		htmlSectionList.add(htmlSectionDynamicContentPane);
-
-		htmlSectionList.add(new HtmlSectionScriptResource(
-				"com/utils/html/sections/dyn_pane/dynamic_content_pane.js"));
 	}
 }

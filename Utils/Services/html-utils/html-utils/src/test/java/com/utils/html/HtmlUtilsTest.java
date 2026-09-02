@@ -17,9 +17,10 @@ class HtmlUtilsTest {
 		final Element documentElement = document.createElement("html_embed_image_test");
 		document.appendChild(documentElement);
 
-		final byte[] imageFileBytes = ResourceFileUtils.resourceFileToByteArray("com/utils/html/test.png");
+		final byte[] imageFileByteArray =
+				ResourceFileUtils.resourceFileToByteArray("com/utils/html/test.png");
 
-		HtmlUtils.embedImage(documentElement, imageFileBytes);
+		HtmlUtils.embedImage(documentElement, imageFileByteArray);
 
 		final String htmlFileContents = XmlDomUtils.saveXmlFile(document, false, 4);
 		Logger.printStatus("Generated HTML file:");
