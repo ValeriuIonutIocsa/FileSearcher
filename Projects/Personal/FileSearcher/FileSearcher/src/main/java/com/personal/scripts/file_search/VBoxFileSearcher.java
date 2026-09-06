@@ -55,6 +55,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 	private CheckBox caseSensitivePathPatternCheckBox;
 	private CheckBox useRegexCheckBox;
 	private CheckBox caseSensitiveCheckBox;
+	private CheckBox wholeWordCheckBox;
 	private CheckBox multiLineCheckBox;
 	private CheckBox winStyleLineEndingsCheckBox;
 	private CheckBox searchInBinaryCheckBox;
@@ -304,7 +305,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
 		final Label caseSensitivePathPatternLabel = BasicControlsFactories.getInstance()
-				.createLabel("case sensitive path pattern:", "bold");
+				.createLabel("cs path pattern:", "bold");
 		GuiUtils.addToHBox(bottomHBox, caseSensitivePathPatternLabel,
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
@@ -335,7 +336,7 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
 		final Label caseSensitiveLabel = BasicControlsFactories.getInstance()
-				.createLabel("case sensitive:", "bold");
+				.createLabel("cs:", "bold");
 		GuiUtils.addToHBox(bottomHBox, caseSensitiveLabel,
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
@@ -344,6 +345,21 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 		final boolean caseSensitive = SavedOptionsFile.INSTANCE.isCaseSensitive();
 		caseSensitiveCheckBox.setSelected(caseSensitive);
 		GuiUtils.addToHBox(bottomHBox, caseSensitiveCheckBox,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		GuiUtils.addToHBox(bottomHBox, BasicControlsFactories.getInstance().createSeparator(Orientation.VERTICAL),
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		final Label wholeWordLabel = BasicControlsFactories.getInstance()
+				.createLabel("whole word:", "bold");
+		GuiUtils.addToHBox(bottomHBox, wholeWordLabel,
+				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
+
+		wholeWordCheckBox =
+				BasicControlsFactories.getInstance().createCheckBox("");
+		final boolean wholeWord = SavedOptionsFile.INSTANCE.isWholeWord();
+		wholeWordCheckBox.setSelected(wholeWord);
+		GuiUtils.addToHBox(bottomHBox, wholeWordCheckBox,
 				Pos.CENTER_LEFT, Priority.NEVER, 0, 0, 0, 7);
 
 		GuiUtils.addToHBox(bottomHBox, BasicControlsFactories.getInstance().createSeparator(Orientation.VERTICAL),
@@ -452,13 +468,14 @@ public class VBoxFileSearcher extends AbstractCustomControl<VBox> {
 
 		final boolean useRegex = useRegexCheckBox.isSelected();
 		final boolean caseSensitive = caseSensitiveCheckBox.isSelected();
+		final boolean wholeWord = wholeWordCheckBox.isSelected();
 		final boolean multiline = multiLineCheckBox.isSelected();
 		final boolean winStyleLineEndings = winStyleLineEndingsCheckBox.isSelected();
 		final boolean searchInBinary = searchInBinaryCheckBox.isSelected();
 
 		return new SearchData(searchEngineType, rgExePathString,
 				searchFolderPathString, filePathPatternString, caseSensitivePathPattern,
-				searchText, useRegex, caseSensitive, multiline, winStyleLineEndings, searchInBinary);
+				searchText, useRegex, caseSensitive, wholeWord, multiline, winStyleLineEndings, searchInBinary);
 	}
 
 	private void makeCountsControlsInvisible() {

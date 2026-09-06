@@ -22,6 +22,7 @@ public final class SavedOptionsFile {
 	private boolean caseSensitivePathPattern;
 	private boolean useRegex;
 	private boolean caseSensitive;
+	private boolean wholeWord;
 	private boolean multiline;
 	private boolean winStyleLineEndings;
 	private boolean searchInBinary;
@@ -29,12 +30,13 @@ public final class SavedOptionsFile {
 	private SavedOptionsFile() {
 
 		searchEngineType = SearchEngineType.RG;
-		caseSensitivePathPattern = true;
+		caseSensitivePathPattern = false;
 		useRegex = false;
-		caseSensitive = true;
-		multiline = true;
+		caseSensitive = false;
+		wholeWord = false;
+		multiline = false;
 		winStyleLineEndings = true;
-		searchInBinary = true;
+		searchInBinary = false;
 	}
 
 	public void parse() {
@@ -59,6 +61,9 @@ public final class SavedOptionsFile {
 
 					final String caseSensitiveString = properties.getProperty("caseSensitive");
 					caseSensitive = Boolean.parseBoolean(caseSensitiveString);
+
+					final String wholeWordString = properties.getProperty("wholeWord");
+					wholeWord = Boolean.parseBoolean(wholeWordString);
 
 					final String multilineString = properties.getProperty("multiline");
 					multiline = Boolean.parseBoolean(multilineString);
@@ -90,6 +95,7 @@ public final class SavedOptionsFile {
 				properties.setProperty("caseSensitivePathPattern", Boolean.toString(caseSensitivePathPattern));
 				properties.setProperty("useRegex", Boolean.toString(useRegex));
 				properties.setProperty("caseSensitive", Boolean.toString(caseSensitive));
+				properties.setProperty("wholeWord", Boolean.toString(wholeWord));
 				properties.setProperty("multiline", Boolean.toString(multiline));
 				properties.setProperty("winStyleLineEndings", Boolean.toString(winStyleLineEndings));
 				properties.setProperty("searchInBinary", Boolean.toString(searchInBinary));
@@ -147,6 +153,15 @@ public final class SavedOptionsFile {
 
 	public boolean isCaseSensitive() {
 		return caseSensitive;
+	}
+
+	public void setWholeWord(
+			final boolean wholeWord) {
+		this.wholeWord = wholeWord;
+	}
+
+	public boolean isWholeWord() {
+		return wholeWord;
 	}
 
 	public void setMultiline(

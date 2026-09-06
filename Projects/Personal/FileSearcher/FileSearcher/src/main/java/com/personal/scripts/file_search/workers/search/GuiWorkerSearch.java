@@ -81,6 +81,9 @@ public class GuiWorkerSearch extends AbstractGuiWorker {
 		final boolean caseSensitive = searchData.caseSensitive();
 		SavedOptionsFile.INSTANCE.setCaseSensitive(caseSensitive);
 
+		final boolean wholeWord = searchData.wholeWord();
+		SavedOptionsFile.INSTANCE.setWholeWord(wholeWord);
+
 		final boolean multiline = searchData.multiline();
 		SavedOptionsFile.INSTANCE.setMultiline(multiline);
 

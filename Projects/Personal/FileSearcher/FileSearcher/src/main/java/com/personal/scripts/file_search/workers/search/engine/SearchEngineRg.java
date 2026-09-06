@@ -157,6 +157,13 @@ public class SearchEngineRg implements SearchEngine {
 			commandPartList.add(caseSensitiveOption);
 			escapedCommandPartList.add(caseSensitiveOption);
 
+			final boolean wholeWord = searchData.wholeWord();
+			if (wholeWord) {
+
+				commandPartList.add("--word-regexp");
+				escapedCommandPartList.add("--word-regexp");
+			}
+
 			final boolean multiline = searchData.multiline();
 			if (multiline) {
 
@@ -259,6 +266,13 @@ public class SearchEngineRg implements SearchEngine {
 			}
 			commandPartList.add(caseSensitiveOption);
 			escapedCommandPartList.add(caseSensitiveOption);
+
+			final boolean wholeWord = searchData.wholeWord();
+			if (wholeWord) {
+
+				commandPartList.add("--word-regexp");
+				escapedCommandPartList.add("--word-regexp");
+			}
 
 			final boolean multiline = searchData.multiline();
 			if (multiline) {

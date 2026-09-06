@@ -15,6 +15,7 @@ public record SearchData(
 		String searchText,
 		boolean useRegex,
 		boolean caseSensitive,
+		boolean wholeWord,
 		boolean multiline,
 		boolean winStyleLineEndings,
 		boolean searchInBinary) {

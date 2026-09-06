@@ -42,6 +42,7 @@ class GuiWorkerSearchTest {
 		final String searchText;
 		final boolean useRegex;
 		final boolean caseSensitive;
+		final boolean wholeWord;
 		final boolean multiline;
 		final boolean winStyleLineEndings;
 		final boolean searchInBinary;
@@ -57,6 +58,7 @@ class GuiWorkerSearchTest {
 			searchText = "jarF";
 			useRegex = false;
 			caseSensitive = true;
+			wholeWord = true;
 			multiline = false;
 			winStyleLineEndings = false;
 			searchInBinary = true;
@@ -71,6 +73,7 @@ class GuiWorkerSearchTest {
 			searchText = "Utils \\{\\w+";
 			useRegex = true;
 			caseSensitive = false;
+			wholeWord = false;
 			multiline = false;
 			winStyleLineEndings = false;
 			searchInBinary = true;
@@ -85,6 +88,7 @@ class GuiWorkerSearchTest {
 			searchText = "cro_dbg_trace";
 			useRegex = false;
 			caseSensitive = false;
+			wholeWord = false;
 			multiline = false;
 			winStyleLineEndings = false;
 			searchInBinary = false;
@@ -99,6 +103,7 @@ class GuiWorkerSearchTest {
 			searchText = "s    */";
 			useRegex = false;
 			caseSensitive = false;
+			wholeWord = false;
 			multiline = false;
 			winStyleLineEndings = false;
 			searchInBinary = true;
@@ -113,6 +118,7 @@ class GuiWorkerSearchTest {
 			searchText = "echo > \"abc\"";
 			useRegex = false;
 			caseSensitive = false;
+			wholeWord = false;
 			multiline = false;
 			winStyleLineEndings = false;
 			searchInBinary = true;
@@ -127,6 +133,7 @@ class GuiWorkerSearchTest {
 			searchText = "";
 			useRegex = false;
 			caseSensitive = false;
+			wholeWord = false;
 			multiline = false;
 			winStyleLineEndings = false;
 			searchInBinary = false;
@@ -141,6 +148,7 @@ class GuiWorkerSearchTest {
 			searchText = ".putInternal(\"PATH\", System.getenv(\"PATH\"))";
 			useRegex = false;
 			caseSensitive = false;
+			wholeWord = false;
 			multiline = false;
 			winStyleLineEndings = false;
 			searchInBinary = true;
@@ -155,6 +163,7 @@ class GuiWorkerSearchTest {
 			searchText = "mov\td2,d10\r\n\tret";
 			useRegex = false;
 			caseSensitive = false;
+			wholeWord = false;
 			multiline = true;
 			winStyleLineEndings = true;
 			searchInBinary = true;
@@ -170,6 +179,7 @@ class GuiWorkerSearchTest {
 			searchText = "cro_dbg_trace";
 			useRegex = false;
 			caseSensitive = true;
+			wholeWord = false;
 			multiline = false;
 			winStyleLineEndings = false;
 			searchInBinary = true;
@@ -185,6 +195,7 @@ class GuiWorkerSearchTest {
 			searchText = "cro_dbg_trace";
 			useRegex = false;
 			caseSensitive = true;
+			wholeWord = false;
 			multiline = false;
 			winStyleLineEndings = false;
 			searchInBinary = false;
@@ -195,7 +206,7 @@ class GuiWorkerSearchTest {
 
 		return new SearchData(searchEngineType, rgExePathString,
 				searchFolderPathString, filePathPatternString, caseSensitivePathPattern,
-				searchText, useRegex, caseSensitive, multiline, winStyleLineEndings, searchInBinary);
+				searchText, useRegex, caseSensitive, wholeWord, multiline, winStyleLineEndings, searchInBinary);
 	}
 
 	@Test
