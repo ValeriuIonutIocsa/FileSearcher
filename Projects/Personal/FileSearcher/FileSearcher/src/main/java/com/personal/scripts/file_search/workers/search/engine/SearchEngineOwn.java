@@ -13,8 +13,12 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
-import org.apache.tika.parser.txt.CharsetDetector;
-import org.apache.tika.parser.txt.CharsetMatch;
+import org.apache.tika.detect.EncodingDetector;
+import org.apache.tika.detect.EncodingResult;
+import org.apache.tika.detect.universal.UniversalEncodingDetector;
+import org.apache.tika.io.TikaInputStream;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.ParseContext;
 
 import com.personal.scripts.file_search.text_find.TextFinder;
 import com.personal.scripts.file_search.workers.search.RunningProcesses;
@@ -145,12 +149,21 @@ public class SearchEngineOwn implements SearchEngine {
 			final String filePathString) {
 
 		String charsetName = null;
-		try (InputStream inputStream = StreamUtils.openBufferedInputStream(filePathString)) {
+		try (InputStream inputStream = StreamUtils.openBufferedInputStream(filePathString);
+				TikaInputStream tikaInputStream = TikaInputStream.get(inputStream)) {
 
-			final CharsetDetector charsetDetector =
-					new CharsetDetector().setText(inputStream);
-			final CharsetMatch charsetMatch = charsetDetector.detect();
-			charsetName = charsetMatch.getName();
+			final EncodingDetector detector = new UniversalEncodingDetector();
+			final Metadata metadata = new Metadata();
+			final ParseContext parseContext = new ParseContext();
+
+			final List<EncodingResult> encodingResultList =
+					detector.detect(tikaInputStream, metadata, parseContext);
+			if (!encodingResultList.isEmpty()) {
+
+				final EncodingResult encodingResult = encodingResultList.getFirst();
+				final Charset charset = encodingResult.getCharset();
+				charsetName = charset.name();
+			}
 
 		} catch (final Throwable throwable) {
 			Logger.printError("failed to detect charset for file:" +

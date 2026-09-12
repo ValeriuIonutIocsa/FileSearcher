@@ -8,7 +8,8 @@ ext {
             ':gui-utils'
     ]
     compileClassPaths = [
-            'org.apache.tika:tika-parser-text-module:3.2.3'
+            'org.apache.tika:tika-parser-text-module:4.0.0',
+            'org.apache.tika:tika-encoding-detector-universal:4.0.0'
     ]
     compileJarFilePaths = []
     testCompileClassPaths = []
