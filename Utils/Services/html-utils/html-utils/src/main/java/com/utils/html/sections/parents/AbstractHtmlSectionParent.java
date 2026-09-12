@@ -34,6 +34,11 @@ public abstract class AbstractHtmlSectionParent extends AbstractHtmlSectionWithA
 			final HtmlSection htmlSection) {
 
 		htmlSectionList.add(htmlSection);
+		return self();
+	}
+
+	@Override
+	protected HtmlSectionParent self() {
 		return this;
 	}
 }

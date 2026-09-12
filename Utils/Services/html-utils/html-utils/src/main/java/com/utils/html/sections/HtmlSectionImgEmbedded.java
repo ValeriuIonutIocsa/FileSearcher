@@ -22,4 +22,9 @@ public class HtmlSectionImgEmbedded extends AbstractHtmlSectionWithAttributes<Ht
 		final String src = HtmlUtils.createImgSrc(imageFileByteArray);
 		xmlStAXWriter.writeAttribute("src", src);
 	}
+
+	@Override
+	protected HtmlSectionImgEmbedded self() {
+		return this;
+	}
 }

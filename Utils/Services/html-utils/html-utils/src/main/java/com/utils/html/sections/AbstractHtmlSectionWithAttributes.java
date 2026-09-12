@@ -67,8 +67,10 @@ public abstract class AbstractHtmlSectionWithAttributes<
 			final String value) {
 
 		attributeMap.put(name, value);
-		return (HtmlSectionT) this;
+		return self();
 	}
+
+	protected abstract HtmlSectionT self();
 
 	@Override
 	public String computeAttribute(

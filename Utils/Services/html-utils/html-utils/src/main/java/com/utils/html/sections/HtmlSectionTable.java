@@ -41,13 +41,18 @@ public class HtmlSectionTable extends AbstractHtmlSectionWithAttributes<HtmlSect
 			final HtmlSection htmlSection) {
 
 		htmlSectionHeadList.add(htmlSection);
-		return this;
+		return self();
 	}
 
 	public HtmlSectionTable addHtmlSectionBody(
 			final HtmlSection htmlSection) {
 
 		htmlSectionBodyList.add(htmlSection);
+		return self();
+	}
+
+	@Override
+	protected HtmlSectionTable self() {
 		return this;
 	}
 }

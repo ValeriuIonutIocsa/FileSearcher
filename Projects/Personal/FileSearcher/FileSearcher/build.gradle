@@ -1,6 +1,6 @@
 ext {
     mainClass = 'com.personal.scripts.file_search.AppStart' + project.name
-    projectVersion = '1.0.5'
+    projectVersion = '1.0.6'
     jarFolderPath = 'C:\\IVI\\Scripts\\FileSearcher'
 
     subProjectNames = [
